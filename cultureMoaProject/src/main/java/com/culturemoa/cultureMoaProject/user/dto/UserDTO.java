@@ -3,47 +3,97 @@ package com.culturemoa.cultureMoaProject.user.dto;
 import java.time.LocalDateTime;
 
 public class UserDTO {
-    private Long userIdx;
-    private String userId;
-    private String name;
+    private Long idx;
+    private String id;
     private String password;
-    private LocalDateTime regDate;
+    private String name;
+    private String email;
+    private String address;
+    private String nickName;
+    private LocalDateTime sDate;
+    private LocalDateTime eDate;
 
-    public UserDTO(String userId, String password, String name, LocalDateTime regDate) {
-        this.userId = userId;
+    public UserDTO(Long idx, String id, String password, String name, String email, String address, String nickName, LocalDateTime sDate, LocalDateTime eDate) {
+        this.idx = idx;
+        this.id = id;
         this.password = password;
         this.name = name;
-        this.regDate = regDate;
+        this.email = email;
+        this.address = address;
+        this.nickName = nickName;
+        this.sDate = sDate;
+        this.eDate = eDate;
     }
 
-    public Long getUserIdx() {
-        return userIdx;
+    public Long getIdx() {
+        return idx;
     }
-    public void setUserIdx(Long userIdx) {
-        this.userIdx = userIdx;
+
+    public void setIdx(Long idx) {
+        this.idx = idx;
     }
-    public String getUserId() {
-        return userId;
+
+    public String getId() {
+        return id;
     }
-    public void setUserId(String userId) {
-        this.userId = userId;
+
+    public void setId(String id) {
+        this.id = id;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-    public LocalDateTime getRegDate() {
-        return regDate;
+
+    public String getEmail() {
+        return email;
     }
-    public void setRegDate(LocalDateTime regDate) {
-        this.regDate = regDate;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public LocalDateTime getsDate() {
+        return sDate;
+    }
+
+    public void setsDate(LocalDateTime sDate) {
+        this.sDate = sDate;
+    }
+
+    public LocalDateTime geteDate() {
+        return eDate;
+    }
+
+    public void seteDate(LocalDateTime eDate) {
+        this.eDate = eDate;
     }
 }
