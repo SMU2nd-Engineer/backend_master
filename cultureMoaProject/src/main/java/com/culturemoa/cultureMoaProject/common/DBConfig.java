@@ -1,52 +1,29 @@
 package com.culturemoa.cultureMoaProject.common;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(value = "classpath:application.properties")
-public class DBConfig implements TransactionManagementConfigurer {
-    @Value("${spring.datasource.driver-class-name}")
-    private String driver;
-    @Value("${spring.datasource.url}")
-    private String jdbcUrl;
-    @Value("${spring.datasource.username}")
-    private String user;
-    @Value("${spring.datasource.password}")
-    private String password;
-
-    @Bean(destroyMethod = "close")
-    public DataSource dataSource() {
-        DataSource ds = new DataSource();
-        ds.setDriverClassName(driver);
-        ds.setUrl(jdbcUrl);
-        ds.setUsername(user);
-        ds.setPassword(password);
-        ds.setInitialSize(2);
-        ds.setMaxActive(10);
-        ds.setTestWhileIdle(true);
-        ds.setMinEvictableIdleTimeMillis(1000 * 60 * 3);
-        ds.setTimeBetweenEvictionRunsMillis(1000 * 10);
-        return ds;
-    }
-
-    @Override
-    public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return transactionManager();
+public class DBConfig {
+    @Bean
+    public SqlSessionFactory sqlSessionFactory(DataSource datasource) throws Exception {
+        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+        sqlSessionFactory.setDataSource(datasource);
+        //mapper 워치에 따라서 classpath*:static/mappers/**/*Mapper.xml 이부분을 조정
+        sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mappers/*Mapper.xml"));
+        return sqlSessionFactory.getObject();
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
-        DataSourceTransactionManager tm = new DataSourceTransactionManager();
-        tm.setDataSource(dataSource());
-        return tm;
+    public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
     }
 }
