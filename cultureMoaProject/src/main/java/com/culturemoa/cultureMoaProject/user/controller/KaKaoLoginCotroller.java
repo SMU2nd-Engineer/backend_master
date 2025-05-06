@@ -5,6 +5,7 @@ import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
 import com.culturemoa.cultureMoaProject.user.dto.KakaoTokenResponseDTO;
 import com.culturemoa.cultureMoaProject.user.dto.KakaoUserInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.beans.factory.annotation.Value;
 
 @RestController
-
 public class KaKaoLoginCotroller {
 
     // 환경 변수 가져오기
@@ -85,17 +85,19 @@ public class KaKaoLoginCotroller {
             }
             System.out.println("소셜 고유아이디가 매칭되었습니다.");
         }
+        // 토큰 발급
         try {
 
             if (getUserInfo != null && getUserInfo.getId() != null) {
                 JwtDTO jwtDTO = authJwtService.tokenCreateSave(response, getUserInfo.getId().toString());
                 return ResponseEntity.ok(jwtDTO);
             } else {
+                System.out.println("카카오 인증 후 토큰 발급 받는 과정에서 오류 발생.");
                 return ResponseEntity.status(401).body("KaKao Invalid credentials");
             }
 
         } catch (Exception e) {
-            System.out.println("카카오 인증 후 토큰 발급 받는 과정에서 오류 발생.");
+
             ResponseEntity.status(400).body("카카오 인증 후 토큰 발급 받는 과정에서 오류 발생.");
         }
 

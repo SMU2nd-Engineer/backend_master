@@ -3,12 +3,14 @@ package com.culturemoa.cultureMoaProject.common.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 /**
  * CredentialsEncoder
  * 암호화를 하거나 암호화를 매칭하는 메서드를 가지고 있는 클래스
  * 
  */
+@Component
 public class CredentialsEncoder {
     @Autowired
     private PasswordEncoder passwordEncoder;

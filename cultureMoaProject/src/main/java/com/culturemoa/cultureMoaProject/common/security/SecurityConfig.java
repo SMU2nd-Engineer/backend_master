@@ -44,9 +44,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (API 서버에서는 보통 꺼둠)
             .cors(cors -> {})             // CORS 설정 적용 (아래 Bean에서 지정)
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/login", "/api/refresh", "/api/logout", "/kakaoAuth").permitAll() // 로그인, 리프레시, 로그아웃, 카카오 인증 API는 인증 없이 허용
+                    .requestMatchers("/login", "/refresh", "/logout", "/kakaoAuth").permitAll() // 로그인, 리프레시, 로그아웃, 카카오 인증 API는 인증 없이 허용
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
+            .logout(logout -> logout.disable()) // 시큐리티 기본 로그아웃으로 get 요청을 방지
             .addFilterBefore(new JwtAuthenticationFilter(jwtValidator), UsernamePasswordAuthenticationFilter.class); // JWT 필터 등록 (기존 필터 앞에 추가)
         return http.build();
     }

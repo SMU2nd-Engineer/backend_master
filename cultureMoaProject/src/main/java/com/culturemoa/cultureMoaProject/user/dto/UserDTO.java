@@ -33,6 +33,9 @@ public class UserDTO {
 
     // mybatis 사용에 따라 없어질 수 있으며 DAO를 위해서 추가 가능성 있음.
     public UserDTO(String userid, String password, String name, LocalDateTime regdate) {
-
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.regDate = regDate;
     }
 }

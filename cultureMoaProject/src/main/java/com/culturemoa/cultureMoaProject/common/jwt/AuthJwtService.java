@@ -11,7 +11,14 @@ public class AuthJwtService {
     @Autowired
     private JwtProvider jwtProvider;
 
-    public JwtDTO tokenCreateSave (HttpServletResponse response, String pUserId) {
+    /**
+     * tokenCreateSave
+     * refreshToken은 쿠키에 저장하고, accessToken은 JwtDTO로 반환
+     * @param pResponse : 응답헤더
+     * @param pUserId : 토큰 생성 userId
+     * @return JWT DTO를 활용하여 accessToken 전달할 수 있게 반환
+     */
+    public JwtDTO tokenCreateSave (HttpServletResponse pResponse, String pUserId) {
     String accessToken  = jwtProvider.generateAccessToken(pUserId);
     String refreshToken = jwtProvider.generateRefreshToken(pUserId);
     // HttpOnly 방식으로 refreshToken 저장
@@ -26,7 +33,7 @@ public class AuthJwtService {
 
 
     // 생성한 쿠키를 응답 헤더에 추가 (브라우저에 저장 지시)
-    response.addHeader("Set-Cookie", cookie.toString());
+    pResponse.addHeader("Set-Cookie", cookie.toString());
 
     return new JwtDTO(accessToken);
 

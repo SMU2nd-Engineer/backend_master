@@ -28,10 +28,14 @@ public class IdPasswordMatchService {
     public String login (String pUserId, String pPassword) {
         // 임시로 지정한 아이디 (test) 와 비번(1234) 암호화를 위해서 변수 생성
         // 암호화 및 암호화 매칭하는 것 사용으로 바꿈
-        String encodeTest = encoder.encodeInfo("test");
-        String encodePwd = encoder.encodeInfo("1234");
-        if(encoder.matchEncodeInfo(pUserId, encodeTest) &&
-                encoder.matchEncodeInfo(encodePwd, encodeTest)) {
+        // 매번 새로운 암호문을 만들어서 오류가 난다고 찾아서 하드 코딩 방식으로 변경
+//        String encodeTest = encoder.encodeInfo("test");
+//        String encodePwd = encoder.encodeInfo("1234");
+//        if(encoder.matchEncodeInfo(pUserId, encodeTest) &&
+//                encoder.matchEncodeInfo(pPassword, encodePwd)) {
+//            return pUserId;
+//        }
+        if ("test".equals(pUserId) && "1234".equals(pPassword)) {
             return pUserId;
         }
         return null;

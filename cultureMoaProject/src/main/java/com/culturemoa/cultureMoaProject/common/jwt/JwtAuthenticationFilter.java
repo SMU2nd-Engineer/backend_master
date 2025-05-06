@@ -25,16 +25,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         // 검증 예외 처리
         // 디버깅 코드
-        System.out.println("🟡 [Filter] JwtAuthenticationFilter 실행됨");
-        System.out.println("🟡 [Filter] 요청 URI: " + request.getRequestURI());
+        System.out.println("[Filter] JwtAuthenticationFilter 실행됨");
+        System.out.println("[Filter] 요청 URI: " + request.getRequestURI());
         String requestURI = request.getRequestURI();
-        if (requestURI.equals("/api/refresh") || requestURI.equals("/api/logout")|| requestURI.equals("/kakaoAuth")) {
-            System.out.println("🟢 [Filter] 예외 경로 요청 - 필터 패스: " + requestURI);
+        if (requestURI.equals("/login") ||
+                requestURI.equals("/refresh") ||
+                requestURI.equals("/logout")||
+                requestURI.equals("/kakaoAuth")) {
+            System.out.println("[Filter] 예외 경로 요청 - 필터 패스: " + requestURI);
             filterChain.doFilter(request, response);
             return;
         }
-
+        System.out.println(" return 이 걸리지 않고서 여기가 실행됨");
         String token = resolveToken(request);
+        System.out.println(token);
         if (token != null) { // 토큰이 비어있지 않으면 실행
             try {
                 // 검증 진행 -
