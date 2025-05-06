@@ -53,7 +53,7 @@ public class KaKaoLoginCotroller {
         formData.add("redirect_uri", kakoRedirectUri);
         formData.add("code", code);
 
-        RestClient restClient = RestClient.create(); //RestClient 인스턴스를 생성
+        RestClient restClient = RestClient.create(); // 서버에서 카카오로 REST 요청을 위한 RestClient 인스턴스를 생성
         KakaoTokenResponseDTO kakaoDto = restClient.post()
                 .uri("https://kauth.kakao.com/oauth/token") // 전송할 대상 URL을 설정
                 .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
@@ -63,7 +63,7 @@ public class KaKaoLoginCotroller {
         System.out.println("====================================================");
         System.out.println("kakaoDto : " +kakaoDto);
         if(kakaoDto == null) {
-            return ResponseEntity.status(400).body("사용자 정보 전달.");
+            return ResponseEntity.status(400).body("Info is null");
         }
         String kakaoAccessToken = kakaoDto.getAccess_token();
         System.out.println(kakaoAccessToken);
