@@ -7,9 +7,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * LogoutController
+ * 로그 아웃을 실행하기 위한 컨트롤러
+ */
 @RestController
 public class LogoutController {
 
+    /**
+     * logout 
+     * 쿠키에 저장된 refresh 기한을 0으로 덮어써서 제거, locatStorage 제거하여 로그아웃
+     * @param pRequest : 요청
+     * @param pResponse : 응답
+     * @return 200 응답을 전달
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest pRequest, HttpServletResponse pResponse) {
         // 같은 쿠키를 덮어 쓰기 위하여 쿠키를 추가하는 로직을 그대로 사용하기

@@ -32,7 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 requestURI.equals("/refresh") ||
                 requestURI.equals("/logout")||
                 requestURI.equals("/kakaoAuth")||
-                requestURI.equals("/naverAuth")
+                requestURI.equals("/naverAuth") ||
+                requestURI.equals("/googleAuth")
                 ) {
             System.out.println("[Filter] 예외 경로 요청 - 필터 패스: " + requestURI);
             filterChain.doFilter(request, response);
