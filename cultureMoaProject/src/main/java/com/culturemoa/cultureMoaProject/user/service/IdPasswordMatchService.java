@@ -35,9 +35,10 @@ public class IdPasswordMatchService {
 //                encoder.matchEncodeInfo(pPassword, encodePwd)) {
 //            return pUserId;
 //        }
+        System.out.println("전달 받은 id, password : " + pUserId + ", " + pPassword);
         if ("test".equals(pUserId) && "1234".equals(pPassword)) {
             return pUserId;
         }
-        return null;
+        return "";
     }
 }

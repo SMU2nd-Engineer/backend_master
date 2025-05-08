@@ -44,7 +44,7 @@ public class LoginController {
             String userId = idPasswordMatchService.login(pRequest.getId(), pRequest.getPassword());
             System.out.println("로그인 결과 userId: " + userId);
             // accessToken / refreshToken 생성
-            if(userId != null) {
+            if(!userId.isEmpty()) {
                 System.out.println("/user/login에서 userId 받아서 실행됨");
                 JwtDTO jwtDTO = authJwtService.tokenCreateSave(pResponse, userId);
                 System.out.println("/user/login에서 userId 받아서 실행됨" + jwtDTO);
@@ -54,7 +54,7 @@ public class LoginController {
                 return ResponseEntity.status(409).body("Invalid credentials");
             }
         } catch (Exception e) {
-            log.error("e: ", e); // 예외 로그 출력 추가
+            log.error("e: 에러가 발생함"); // 예외 로그 출력 추가
             return ResponseEntity.status(500).body("서버 오류 발생: " + e.getMessage());
         }
     }
