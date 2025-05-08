@@ -45,8 +45,15 @@ public class GoogleLoginCotroller {
     @Autowired
     private AuthJwtService authJwtService;
 
+    /**
+     * 구글 소셜 로그인 백엔드 처리 컨트롤럴 역할(추가적으로 필요로직을 분리할 수 있음)
+     * @param request : 전달 받은 요청
+     * @param response : 요청할 것
+     * @param resValue : body에서 정보를 가져올 맵
+     * @return 응답을 반환
+     */
     @PostMapping("/googleAuth")
-    public ResponseEntity<?> requestMethodName(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> resValue) {
+    public ResponseEntity<?> googleAuth(HttpServletRequest request, HttpServletResponse response,@RequestBody Map<String, String> resValue) {
 
         // 디버깅 코드
         System.out.println("[Controller] /googleAuth 요청 도착함");

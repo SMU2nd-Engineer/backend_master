@@ -20,6 +20,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ *  로그인 컨트롤러
+ *
+ */
 @Slf4j
 @RestController
 public class LoginController {
@@ -36,6 +40,13 @@ public class LoginController {
     @Autowired
     private AuthJwtService authJwtService;
 
+    /**
+     * loginAccess
+     * 로그인 컨트롤러 메서드
+     * @param pRequest : 요청의 다디를 받음
+     * @param pResponse : 응답 헤더에 값을 저장하기 위해서 넣음.
+     * @return : AccessToken을 반환
+     */
     @PostMapping("/login")
     public ResponseEntity<?> loginAccess(@RequestBody UserDTO pRequest, HttpServletResponse pResponse) {
         try {
@@ -50,7 +61,7 @@ public class LoginController {
                 System.out.println("/user/login에서 userId 받아서 실행됨" + jwtDTO);
                 return ResponseEntity.ok(jwtDTO);
             } else {
-                System.out.println("오류발생");
+                System.out.println("오류 발생");
                 return ResponseEntity.status(409).body("Invalid credentials");
             }
         } catch (Exception e) {
