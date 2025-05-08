@@ -23,9 +23,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO {
-    private Long userIdx;
-    private String userId;
-    private String name;
+    private Long idx;
+    private String id;
     private String password;
     private String socialLogin;
     private String withdrawnMember;
@@ -36,6 +35,10 @@ public class UserDTO {
         this.userId = userId;
         this.password = password;
         this.name = name;
-        this.regDate = regDate;
+        this.email = email;
+        this.address = address;
+        this.nickName = nickName;
+        this.sDate = sDate;
+        this.eDate = eDate;
     }
 }
