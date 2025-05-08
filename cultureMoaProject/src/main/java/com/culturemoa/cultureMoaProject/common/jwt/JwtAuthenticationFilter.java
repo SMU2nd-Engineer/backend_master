@@ -44,13 +44,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("[Filter] 요청 URI: " + pRequest.getRequestURI());
 
         String requestURI = pRequest.getRequestURI();
+
+        // 토큰 발행을 안 해도 요청을 선택함.
         if (
-                requestURI.equals("/login") ||
-                requestURI.equals("/refresh") ||
-                requestURI.equals("/logout")||
-                requestURI.equals("/kakaoAuth")||
-                requestURI.equals("/naverAuth") ||
-                requestURI.equals("/googleAuth")
+                requestURI.equals("/login") || // 로그인 토큰이 없는 단계
+                requestURI.equals("/refresh") || // 리프레시 또한 토큰이 없는 단계
+                requestURI.equals("/kakaoAuth")|| // 소셜 로그인 토큰이 없는 단계
+                requestURI.equals("/naverAuth") || // 소셜 로그인 토큰이 없는 단계
+                requestURI.equals("/googleAuth") // 소셜 로그인 토큰이 없는 단계
                 ) {
             System.out.println("[Filter] 예외 경로 요청 - 필터 패스: " + requestURI);
             pFilterChain.doFilter(pRequest, pResponse);
