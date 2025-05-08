@@ -45,7 +45,7 @@ public class SecurityConfig {
             .cors(cors -> {})             // CORS 설정 적용 (아래 Bean에서 지정)
             .authorizeHttpRequests(auth -> auth
 //                    .requestMatchers("/login", "/refresh", "/logout", "/kakaoAuth", "/naverAuth", "/googleAuth").permitAll() // 로그인, 리프레시, 로그아웃, 카카오 인증 API는 인증 없이 허용
-                    .requestMatchers("/*").permitAll() // 로그인, 리프레시, 로그아웃, 카카오 인증 API는 인증 없이 허용
+                    .requestMatchers("/**").permitAll() // 모든 경로를 허용하는 test 코드
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
             .logout(logout -> logout.disable()) // 시큐리티 기본 로그아웃으로 get 요청을 방지
