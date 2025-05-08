@@ -41,7 +41,7 @@ public class LoginController {
         try {
             // 아이디 비밀번호 검증 후 토큰을 반환
             System.out.println("로그인 기능을 시작함" );
-            String userId = idPasswordMatchService.login(pRequest.getUserId(), pRequest.getPassword());
+            String userId = idPasswordMatchService.login(pRequest.getId(), pRequest.getPassword());
             System.out.println("로그인 결과 userId: " + userId);
             // accessToken / refreshToken 생성
             if(userId != null) {
