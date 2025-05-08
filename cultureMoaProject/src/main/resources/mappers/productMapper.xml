@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="productMapper">
+    <resultMap id="getAllProduct" type="hashmap">
+
+    </resultMap>
+
+    <select id="getAllProduct" resultType="Map" >
+        SELECT MAIN.IDX, CATEGORY_IDX, TITLE, SDATE, EDATE,
+                USERID, PRICE, FLAG, IMAGE_URL, TEXT
+        FROM PRODUCT_TBL MAIN
+        LEFT OUTER JOIN PRODUCT_DETAIL_TBL DETAIL ON
+                MAIN.IDX = DETAIL.PRODUCT_IDX
+    </select>
+
+</mapper>
