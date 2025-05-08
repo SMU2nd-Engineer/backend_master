@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+// 예시로 사용할 것 또는 마이바티스 사용할 예정이라 변경 될 수 도 있다.
 @Repository
 public class UserDAO {
     @Autowired
