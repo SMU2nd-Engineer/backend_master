@@ -20,7 +20,7 @@ public class ChatRoomController {
     }
 
     @PostMapping
-    public ChatRoomDTO CreateChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
+    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
         chatRoomDTO.setId(countersService.getId(type));
 
         return chatRoomService.createChatRoom(chatRoomDTO);
