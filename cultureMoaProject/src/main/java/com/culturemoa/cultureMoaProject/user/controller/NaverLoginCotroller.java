@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -62,22 +63,22 @@ public class NaverLoginCotroller {
         formData.add("state", loginState);
 
         RestClient restClient = RestClient.create(); // 서버에서 네이버로 REST 요청을 위한 RestClient 인스턴스를 생성
-        NaverTokenResponseDTO NaverDto = restClient.post()
+        NaverTokenResponseDTO NaverTokenDto = restClient.post()
                 .uri("https://nid.naver.com/oauth2.0/token") // 전송할 대상 URL을 설정
                 .body(formData)
                 .retrieve()
                 .body(NaverTokenResponseDTO.class);
         System.out.println("====================================================");
-        System.out.println("NaverDto : " +NaverDto);
-        if(NaverDto == null) {
-            return ResponseEntity.status(400).body("사용자 정보 전달.");
+        System.out.println("NaverDto : " +NaverTokenDto);
+        if(NaverTokenDto == null) {
+            return ResponseEntity.status(400).body("토큰 정보가 없음.");
         }
-        String googleAccessToken = NaverDto.getAccess_token();
-        System.out.println("googleAccessToken : " + googleAccessToken);
+        String naverAccessToken = NaverTokenDto.getAccess_token();
+        System.out.println("naverAccessToken : " + naverAccessToken);
         // DTO 를 활용하여 데이터를 받아옮
         NaverUserInfoDTO getUserInfo = restClient.get()
                 .uri("https://openapi.naver.com/v1/nid/me")
-                .header("Authorization", "Bearer "+ googleAccessToken)
+                .header("Authorization", "Bearer "+ naverAccessToken)
                 .retrieve()
                 .body(NaverUserInfoDTO.class);
         System.out.println("여기까지 진행");
@@ -89,16 +90,24 @@ public class NaverLoginCotroller {
             // id를 활용하여 사용자 db와 조회하는 로직 설계할 것
             // 현재는 단순히 하드 코딩하여 로그인 진행행
             System.out.println("사용자 추출한 고유 id : " + getUserInfo.getResponse().getId());
+            // 소셜 아이디랑 db와 매칭하는 자리
             if (!"YW_8tOJnONdvRSY1Xjr6Fx6s_72afOE8h-q_nFac32Q".equals(getUserInfo.getResponse().getId())) {
-                System.out.println("여기를 진행함 000000000000000000000000000");
-                return ResponseEntity.status(402).body("비밀번호가 다릅니다.");
+                String socialId = getUserInfo.getResponse().getId();
+                String provider = "naver";
+                HashMap<String, String> bodyContainer = new HashMap<>();
+                bodyContainer.put("socialId", socialId);
+                bodyContainer.put("provider", provider);
+                return ResponseEntity.status(402).body(bodyContainer);
             }
             System.out.println("소셜 고유아이디가 매칭되었습니다.");
+        }else {
+            // 소셜 정보가 없음. 문제가 있다고 보고 400 에러를 던짐
+            return ResponseEntity.status(400).body("소셜 정보가 매칭 되지 않습니다.");
         }
         // 토큰 발급
         try {
             System.out.println("여기를 진행함");
-            if (getUserInfo != null && getUserInfo.getResponse().getId() != null) {
+            if (getUserInfo.getResponse().getId() != null) {
                 System.out.println("여기를 진행함 11111111111111111111111111" );
                 JwtDTO jwtDTO = authJwtService.tokenCreateSave(response, getUserInfo.getResponse().getId());
                 return ResponseEntity.ok(jwtDTO);
@@ -110,7 +119,7 @@ public class NaverLoginCotroller {
         } catch (Exception e) {
 
             ResponseEntity.status(400).body("네이버 인증 후 토큰 발급 받는 과정에서 오류 발생.");
-        }
+            }
 
 
 

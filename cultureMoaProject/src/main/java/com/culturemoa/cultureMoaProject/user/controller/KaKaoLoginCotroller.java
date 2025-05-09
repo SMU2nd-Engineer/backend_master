@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -80,15 +81,26 @@ public class KaKaoLoginCotroller {
             // id를 활용하여 사용자 db와 조회하는 로직 설계할 것
             // 현재는 단순히 하드 코딩하여 로그인 진행행
             System.out.println(getUserInfo.getId());
-            if (!"4242246033".equals(getUserInfo.getId().toString())) {
-                return ResponseEntity.status(401).body("비밀번호가 다릅니다.");
+//            if (!"4242246033".equals(getUserInfo.getId().toString())) {
+            if (!"424224603".equals(getUserInfo.getId().toString())) {
+                String socialId = getUserInfo.getId().toString();
+                String provider = "kakao";
+                HashMap<String, String> bodyContainer = new HashMap<>();
+                bodyContainer.put("socialId", socialId);
+                bodyContainer.put("provider", provider);
+                return ResponseEntity.status(402).body(bodyContainer);
             }
             System.out.println("소셜 고유아이디가 매칭되었습니다.");
+        // 받아온 소셜 정보를 사용하여 정보가 있으면 로그인 진행 다음 단계 진행 없으면 회원 가입 페이지 이동하게 끔 해야함.
+        } else {
+            System.out.println("사용자 정보가 없습니다. 회원 가입 페이지로 안내해야 합니다.");
+            return ResponseEntity.status(400).body("소셜 정보가 매칭 되지 않습니다.");
         }
+
         // 토큰 발급
         try {
 
-            if (getUserInfo != null && getUserInfo.getId() != null) {
+            if (getUserInfo.getId() != null) {
                 JwtDTO jwtDTO = authJwtService.tokenCreateSave(response, getUserInfo.getId().toString());
                 return ResponseEntity.ok(jwtDTO);
             } else {

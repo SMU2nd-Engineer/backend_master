@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -102,17 +103,22 @@ public class GoogleLoginCotroller {
             // 현재는 단순히 하드 코딩하여 로그인 진행행
             System.out.println("사용자 추출한 고유 id : " + getUserInfo.getSub());
             if (!"104753521565973169492".equals(getUserInfo.getSub())) {
-                System.out.println("여기를 진행함 000000000000000000000000000");
-                return ResponseEntity.status(402).body("비밀번호가 다릅니다.");
-            } else {
-                System.out.println("고유 아이디가 다르니 확인해주세요 : " + getUserInfo.getSub());
+                String socialId = getUserInfo.getSub();
+                String provider = "google";
+                HashMap<String, String> bodyContainer = new HashMap<>();
+                bodyContainer.put("socialId", socialId);
+                bodyContainer.put("provider", provider);
+                return ResponseEntity.status(402).body(bodyContainer);
             }
             System.out.println("소셜 고유아이디가 매칭되었습니다.");
+        } else {
+            // 소셜 정보가 없음. 문제가 있다고 보고 400 에러를 던짐
+            return ResponseEntity.status(400).body("소셜 정보가 매칭 되지 않습니다.");
         }
         // 토큰 발급
         try {
             System.out.println("여기를 진행함");
-            if (getUserInfo != null && getUserInfo.getSub() != null) {
+            if (getUserInfo.getSub() != null) {
                 System.out.println("여기를 진행함 11111111111111111111111111" );
                 JwtDTO jwtDTO = authJwtService.tokenCreateSave(response, getUserInfo.getSub());
                 return ResponseEntity.ok(jwtDTO);
