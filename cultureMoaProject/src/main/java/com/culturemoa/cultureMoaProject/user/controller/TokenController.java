@@ -1,10 +1,8 @@
 package com.culturemoa.cultureMoaProject.user.controller;
 
-import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
-import com.culturemoa.cultureMoaProject.user.service.IdPasswordMatchService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

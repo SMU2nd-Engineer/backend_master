@@ -47,13 +47,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 토큰 발행을 안 해도 요청을 선택함.
         if (
-                requestURI.equals("/login") || // 로그인 토큰이 없는 단계
+                requestURI.equals("/user/login") || // 로그인 토큰이 없는 단계
                 requestURI.equals("/refresh") || // 리프레시 또한 토큰이 없는 단계
                 requestURI.equals("/kakaoAuth")|| // 소셜 로그인 토큰이 없는 단계
                 requestURI.equals("/naverAuth") || // 소셜 로그인 토큰이 없는 단계
                 requestURI.equals("/googleAuth") ||// 소셜 로그인 토큰이 없는 단계
                 requestURI.equals("/logout") ||// refresh 만료 후 로그인 페이지 돌아 갈 때 남아 있는 토큰 제거하기 위해 필요
-                requestURI.equals("/duplicatecheck") ||
+                requestURI.equals("/user/duplicatecheck") ||
                 requestURI.equals("/registration") ||
                 requestURI.equals("/idFind")
 

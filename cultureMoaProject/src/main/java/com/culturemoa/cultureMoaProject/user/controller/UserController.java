@@ -1,24 +1,82 @@
 package com.culturemoa.cultureMoaProject.user.controller;
 
+import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
+import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
+import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
+import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
 import com.culturemoa.cultureMoaProject.user.dto.UserDTO;
+import com.culturemoa.cultureMoaProject.user.dto.UserLoginRequestDTO;
+import com.culturemoa.cultureMoaProject.user.dto.UserRegisterRequestDTO;
 import com.culturemoa.cultureMoaProject.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
-    @GetMapping("/info")
-    public List<UserDTO> user(){
-        System.out.println(userService.getAllUser(1));
+    @Autowired
+    private JwtProvider jwtProvider;
 
-        return userService.getAllUser(1);
+    @Autowired
+    private JwtValidator jwtValidator;
+
+    @Autowired
+    private AuthJwtService authJwtService;
+
+    /**
+     * 회원 가입 페이지 정보를 이용 회원 가입 진행.
+     * @param pRequest : 프론트에서 전달 받은 회원 가입 정보
+     * @return : 정상적인 경우 ok 응답을 반환
+     */
+    @PostMapping("/registration")
+    public ResponseEntity<?> userRegistrationDTO (
+            @RequestBody UserRegisterRequestDTO pRequest) {
+        //회원 가입 진행.
+        userService.registerUser(pRequest);
+        return ResponseEntity.ok("User information registration completed ");
+    }
+
+    /**
+     * loginAccess
+     * 로그인 컨트롤러 메서드
+     * @param pRequest : 요청의 다디를 받음
+     * @param pResponse : 응답 헤더에 값을 저장하기 위해서 넣음.
+     * @return : AccessToken을 반환
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> loginAccess(@RequestBody UserLoginRequestDTO pRequest, HttpServletResponse pResponse) {
+            // 가져온 유정 정보를 조회 하여 서비스에서 매칭 후 조회한 userId를 반환
+            String userId = userService.loginAuth(pRequest.getId(), pRequest.getPassword());
+
+            // 인증 성공하면 jwt 생성 및 리프레시 쿠키에 저장.
+            JwtDTO jwtDTO = authJwtService.tokenCreateSave(pResponse, userId);
+
+            return ResponseEntity.ok(jwtDTO);
+    }
+
+    /**
+     * duplicateCheck
+     * 중복 체크 요청 처리 컨트롤러 메서드
+     * @param pCheckList : 전달 받은 id, nickName
+     * @param pCategory : 중복 검사할 컬럼
+     * @return 검증 결과에 따라 true | false 반환
+     */
+    @GetMapping("/duplicatecheck")
+    public ResponseEntity<?> duplicateCheck(@RequestParam("checklist") String pCheckList,
+                                            @RequestParam("category") String pCategory ) {
+        // 검증 로직에서 true를 받으면 true를 반환
+        if(userService.duplicateCheck(pCheckList, pCategory) > 0) {
+            return ResponseEntity.ok(false);
+        } else {
+            return ResponseEntity.ok(true);
+        }
     }
 }
