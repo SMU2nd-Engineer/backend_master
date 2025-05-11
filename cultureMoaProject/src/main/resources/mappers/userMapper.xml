@@ -19,5 +19,16 @@
     <select id="duplicateIdCheck" parameterType="String" resultType="int">
         select count(*) from USER_TBL where ${columnName} = #{pCheckList}
     </select>
+    
+    <!--  아이디 찾기  -->
+    <select id="findId" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdRequestDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdResponseDTO" >
+        select id from USER_TBL where name=#{name} and email=#{email}
+    </select>
 
+    <!--  비밀번호 변경  -->
+    <update id="changePassword" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserChangePasswordRequestDTO" >
+        update USER_TBL
+        set PASSWORD=#{password}, EDATE=#{eDate}
+        where id=#{id}
+    </update>
 </mapper>

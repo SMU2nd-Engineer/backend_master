@@ -1,8 +1,6 @@
 package com.culturemoa.cultureMoaProject.user.repository;
 
-import com.culturemoa.cultureMoaProject.user.dto.UserDTO;
-import com.culturemoa.cultureMoaProject.user.dto.UserLoginRequestDTO;
-import com.culturemoa.cultureMoaProject.user.dto.UserRegisterRequestDTO;
+import com.culturemoa.cultureMoaProject.user.dto.*;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -25,7 +23,7 @@ public class UserDAO {
      * @param pUserDTO 회원 가입에 입력한 유저 정보가 담긴 dto
      */
     public void insertUser(UserRegisterRequestDTO pUserDTO) {
-        sqlSessionTemplate.selectOne("userMapper.insertUser",pUserDTO);
+        sqlSessionTemplate.insert("userMapper.insertUser",pUserDTO);
     }
 
     /**
@@ -61,5 +59,13 @@ public class UserDAO {
         duplicateMap.put("pCheckList", pCheckList);
         duplicateMap.put("columnName", columnName);
         return  sqlSessionTemplate.selectOne("userMapper.duplicateIdCheck",duplicateMap);
+    }
+
+    public UserFindIdResponseDTO findId (UserFindIdRequestDTO findIdInfo) {
+        return sqlSessionTemplate.selectOne("userMapper.findId", findIdInfo);
+    }
+
+    public int updateUserPassword (UserChangePasswordRequestDTO changePasswordRequestDTO) {
+        return sqlSessionTemplate.update("userMapper.changePassword", changePasswordRequestDTO);
     }
 }

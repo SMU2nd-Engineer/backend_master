@@ -4,9 +4,7 @@ import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
-import com.culturemoa.cultureMoaProject.user.dto.UserDTO;
-import com.culturemoa.cultureMoaProject.user.dto.UserLoginRequestDTO;
-import com.culturemoa.cultureMoaProject.user.dto.UserRegisterRequestDTO;
+import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,13 +63,15 @@ public class UserController {
     /**
      * duplicateCheck
      * 중복 체크 요청 처리 컨트롤러 메서드
-     * @param pCheckList : 전달 받은 id, nickName
-     * @param pCategory : 중복 검사할 컬럼
+     * @pDuplicateDto :
      * @return 검증 결과에 따라 true | false 반환
      */
-    @GetMapping("/duplicatecheck")
-    public ResponseEntity<?> duplicateCheck(@RequestParam("checklist") String pCheckList,
-                                            @RequestParam("category") String pCategory ) {
+    @PostMapping("/duplicatecheck")
+    public ResponseEntity<?> duplicateCheck(@RequestBody UserDuplicateCheckRequestDTO pDuplicateDto) {
+        // 전달 받은 값 변수에 할당
+        String pCheckList = pDuplicateDto.getName();
+        String pCategory = pDuplicateDto.getCategory();
+
         // 검증 로직에서 true를 받으면 true를 반환
         if(userService.duplicateCheck(pCheckList, pCategory) > 0) {
             return ResponseEntity.ok(false);
@@ -79,4 +79,23 @@ public class UserController {
             return ResponseEntity.ok(true);
         }
     }
+
+    @PostMapping("/idFind")
+    public ResponseEntity<?> idFind (@RequestBody UserFindIdRequestDTO qFindIdInfo) {
+        UserFindIdResponseDTO userFindIdResponseDTO = userService.findId(qFindIdInfo);
+        return ResponseEntity.ok(userFindIdResponseDTO);
+    }
+
+    @PostMapping("/passwordFind")
+    public ResponseEntity<?> passwordFind () {
+        return ResponseEntity.ok("정보가 일치합니다.");
+    }
+
+    @PostMapping("/passwordChange")
+    public ResponseEntity<?> passwordChange (@RequestBody UserChangePasswordRequestDTO pUserChangePasswordRequestDTO) {
+        // 비밀 번호 변경 진행
+        userService.changePassword(pUserChangePasswordRequestDTO);
+        return ResponseEntity.ok("비밀 번호가 정상적으로 변경 되었습니다.");
+    }
+
 }

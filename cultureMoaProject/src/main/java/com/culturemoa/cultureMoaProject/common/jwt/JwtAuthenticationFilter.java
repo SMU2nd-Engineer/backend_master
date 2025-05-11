@@ -53,9 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 requestURI.equals("/naverAuth") || // 소셜 로그인 토큰이 없는 단계
                 requestURI.equals("/googleAuth") ||// 소셜 로그인 토큰이 없는 단계
                 requestURI.equals("/logout") ||// refresh 만료 후 로그인 페이지 돌아 갈 때 남아 있는 토큰 제거하기 위해 필요
-                requestURI.equals("/user/duplicatecheck") ||
-                requestURI.equals("/registration") ||
-                requestURI.equals("/idFind")
+                requestURI.equals("/user/duplicatecheck") || // 중복 체크 토큰 없음.
+                requestURI.equals("/user/registration") || // 회원 정보 등록 토큰 없음
+                requestURI.equals("/user/idFind") || // 아이디 찾기 토큰 없음
+                requestURI.equals("/user/passwordFind") || // 패스워드 찾기 토큰 없음
+                requestURI.equals("/user/passwordChange") // 비밀 번호 변경 토큰 없음
 
                 ) {
             System.out.println("[Filter] 예외 경로 요청 - 필터 패스: " + requestURI);

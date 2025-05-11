@@ -28,5 +28,6 @@ public class UserRegisterRequestDTO {
     private String email;
     private String address;
     private String nickName;
+    private String socialLogin;
     private LocalDateTime sDate;
 }

@@ -1,8 +1,7 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
-import com.culturemoa.cultureMoaProject.user.dto.UserDTO;
-import com.culturemoa.cultureMoaProject.user.dto.UserLoginRequestDTO;
-import com.culturemoa.cultureMoaProject.user.dto.UserRegisterRequestDTO;
+import com.culturemoa.cultureMoaProject.user.dto.*;
+import com.culturemoa.cultureMoaProject.user.exception.DontChangeException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.exception.UserNotFoundException;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
@@ -31,7 +30,9 @@ public class UserService {
         // 비밀번호 암호화
         pUserDTO.setPassword(passwordEncoder.encode(pUserDTO.getPassword()));
         // 등록 날짜 넣기
-        pUserDTO.setSDate(LocalDateTime.now());
+        pUserDTO.setSDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        // 일반 회원 가입이므로 socialLogin에 일반 로그인을 알 수 있도록 값 추가
+        pUserDTO.setSocialLogin("regularLogin");
         // DAO로 데이터 넣기
         userDAO.insertUser(pUserDTO);
     }
@@ -56,12 +57,32 @@ public class UserService {
     }
 
     /**
-     *
+     * 아이디, 닉네임 중복 체크
      * @param pCheckList : 전달 받은 id, nickName
      * @param pCategory : 중복 검사할 컬럼
      * @return 중복 체크 후 중복이면 1이상 아니면 0
      */
     public int duplicateCheck(String pCheckList, String pCategory) {
         return userDAO.duplicateCheck(pCheckList, pCategory);
+    }
+
+    public UserFindIdResponseDTO findId (UserFindIdRequestDTO findIdInfo) {
+        return userDAO.findId (findIdInfo);
+    }
+
+    public void changePassword (UserChangePasswordRequestDTO ChangeDto) {
+
+        // 비밀번호 암호화
+        ChangeDto.setPassword(passwordEncoder.encode(ChangeDto.getPassword()));
+        // 등록 날짜 넣기
+        ChangeDto.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        // DAO로 비밀번호 업데이트하기
+        int ChangeCheck = userDAO.updateUserPassword(ChangeDto);
+
+        if (ChangeCheck == 0 ) {
+            // 변경이 안되면 0을 받으므로 커스텀 에러 처리
+            throw new DontChangeException();
+        }
+
     }
 }
