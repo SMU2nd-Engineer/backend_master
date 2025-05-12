@@ -42,6 +42,11 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(WithdrawalUserException.class)
+    public ResponseEntity<?> withdrawalUser (WithdrawalUserException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
     @ExceptionHandler(SocialUserNotFoundException.class)
     public ResponseEntity<?> socialUserNotFound (SocialUserNotFoundException e) {
         HashMap<String, String> bodyContainer = new HashMap<>();

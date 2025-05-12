@@ -7,16 +7,15 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 로그인 완료 후 전달용 DTO
- * 현재는 사용하지 않으나 확장성을 위하여 만들어 놓음
- * id : 사용자 조회 후 정보
+ * UserWithdrawalDTO
+ * 탈퇴할 사용자의 정보를 담을 DTO
+ * id : 탈퇴할 사용자의 id
+ * wDate : 탈퇴한 날짜
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLoginResponseDTO {
+public class UserWithdrawalDTO {
     private String id;
-    private String password;
     private LocalDateTime wDate;
 }

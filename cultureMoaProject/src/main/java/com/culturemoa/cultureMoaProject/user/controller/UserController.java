@@ -1,20 +1,13 @@
 package com.culturemoa.cultureMoaProject.user.controller;
 
-import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
-import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
-import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.service.SocialLoginService;
 import com.culturemoa.cultureMoaProject.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -148,6 +141,11 @@ public class UserController {
         // 비밀 번호 변경 진행
         userService.changePassword(pUserChangePasswordRequestDTO);
         return ResponseEntity.ok("비밀 번호가 정상적으로 변경 되었습니다.");
+    }
+
+    @PostMapping("/withdrawal")
+    public ResponseEntity<?> userWithdrwal (@RequestBody UserWithdrawalDTO userWithdrawalDTO) {
+        return ResponseEntity.ok("");
     }
 
 }

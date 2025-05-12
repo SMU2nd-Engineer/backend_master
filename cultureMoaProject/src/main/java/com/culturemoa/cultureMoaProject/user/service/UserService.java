@@ -57,7 +57,12 @@ public class UserService {
     public JwtDTO loginAndIssuanceToken (UserLoginRequestDTO pRequest, HttpServletResponse pResponse) {
         // dao를 통하여 db의 id와 패스워드 가져오기
         UserLoginResponseDTO userLogin = userDAO.findByLoginInfo(pRequest);
-
+        
+        // 탈퇴한 회원으로 로그인 시 예외 발생
+        if(userLogin.getWDate() != null) {
+            throw new WithdrawalUserException();
+        }
+        // 토큰 발급을 위한 userId 추출
         String userId = userLogin.getId();
 
         // 아이디가 없을 경우 예외 던지기
