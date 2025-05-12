@@ -9,9 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// 예시로 사용할 것 또는 마이바티스 사용할 예정이라 변경 될 수 도 있다.
+/**
+ * UserDAO
+ * 마이바티스와 연동하여 DB에서 데이터를 조회할 Data Access Object
+ * sqlSessionTemplate : 마이바티스용 변수
+ */
 @Repository
 public class UserDAO {
+    
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
@@ -33,6 +38,15 @@ public class UserDAO {
      */
     public UserLoginResponseDTO findByLoginInfo (UserLoginRequestDTO pRequest) {
         return sqlSessionTemplate.selectOne("userMapper.findByLoginId",pRequest);
+    }
+
+    /**
+     * 아이디로 유정 정보를 가져오는 DAO
+     * @param userId : 입력 받은 사용자 정보 DTO
+     * @return 아이디로 매칭된 유저 정보를 담은 dto
+     */
+    public SocialLoginResponseDTO socialFindByLoginInfo (String userId) {
+        return sqlSessionTemplate.selectOne("userMapper.socialFindByLoginId",userId);
     }
 
     /**
@@ -79,6 +93,11 @@ public class UserDAO {
         return sqlSessionTemplate.update("userMapper.changePassword", changePasswordRequestDTO);
     }
 
+    /**
+     * 비밀번호 찾기 입력시 데이터가 일치하는지 DB와 조회하는 DAO
+     * @param userFindPasswordRequestDTO : 사용자가 입력한 이메일, 아이디, 이름 정보가 담김
+     * @return 응답DTO
+     */
     public UserFindPasswordResponseDTO passwordFindMatch (UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
         return sqlSessionTemplate.selectOne("userMapper.passwordFindMatch", userFindPasswordRequestDTO);
     }

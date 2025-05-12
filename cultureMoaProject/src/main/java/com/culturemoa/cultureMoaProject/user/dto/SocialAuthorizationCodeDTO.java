@@ -5,14 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *  중복 체크할 데이터를 전달 받은 DTO
- *  name
- *  category
+ * 소셜 로그인 인가 코드를 위한 DTO
+ * code : 소셜 로그인에서 받아온 코드
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDuplicateCheckRequestDTO {
-    private String name;
-    private String category;
+public class SocialAuthorizationCodeDTO {
+    private String code;
 }

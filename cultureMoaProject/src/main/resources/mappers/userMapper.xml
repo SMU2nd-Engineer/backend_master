@@ -15,6 +15,10 @@
         select ID, PASSWORD from USER_TBL where ID = #{id}
     </select>
 
+    <select id="socialFindByLoginId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.SocialLoginResponseDTO" >
+        select ID from USER_TBL where ID = #{id}
+    </select>
+
     <!--  아이디/ 닉네임 중복 체크  -->
     <select id="duplicateIdCheck" parameterType="String" resultType="int">
         select count(*) from USER_TBL where ${columnName} = #{pCheckList}

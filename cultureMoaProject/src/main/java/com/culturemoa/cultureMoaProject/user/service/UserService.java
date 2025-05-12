@@ -2,12 +2,8 @@ package com.culturemoa.cultureMoaProject.user.service;
 
 import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
-import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
-import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
 import com.culturemoa.cultureMoaProject.user.dto.*;
-import com.culturemoa.cultureMoaProject.user.exception.DontChangeException;
-import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
-import com.culturemoa.cultureMoaProject.user.exception.UserNotFoundException;
+import com.culturemoa.cultureMoaProject.user.exception.*;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+/**
+ * 유저 서비스 클래스
+ * userDAO : DB와 연동을 위해서 사용하는 DAO 변수
+ * passwordEncoder : 암호화를 위해서 사용하는 변수 
+ * authJwtService : JWT 토큰 발급을 위한 변수
+ */
 @Service
 public class UserService {
     @Autowired
@@ -24,13 +25,7 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    @Autowired
-    private JwtValidator jwtValidator;
-
+    
     @Autowired
     private AuthJwtService authJwtService;
 
@@ -45,8 +40,10 @@ public class UserService {
         pUserDTO.setPassword(passwordEncoder.encode(pUserDTO.getPassword()));
         // 등록 날짜 넣기
         pUserDTO.setSDate(LocalDateTime.now().withNano(0)); // 나노초 제거
-        // 일반 회원 가입이므로 socialLogin에 일반 로그인을 알 수 있도록 값 추가
-        pUserDTO.setSocialLogin("regularLogin");
+        // 일반 회원 가입이면 socialLogin에 일반 로그인을 알 수 있도록 값 추가 아니면 그대로 사용하기
+        if(pUserDTO.getSocialLogin() == null || pUserDTO.getSocialLogin().isEmpty()) {
+            pUserDTO.setSocialLogin("regularLogin");
+        }
         // DAO로 데이터 넣기
         userDAO.insertUser(pUserDTO);
     }
@@ -77,31 +74,75 @@ public class UserService {
     }
 
     /**
+     * 소셜 아이디를 조회하기
+     * @param pUserId : 소셜 id
+     * @param pResponse : refresh 토큰을 담을 헤더를 위해서 가져옴
+     * @return : refresh 토큰은 쿠키에 담고 accessToken을 넘기기
+     */
+    public JwtDTO socialLoginAndIssuanceToken (String pUserId, HttpServletResponse pResponse, String socialProvider ) {
+        // dao를 통하여 db의 id 가져오기 (id로 토큰 발급)
+        SocialLoginResponseDTO userLogin = userDAO.socialFindByLoginInfo(pUserId);
+
+        // 아이디 조회해서 가져오지 않은 경우 예외 던지기
+        if(userLogin == null) {
+            throw new SocialUserNotFoundException(pUserId, socialProvider); // 사용자 없음 예외, 회원 가입 유도
+        }
+        String userId = userLogin.getId();
+
+        // 문제 없으면 토큰 발급하기
+        return authJwtService.tokenCreateSave(pResponse, userId);
+    }
+
+    /**
      * 아이디, 닉네임 중복 체크
-     * @param pCheckList : 전달 받은 id, nickName
-     * @param pCategory : 중복 검사할 컬럼
+     * @param pDuplicateDto : 전달 받은 id, nickName
      * @return 중복 체크 후 중복이면 1이상 아니면 0
      */
-    public int duplicateCheck(String pCheckList, String pCategory) {
-        return userDAO.duplicateCheck(pCheckList, pCategory);
+    public boolean duplicateCheck(UserDuplicateCheckRequestDTO pDuplicateDto) {
+        // 전달 받은 값 변수에 할당
+        String pCheckList = pDuplicateDto.getName(); // 검사할 id, nickName 명
+        String pCategory = pDuplicateDto.getCategory(); // 검사할 컬럼
+        int duplicateCheckValue = userDAO.duplicateCheck(pCheckList, pCategory);
+        return duplicateCheckValue == 0;
     }
 
-    public UserFindIdResponseDTO findId (UserFindIdRequestDTO findIdInfo) {
-        return userDAO.findId (findIdInfo);
+    /**
+     * 아이디 찾기 서비스
+     * @param pFindIdInfo : 사용자가 입력한 이메일, 이름이 담긴 DTO
+     * @return 사용자 아이디가 담긴 UserFindIdresponseDTO 객체
+     */
+    public UserFindIdResponseDTO findId (UserFindIdRequestDTO pFindIdInfo) {
+        UserFindIdResponseDTO userFindIdResponseDTO = userDAO.findId(pFindIdInfo);
+        if (userFindIdResponseDTO.getId() == null || userFindIdResponseDTO.getId().isEmpty()){
+            throw new DontMatchUserInfoException();
+        }
+        return userFindIdResponseDTO;
     }
 
-    public void passwordFind (UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
-        userDAO.passwordFindMatch (userFindPasswordRequestDTO);
+    /**
+     * 패스워드 찾기 클릭시 처리할 서비스
+     * @param pUserFindPasswordRequestDTO : 사용자가 입력한 이메일, 아이디, 이름 정보가 담긴 DTO
+     */
+    public void passwordFind (UserFindPasswordRequestDTO pUserFindPasswordRequestDTO) {
+        UserFindPasswordResponseDTO userFindPasswordResponseDTO = userDAO.passwordFindMatch (pUserFindPasswordRequestDTO);
+        // 가져온 정보가 없을 경우 매치되지 않았으므로 예외를 던짐.
+        if(userFindPasswordResponseDTO.getPassword()==null || userFindPasswordResponseDTO.getPassword().isEmpty()) {
+            throw new DontMatchUserInfoException();
+        }
     }
 
-    public void changePassword (UserChangePasswordRequestDTO ChangeDto) {
+    /**
+     * 암호를 변경하기 위하여 사용하는 service
+     * @param pChangeDto : 변경할 password가 담긴 DTO 변수
+     */
+    public void changePassword (UserChangePasswordRequestDTO pChangeDto) {
 
         // 비밀번호 암호화
-        ChangeDto.setPassword(passwordEncoder.encode(ChangeDto.getPassword()));
+        pChangeDto.setPassword(passwordEncoder.encode(pChangeDto.getPassword()));
         // 등록 날짜 넣기
-        ChangeDto.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        pChangeDto.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
         // DAO로 비밀번호 업데이트하기
-        int ChangeCheck = userDAO.updateUserPassword(ChangeDto);
+        int ChangeCheck = userDAO.updateUserPassword(pChangeDto);
 
         if (ChangeCheck == 0 ) {
             // 변경이 안되면 0을 받으므로 커스텀 에러 처리
