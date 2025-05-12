@@ -143,8 +143,14 @@ public class UserController {
         return ResponseEntity.ok("비밀 번호가 정상적으로 변경 되었습니다.");
     }
 
+    /**
+     * 회원 탈퇴 컨트롤러
+     * @param userWithdrawalDTO : 회원 탈퇴 DTO(id, wDate)
+     * @return 응답 200
+     */
     @PostMapping("/withdrawal")
     public ResponseEntity<?> userWithdrwal (@RequestBody UserWithdrawalDTO userWithdrawalDTO) {
+        userService.userWithdrawal(userWithdrawalDTO);
         return ResponseEntity.ok("");
     }
 

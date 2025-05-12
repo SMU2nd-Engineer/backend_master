@@ -155,4 +155,16 @@ public class UserService {
         }
 
     }
+
+    public void userWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
+        // 회원 탈퇴 날짜 넣기
+        userWithdrawalDTO.setWDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+
+        //  id를 기준으로 회원 날짜 넣기
+        int userWithdrawalProcess = userDAO.updateWithdrawal(userWithdrawalDTO);
+
+        if(userWithdrawalProcess == 0) {
+            throw new DBManipulationFailException();
+        }
+    }
 }

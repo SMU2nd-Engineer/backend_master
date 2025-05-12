@@ -40,4 +40,10 @@
     <select id="passwordFindMatch" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.UserFindPasswordResponseDTO">
         select PASSWORD from USER_TBL where ID = #{id} and NAME=#{name} and EMAIL=#{email}
     </select>
+    <!--  회원 탈퇴 클릭시 id로 조회하여 wDate 업데이트  -->
+    <insert id="updateWithdrawal" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserWithdrawalDTO" >
+        update USER_TBL
+        set WDATE = #{wDate}
+        where ID = #{id}
+    </insert>
 </mapper>

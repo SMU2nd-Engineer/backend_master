@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,5 +99,9 @@ public class UserDAO {
      */
     public UserFindPasswordResponseDTO passwordFindMatch (UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
         return sqlSessionTemplate.selectOne("userMapper.passwordFindMatch", userFindPasswordRequestDTO);
+    }
+
+    public int updateWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
+        return sqlSessionTemplate.delete("userMapper.updateWithdrawal", userWithdrawalDTO);
     }
 }
