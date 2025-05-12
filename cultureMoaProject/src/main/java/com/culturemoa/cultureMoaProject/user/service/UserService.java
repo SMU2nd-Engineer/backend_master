@@ -1,10 +1,15 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
+import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
+import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
+import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
+import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.DontChangeException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.exception.UserNotFoundException;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,15 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtProvider jwtProvider;
+
+    @Autowired
+    private JwtValidator jwtValidator;
+
+    @Autowired
+    private AuthJwtService authJwtService;
 
     /**
      * 프론트에서 전달받은 데이터를 활용하여 유저 정보 등록
@@ -39,21 +53,27 @@ public class UserService {
 
     /**
      * 로그인 전달 받은 아이디와 비밀번호를 매칭하여 값을 비교
-     * @param pId : 사용자가 입력한 아이디
-     * @param pPassWord : 사용자가 입력한 비밀번호
+     * @param pRequest : 사용자가 입력한 id와 비밀번호가 담긴 DTO
+     * @param pResponse : 헤더에 쿠키 담기
      * @return : 조회한 사용자 정보를 담은 UserDTO 객체
      */
-    public String loginAuth (String pId, String pPassWord) {
-        UserLoginRequestDTO userLogin = userDAO.findByLoginId(pId);
+    public JwtDTO loginAndIssuanceToken (UserLoginRequestDTO pRequest, HttpServletResponse pResponse) {
+        // dao를 통하여 db의 id와 패스워드 가져오기
+        UserLoginResponseDTO userLogin = userDAO.findByLoginInfo(pRequest);
 
-        if(userLogin == null) {
+        String userId = userLogin.getId();
+
+        // 아이디가 없을 경우 예외 던지기
+        if(userId == null) {
             throw new UserNotFoundException(); // 사용자 없음 예외
         }
-
-        if(!passwordEncoder.matches(pPassWord, userLogin.getPassword())) {
+        // 사용자 입력 값, 조회하여 가져온 passowrd를 매칭하여 다르면 오류 발생.
+        if(!passwordEncoder.matches(pRequest.getPassword(), userLogin.getPassword())) {
             throw new InvalidPasswordException(); // 비밀번호 일치하지 않음.
         }
-        return userLogin.getId();
+
+        // 문제 없으면 토큰 발급하기
+        return authJwtService.tokenCreateSave(pResponse, userId);
     }
 
     /**
@@ -68,6 +88,10 @@ public class UserService {
 
     public UserFindIdResponseDTO findId (UserFindIdRequestDTO findIdInfo) {
         return userDAO.findId (findIdInfo);
+    }
+
+    public void passwordFind (UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
+        userDAO.passwordFindMatch (userFindPasswordRequestDTO);
     }
 
     public void changePassword (UserChangePasswordRequestDTO ChangeDto) {

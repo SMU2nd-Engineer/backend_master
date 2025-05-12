@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AccessToken 만료 또는 없을 경우 Refresh 토큰으로 재발급하는 컨트롤러
+ */
 @RestController
 public class TokenController {
 

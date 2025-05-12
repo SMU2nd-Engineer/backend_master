@@ -15,5 +15,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserLoginResponseDTO {
     private String id;
-    private String nickName;
+    private String password;
 }

@@ -28,11 +28,11 @@ public class UserDAO {
 
     /**
      * 아이디로 유정 정보를 가져오는 DAO
-     * @param pId : 입력 받은 id 정보
+     * @param pRequest : 입력 받은 사용자 정보 DTO
      * @return 아이디로 매칭된 유저 정보를 담은 dto
      */
-    public UserLoginRequestDTO findByLoginId (String pId) {
-        return sqlSessionTemplate.selectOne("userMapper.findByLoginId",pId);
+    public UserLoginResponseDTO findByLoginInfo (UserLoginRequestDTO pRequest) {
+        return sqlSessionTemplate.selectOne("userMapper.findByLoginId",pRequest);
     }
 
     /**
@@ -61,11 +61,25 @@ public class UserDAO {
         return  sqlSessionTemplate.selectOne("userMapper.duplicateIdCheck",duplicateMap);
     }
 
+    /**
+     * 아이디 찾기 위한 DAO
+     * @param findIdInfo : ID 찾기 위해 사용자에게 받은 name, email 정보
+     * @return UserFindIdResponseDTO 반환(위에서 사용시 void로 의미없음)
+     */
     public UserFindIdResponseDTO findId (UserFindIdRequestDTO findIdInfo) {
         return sqlSessionTemplate.selectOne("userMapper.findId", findIdInfo);
     }
 
+    /**
+     * 비밀 번호 찾기시 비밀번호 업데이트 DAO
+     * @param changePasswordRequestDTO : 암호화된 새로운 비밀번호 정보가 들어있는 DTO
+     * @return 비밀번호 변경 확인을 위하여 1(정상 변경) 또는 0(변경 안됨)
+     */
     public int updateUserPassword (UserChangePasswordRequestDTO changePasswordRequestDTO) {
         return sqlSessionTemplate.update("userMapper.changePassword", changePasswordRequestDTO);
+    }
+
+    public UserFindPasswordResponseDTO passwordFindMatch (UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
+        return sqlSessionTemplate.selectOne("userMapper.passwordFindMatch", userFindPasswordRequestDTO);
     }
 }

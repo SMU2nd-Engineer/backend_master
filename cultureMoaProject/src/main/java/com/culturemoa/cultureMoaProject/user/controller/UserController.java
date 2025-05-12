@@ -20,15 +20,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    @Autowired
-    private JwtValidator jwtValidator;
-
-    @Autowired
-    private AuthJwtService authJwtService;
-
     /**
      * 회원 가입 페이지 정보를 이용 회원 가입 진행.
      * @param pRequest : 프론트에서 전달 받은 회원 가입 정보
@@ -52,10 +43,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> loginAccess(@RequestBody UserLoginRequestDTO pRequest, HttpServletResponse pResponse) {
             // 가져온 유정 정보를 조회 하여 서비스에서 매칭 후 조회한 userId를 반환
-            String userId = userService.loginAuth(pRequest.getId(), pRequest.getPassword());
-
-            // 인증 성공하면 jwt 생성 및 리프레시 쿠키에 저장.
-            JwtDTO jwtDTO = authJwtService.tokenCreateSave(pResponse, userId);
+            JwtDTO jwtDTO = userService.loginAndIssuanceToken(pRequest, pResponse);
 
             return ResponseEntity.ok(jwtDTO);
     }
@@ -87,7 +75,8 @@ public class UserController {
     }
 
     @PostMapping("/passwordFind")
-    public ResponseEntity<?> passwordFind () {
+    public ResponseEntity<?> passwordFind (UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
+        userService.passwordFind(userFindPasswordRequestDTO);
         return ResponseEntity.ok("정보가 일치합니다.");
     }
 
