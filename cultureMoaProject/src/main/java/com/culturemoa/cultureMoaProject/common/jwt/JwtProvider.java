@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.util.StringUtils;
 
 /**
  *  JwtProvider
@@ -94,4 +96,19 @@ public class JwtProvider {
             return e.getClaims().toString();
         }
     }
+
+    /**
+     * resolveToken
+     * 요청 헤더에서 "Authorization" 값을 가져와서 'Bearer ' 이후 토큰만 추출
+     * @param request : 요청 값 담은 변수
+     * @return : 헤더에서 토큰을 반환
+     */
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7); // "Bearer " 이후 토큰 값 반환
+        }
+        return null;
+    }
+
 }
