@@ -7,5 +7,7 @@
         select PASSWORD from USER_TBL where ID = #{id} and WDATE is null
     </select>
 
-
+    <select id="findSocialLoginByTokenId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO" >
+        select SOCIAL_LOGIN from USER_TBL where ID=#{tokenUserId} and WDATE is null
+    </select>
 </mapper>
