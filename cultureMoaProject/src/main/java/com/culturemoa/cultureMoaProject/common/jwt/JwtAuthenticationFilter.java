@@ -41,24 +41,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 토큰 검증 예외 처리(로그인, 회원가입, 아이디/비밀번호 찾기 등 토큰 발급이 필요 없는 경우 추가하기 위해서 넣음)
         // 디버깅 코드
         System.out.println("[Filter] JwtAuthenticationFilter 실행됨");
-        System.out.println("[Filter] 요청 URI: " + pRequest.getRequestURI());
-
-        String requestURI = pRequest.getRequestURI();
-
-        // 토큰 발행을 안 해도 요청을 선택함.
-        if (
-                requestURI.equals("/user/login") || // 로그인 토큰이 없는 단계
-                requestURI.equals("/refresh") || // 리프레시 또한 토큰이 없는 단계
-                requestURI.equals("/user/kakaoAuth")|| // 소셜 로그인 토큰이 없는 단계
-                requestURI.equals("/user/naverAuth") || // 소셜 로그인 토큰이 없는 단계
-                requestURI.equals("/user/googleAuth") ||// 소셜 로그인 토큰이 없는 단계
-                requestURI.equals("/logout") ||// refresh 만료 후 로그인 페이지 돌아 갈 때 남아 있는 토큰 제거하기 위해 필요
-                requestURI.equals("/user/duplicatecheck") || // 중복 체크 토큰 없음.
-                requestURI.equals("/user/registration") || // 회원 정보 등록 토큰 없음
-                requestURI.equals("/user/idFind") || // 아이디 찾기 토큰 없음
-                requestURI.equals("/user/passwordFind") || // 패스워드 찾기 토큰 없음
-                requestURI.equals("/user/passwordChange") // 비밀 번호 변경 토큰 없음
-
+        System.out.println("[Filter] 요청 URI: " + request.getRequestURI());
+        String requestURI = request.getRequestURI();
+        if (requestURI.equals("/*")
+//        requestURI.equals("/login")
+//                ||
+//                requestURI.equals("/refresh") ||
+//                requestURI.equals("/logout")||
+//                requestURI.equals("/kakaoAuth")||
+//                requestURI.equals("/naverAuth") ||
+//                requestURI.equals("/googleAuth")
                 ) {
             System.out.println("[Filter] 예외 경로 요청 - 필터 패스: " + requestURI);
             pFilterChain.doFilter(pRequest, pResponse);

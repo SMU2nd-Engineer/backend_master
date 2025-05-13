@@ -1,9 +1,14 @@
 package com.culturemoa.cultureMoaProject.common.jwt;
 
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -60,7 +65,6 @@ public class JwtProvider {
                 .compact();
     }
 
-
     /*
      * getUserIdFromToken
      * refresh 토큰으로 새로운 access 토큰 생성할 때 필요한 userId 추출
@@ -72,5 +76,22 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("userId", String.class);
+    }
+
+    /**
+     * 토큰을 사용자 정보로 변환하는 메서드
+     * @param accessToken 엑세스토큰
+     * @return 복호화된 UserId
+     */
+    public String getUserInfoByToken(String accessToken){
+        try {
+            Claims claims = Jwts.parserBuilder().setSigningKey(KEY).build().parseClaimsJwt(accessToken).getBody();
+
+            if(claims.isEmpty()) return "";
+
+            return claims.get("userId").toString();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().toString();
+        }
     }
 }
