@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
  * sDate : 생성한 날짜
  * eDate : 수정한 날짜
  * wDate : 회원 탈퇴 날짜
- * isWithdrawal : 회원 탈퇴 여부
  */
 
 @Data
@@ -37,7 +36,5 @@ public class UserDTO {
     private LocalDateTime sDate;
     private LocalDateTime eDate;
     private LocalDateTime wDate;
-    private int isWithdrawal;
-
 
 }

@@ -46,8 +46,6 @@ public class UserService {
         if(pUserDTO.getSocialLogin() == null || pUserDTO.getSocialLogin().isEmpty()) {
             pUserDTO.setSocialLogin("regularLogin");
         }
-        //회원탈퇴 기본값으로 0 넣기
-        pUserDTO.setIsWithdrawal(0);
         // DAO로 데이터 넣기
         userDAO.insertUser(pUserDTO);
     }
@@ -111,7 +109,7 @@ public class UserService {
         // 전달 받은 값 변수에 할당
         String pCheckList = pDuplicateDto.getName(); // 검사할 id, nickName 명
         String pCategory = pDuplicateDto.getCategory(); // 검사할 컬럼
-        // sql injection 방지 위해 pCheckList 지정
+        // sql injection 방지 위해 pCheckList 지정 위해 DTO에서 꺼내서 처리
         String columnName;
         switch (pCategory) {
             case ("id") :
@@ -183,9 +181,6 @@ public class UserService {
 
         // 회원 정보 수정 날짜 넣기
         userWithdrawalDTO.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
-
-        // 회원 탈퇴 여부 탈퇴로 수정하도록 변경
-        userWithdrawalDTO.setIsWithdrawal(1);
 
         //  id를 기준으로 회원 날짜 넣기
         int userWithdrawalProcess = userDAO.updateWithdrawal(userWithdrawalDTO);
