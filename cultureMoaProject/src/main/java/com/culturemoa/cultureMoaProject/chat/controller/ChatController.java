@@ -13,7 +13,7 @@ import java.util.List;
 public class ChatController {
     private final ChatService chatService;
     private final CountersService countersService;
-    private static final String type = "chat";
+    private static final String TYPE = "chat";
 
     @Autowired
     public ChatController(ChatService chatService, CountersService countersService) {
@@ -33,7 +33,7 @@ public class ChatController {
 
     @PostMapping
     public ChatDTO createChat(@RequestBody ChatDTO chatDTO){
-        chatDTO.setId(countersService.getId(type));
+        chatDTO.setId(countersService.getId(TYPE));
         return chatService.createChat(chatDTO);
     }
 

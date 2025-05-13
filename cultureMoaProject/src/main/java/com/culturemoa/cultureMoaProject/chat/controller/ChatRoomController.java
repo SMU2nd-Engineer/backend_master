@@ -12,7 +12,7 @@ import java.util.List;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final CountersService countersService;
-    private static final String type = "chatroom";
+    private static final String TYPE = "chatroom";
 
     public ChatRoomController(ChatRoomService chatRoomService, CountersService countersService) {
         this.chatRoomService = chatRoomService;
@@ -21,7 +21,7 @@ public class ChatRoomController {
 
     @PostMapping
     public ChatRoomDTO CreateChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
-        chatRoomDTO.setId(countersService.getId(type));
+        chatRoomDTO.setId(countersService.getId(TYPE));
 
         return chatRoomService.createChatRoom(chatRoomDTO);
     }
