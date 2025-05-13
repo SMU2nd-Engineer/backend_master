@@ -41,8 +41,15 @@ public class LogAspect {
         // 실행 결과 로그
         Object returnObj = proceedingJoinPoint.proceed();
 
-        log.info("parameter type = {}", returnObj.getClass().getSimpleName());
-        log.info("parameter value = {}", returnObj);
+//        log.info("parameter type = {}", returnObj.getClass().getSimpleName());
+//        log.info("parameter value = {}", returnObj);
+
+        if (returnObj != null) {
+            log.info("return type = {}", returnObj.getClass().getSimpleName());
+            log.info("return value = {}", returnObj);
+        } else {
+            log.info("return value is null");
+        }
 
         return  returnObj;
     }

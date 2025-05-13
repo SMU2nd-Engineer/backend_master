@@ -1,10 +1,8 @@
 package com.culturemoa.cultureMoaProject.user.controller;
 
-import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
-import com.culturemoa.cultureMoaProject.user.service.IdPasswordMatchService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * AccessToken 만료 또는 없을 경우 Refresh 토큰으로 재발급하는 컨트롤러
+ */
 @RestController
 public class TokenController {
 

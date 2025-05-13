@@ -33,7 +33,7 @@ public class SecurityConfig {
         this.jwtValidator = jwtValidator;
     }
 
-    /*
+    /**
      * securityFilterChain
      * 스프링 시큐리티 커스텀 필터 적용
      * http: 시큐리티 필터체인을 전달 받을 매개 변수
@@ -44,6 +44,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (API 서버에서는 보통 꺼둠)
             .cors(cors -> {})             // CORS 설정 적용 (아래 Bean에서 지정)
             .authorizeHttpRequests(auth -> auth
+
 //                    .requestMatchers("/login", "/refresh", "/logout", "/kakaoAuth", "/naverAuth", "/googleAuth").permitAll() // 로그인, 리프레시, 로그아웃, 카카오 인증 API는 인증 없이 허용
                     .requestMatchers("/**").permitAll() // 모든 경로를 허용하는 test 코드
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
@@ -53,7 +54,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /*
+    /**
      * corsConfigurationSource
      * corf 보안 정책를 회피하기 위하여 전역으로 설정하기 위한 메서드
      */
