@@ -44,8 +44,17 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (API 서버에서는 보통 꺼둠)
             .cors(cors -> {})             // CORS 설정 적용 (아래 Bean에서 지정)
             .authorizeHttpRequests(auth -> auth
-
-//                    .requestMatchers("/login", "/refresh", "/logout", "/kakaoAuth", "/naverAuth", "/googleAuth").permitAll() // 로그인, 리프레시, 로그아웃, 카카오 인증 API는 인증 없이 허용
+//                    .requestMatchers("/user/login",
+//                                     "/refresh",
+//                                     "/user/logout",
+//                                     "/user/kakaoAuth",
+//                                     "/user/naverAuth",
+//                                     "/user/googleAuth",
+//                                     "/user/duplicatecheck",
+//                                     "/user/idFind",
+//                                     "/user/passwordFind",
+//                                     "/user/passwordChange",
+//                                     ).permitAll() // 인증을 자동 허용하는 경로들
                     .requestMatchers("/**").permitAll() // 모든 경로를 허용하는 test 코드
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
