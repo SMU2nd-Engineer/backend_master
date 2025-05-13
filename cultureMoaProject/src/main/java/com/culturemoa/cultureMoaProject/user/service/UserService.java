@@ -56,28 +56,25 @@ public class UserService {
      * @param pResponse : 헤더에 쿠키 담기
      * @return : 조회한 사용자 정보를 담은 UserDTO 객체
      */
-    public JwtDTO loginAndIssuanceToken (UserLoginRequestDTO pRequest, HttpServletResponse pResponse) {
-        // dao를 통하여 db의 id와 패스워드 가져오기
-        UserLoginResponseDTO userLogin = userDAO.findByLoginInfo(pRequest);
-        
-        // 탈퇴한 회원으로 로그인 시 예외 발생
-        if(userLogin.getWDate() != null) {
-            throw new WithdrawalUserException();
-        }
-        // 토큰 발급을 위한 userId 추출
-        String userId = userLogin.getId();
+    public JwtDTO loginAndIssuanceToken (UserLoginDTO pRequest, HttpServletResponse pResponse) {
+        // dao를 통하여 db의 패스워드 가져오기
+        UserLoginDTO userLogin = userDAO.findByLoginInfo(pRequest);
 
-        // 아이디가 없을 경우 예외 던지기
-        if(userId == null) {
-            throw new UserNotFoundException(); // 사용자 없음 예외
-        }
+
         // 사용자 입력 값, 조회하여 가져온 passowrd를 매칭하여 다르면 오류 발생.
         if(!passwordEncoder.matches(pRequest.getPassword(), userLogin.getPassword())) {
             throw new InvalidPasswordException(); // 비밀번호 일치하지 않음.
         }
+        // 토큰 발급을 위한 userId 추출하기 위하여 로그인 아이디 매칭해서 한 번 더 검증
+        if(pRequest.getId().equals(userLogin.getId())) {
+            String userId = userLogin.getId();
+            // 문제 없으면 토큰 발급하기
+            return authJwtService.tokenCreateSave(pResponse, userId);
+        } else {
+            throw new DontMatchUserInfoException();
+        }
 
-        // 문제 없으면 토큰 발급하기
-        return authJwtService.tokenCreateSave(pResponse, userId);
+
     }
 
     /**

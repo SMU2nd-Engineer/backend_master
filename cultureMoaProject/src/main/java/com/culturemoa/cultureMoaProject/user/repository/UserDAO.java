@@ -5,12 +5,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * UserDAO
- * 마이바티스와 연동하여 DB에서 데이터를 조회할 Data Access Object
+ * 마이바티스와 연동하여 DB에서 데이터를 조회할 Data Access Object, 마이페이지 제외 DAO
  * sqlSessionTemplate : 마이바티스용 변수
  */
 @Repository
@@ -31,12 +30,12 @@ public class UserDAO {
     }
 
     /**
-     * 아이디로 유정 정보를 가져오는 DAO
+     * 일반 로그인 시 입력한 아이디로 패스워드를 DAO
      * @param pRequest : 입력 받은 사용자 정보 DTO
      * @return 아이디로 매칭된 유저 정보를 담은 dto
      */
-    public UserLoginResponseDTO findByLoginInfo (UserLoginRequestDTO pRequest) {
-        return sqlSessionTemplate.selectOne("userMapper.findByLoginId",pRequest);
+    public UserLoginDTO findByLoginInfo (UserLoginDTO pRequest) {
+        return sqlSessionTemplate.selectOne("userMapper.findPasswordByLoginId",pRequest);
     }
 
     /**

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 회원 가입, 일반 또는 소셜 로그인, 아이디&닉네임 중복 체크, 비밀번호 변경, 아이디 찾기 컨트롤러
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -40,7 +43,7 @@ public class UserController {
      * @return : AccessToken을 반환
      */
     @PostMapping("/login")
-    public ResponseEntity<?> loginAccess(@RequestBody UserLoginRequestDTO pRequest, HttpServletResponse pResponse) {
+    public ResponseEntity<?> loginAccess(@RequestBody UserLoginDTO pRequest, HttpServletResponse pResponse) {
             // 가져온 유정 정보를 조회 하여 서비스에서 매칭 후 조회한 userId를 반환
             JwtDTO jwtDTO = userService.loginAndIssuanceToken(pRequest, pResponse);
 
