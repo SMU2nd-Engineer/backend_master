@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
  * address : 주소
  * email : 이메일
  * sDate : 생성한 날짜 - serivce에서 생성
+ * isWithdrawal : 회원 탈퇴 여부 등록용
  */
 
 @Data
@@ -30,4 +31,5 @@ public class UserRegisterRequestDTO {
     private String nickName;
     private String socialLogin;
     private LocalDateTime sDate;
+    private int isWithdrawal;
 }

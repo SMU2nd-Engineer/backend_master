@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 유저 서비스 클래스
@@ -44,6 +46,8 @@ public class UserService {
         if(pUserDTO.getSocialLogin() == null || pUserDTO.getSocialLogin().isEmpty()) {
             pUserDTO.setSocialLogin("regularLogin");
         }
+        //회원탈퇴 기본값으로 0 넣기
+        pUserDTO.setIsWithdrawal(0);
         // DAO로 데이터 넣기
         userDAO.insertUser(pUserDTO);
     }
@@ -107,7 +111,24 @@ public class UserService {
         // 전달 받은 값 변수에 할당
         String pCheckList = pDuplicateDto.getName(); // 검사할 id, nickName 명
         String pCategory = pDuplicateDto.getCategory(); // 검사할 컬럼
-        int duplicateCheckValue = userDAO.duplicateCheck(pCheckList, pCategory);
+        // sql injection 방지 위해 pCheckList 지정
+        String columnName;
+        switch (pCategory) {
+            case ("id") :
+                columnName = "ID";
+                break;
+            case ("nickName") :
+                columnName = "NICKNAME";
+                break;
+            default :
+                throw new IllegalArgumentException("컬럼 정보를 확인 할 수 없습니다.");
+        }
+        // 마이바티스틑 인자로 두번째 인자 하나만 받아서 Map 등을 이용해야 한다.
+        Map<String, Object> duplicateMap = new HashMap<>();
+        duplicateMap.put("pCheckList", pCheckList);
+        duplicateMap.put("columnName", columnName);
+        int duplicateCheckValue = userDAO.duplicateCheck(duplicateMap);
+
         return duplicateCheckValue == 0;
     }
 
@@ -159,6 +180,12 @@ public class UserService {
     public void userWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
         // 회원 탈퇴 날짜 넣기
         userWithdrawalDTO.setWDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+
+        // 회원 정보 수정 날짜 넣기
+        userWithdrawalDTO.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+
+        // 회원 탈퇴 여부 탈퇴로 수정하도록 변경
+        userWithdrawalDTO.setIsWithdrawal(1);
 
         //  id를 기준으로 회원 날짜 넣기
         int userWithdrawalProcess = userDAO.updateWithdrawal(userWithdrawalDTO);

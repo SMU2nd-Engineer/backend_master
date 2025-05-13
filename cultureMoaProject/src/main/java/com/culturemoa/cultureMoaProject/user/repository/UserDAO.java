@@ -50,27 +50,10 @@ public class UserDAO {
 
     /**
      * 회원 가입에서 중복을 처리하는 DAO
-     * @param pCheckList : 회원 가입에서 입력 받은 id 또는 nickName
-     * @param pCategory : 중복체크가 어디에서 눌렸는지 입력 받은 카테고리
+     * @param duplicateMap : 회원 가입에서 입력 받은 id 또는 nickName 과 어디를 검색할지 내용이 들어가 있음
      * @return 쿼리문에서 찾은 id/ nickName의 값 으로 1이상이면 중복이라는 의미
      */
-    public int duplicateCheck (String pCheckList, String pCategory) {
-        // sql injection 방지 위해 pCheckList 지정
-        String columnName;
-        switch (pCategory) {
-            case ("id") :
-                columnName = "ID";
-                break;
-            case ("nickName") :
-                columnName = "NICKNAME";
-                break;
-            default :
-                throw new IllegalArgumentException("컬럼 정보를 확인 할 수 없습니다.");
-        }
-        // 마이바티스틑 인자로 두번째 인자 하나만 받아서 Map 등을 이용해야 한다.
-        Map<String, Object> duplicateMap = new HashMap<>();
-        duplicateMap.put("pCheckList", pCheckList);
-        duplicateMap.put("columnName", columnName);
+    public int duplicateCheck (Map<String, Object> duplicateMap) {
         return  sqlSessionTemplate.selectOne("userMapper.duplicateIdCheck",duplicateMap);
     }
 

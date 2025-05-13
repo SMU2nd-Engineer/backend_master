@@ -5,45 +5,47 @@
     <!--    -->
     <insert id="insertUser" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserDTO">
         insert into USER_TBL
-        ( ID, NAME, EMAIL, PASSWORD, ADDRESS, NICKNAME, SOCIAL_LOGIN, SDATE)
+        ( ID, NAME, EMAIL, PASSWORD, ADDRESS, NICKNAME, SOCIAL_LOGIN, SDATE, IS_WITHDRAWAL)
         values
-        (#{id}, #{name}, #{email}, #{password}, #{address}, #{nickName}, #{socialLogin}, #{sDate})
+        (#{id}, #{name}, #{email}, #{password}, #{address}, #{nickName}, #{socialLogin}, #{sDate}, #{isWithdrawal)
     </insert>
 
     <!--    유저 id를 이용하여 아이디 패스워드 가져오기    -->
     <select id="findByLoginId" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserLoginRequestDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserLoginResponseDTO">
-        select ID, PASSWORD, WDATE from USER_TBL where ID = #{id}
+        select ID, PASSWORD, WDATE from USER_TBL where ID = #{id} and IS_WITHDRAWAL = 0
     </select>
 
+    <!--  아이디 찾기 조회에 사용할 쿼리  -->
     <select id="socialFindByLoginId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.SocialLoginResponseDTO" >
-        select ID from USER_TBL where ID = #{id}
+        select ID from USER_TBL where ID = #{id} and IS_WITHDRAWAL = 0
     </select>
 
     <!--  아이디/ 닉네임 중복 체크  -->
     <select id="duplicateIdCheck" parameterType="String" resultType="int">
-        select count(*) from USER_TBL where ${columnName} = #{pCheckList}
+        select count(*) from USER_TBL where ${columnName} = #{pCheckList} and IS_WITHDRAWAL = 0
     </select>
     
     <!--  아이디 찾기  -->
     <select id="findId" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdRequestDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdResponseDTO" >
-        select id from USER_TBL where name=#{name} and email=#{email}
+        select id from USER_TBL where name=#{name} and email=#{email} and IS_WITHDRAWAL = 0
     </select>
 
     <!--  비밀번호 변경  -->
     <update id="changePassword" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserChangePasswordRequestDTO" >
         update USER_TBL
         set PASSWORD=#{password}, EDATE=#{eDate}
-        where id=#{id}
+        where id=#{id} and IS_WITHDRAWAL = 0
     </update>
 
     <!--    유저 이름과, 이메일, id를 이용해서 정보를 조회    -->
     <select id="passwordFindMatch" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.UserFindPasswordResponseDTO">
-        select PASSWORD from USER_TBL where ID = #{id} and NAME=#{name} and EMAIL=#{email}
+        select PASSWORD from USER_TBL where ID = #{id} and NAME=#{name} and EMAIL=#{email} and IS_WITHDRAWAL = 0
     </select>
+
     <!--  회원 탈퇴 클릭시 id로 조회하여 wDate 업데이트  -->
     <insert id="updateWithdrawal" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserWithdrawalDTO" >
         update USER_TBL
-        set WDATE = #{wDate}
-        where ID = #{id}
+        set WDATE = #{wDate}, IS_WITHDRAWAL = 1, EDATE = #{eDate}
+        where ID = #{id} and IS_WITHDRAWAL = 0;
     </insert>
 </mapper>
