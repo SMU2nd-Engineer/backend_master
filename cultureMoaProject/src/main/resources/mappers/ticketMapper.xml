@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ticketMapper">
+    <select id="getAllTicket" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO" >
+        SELECT *
+        FROM TICKET_TBL
+    </select>
+
+    <!-- 장르별 -->
+    <!-- 전체 장르 목록만 조회 (중복 제거) -->
+    <select id="getAllGenres" resultType="String" >
+        SELECT DISTINCT genre
+        FROM TICKET_TBL
+        WHERE genre IS NOT NULL
+    </select>
+    <!-- 장르별 티켓 목록 조회 -->
+    <select id="getTicketsByGenre" parameterType="String" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">
+        SELECT *
+        FROM TICKET_TBL
+        WHERE genre = #{genre}
+    </select>
+
+    <!-- 날짜별 -->
+    <!-- 전체 날짜 목록만 조회 (중복 제거)  -->
+    <select id="getAlldate" resultType="String" >
+        SELECT DISTINCT sDate, DISTINCT eDate
+        FROM TICKET_TBL
+        WHERE sDate IS NOT NULL, eDate IS NOT NULL
+    </select>
+    <!-- 날짜별 티켓 목록 조회 -->
+    <select id="getTicketsByGenre2" parameterType="String" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">
+        SELECT *
+        FROM TICKET_TBL
+        WHERE genre = #{genre}
+    </select>
+
+
+
+
+</mapper>
