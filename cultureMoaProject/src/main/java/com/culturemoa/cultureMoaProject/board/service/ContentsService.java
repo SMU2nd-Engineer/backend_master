@@ -1,6 +1,7 @@
 package com.culturemoa.cultureMoaProject.board.service;
 
 import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
+import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
 import com.culturemoa.cultureMoaProject.board.repository.ContentsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,10 @@ public class ContentsService {
     }
 
     public List<ContentsDTO> getAllContents() {
-        return  contentsDAO.getAllContents();
+        return contentsDAO.getAllContents();
+    }
+
+    public List<ContentInfoDTO> getContentInfos() {
+        return contentsDAO.getContentInfos();
     }
 }
