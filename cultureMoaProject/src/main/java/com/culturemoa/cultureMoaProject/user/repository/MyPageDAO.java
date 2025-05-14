@@ -1,7 +1,9 @@
 package com.culturemoa.cultureMoaProject.user.repository;
 
 import com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO;
+import com.culturemoa.cultureMoaProject.user.dto.MyPageGetUserInfoDTO;
 import com.culturemoa.cultureMoaProject.user.dto.MyPagePasswordCheckDTO;
+import com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,10 +17,40 @@ public class MyPageDAO {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
+    /**
+     * 아이디를 사용하여 패스워드 체크를 위한 단방향 암호 가져오기
+     * @param userId : 토큰에서 추출한 아이디
+     * @return 단방향 암호값을 담을 MyPagePasswordCheckDTO
+     */
     public MyPagePasswordCheckDTO getPassword(String userId) {
         return sqlSessionTemplate.selectOne("myPageMapper.findPasswordByTokenId", userId);
     }
+
+    /**
+     * 아이디를 이용하여 소셜 로그인 정보를 가져오기
+     * @param tokenUserId : 토큰에서 추출한 아이디
+     * @return : 소셜 정보를 담을 DTO
+     */
     public MyPageCheckSocialDTO getSocialLogin(String tokenUserId) {
         return sqlSessionTemplate.selectOne("myPageMapper.findSocialLoginByTokenId", tokenUserId);
     }
+
+    /**
+     * 아이디 정보를 이용하여 개인 정보 수정에 넘길 데이터 가져오기
+     * @param tokenUserId : 토큰에서 추출한 id
+     * @return MyPageGetUserInfoDTO에 데이터 담아서 반환.
+     */
+    public MyPageGetUserInfoDTO getUserInfoById(String tokenUserId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.findUserInfoByTokenId", tokenUserId);
+    }
+
+    /**
+     * 사용자가 입력한 개인 정보 수정 정보를 이용하여 수정 진행
+     * @param myPageUpdateUserInfoDTO : 수정한 개인 정보가 담김(password 빈값일 수 있음)
+     * @return 성공 여부를 판단한기 위하여 int로 반환.
+     */
+    public int updateUserInfo(MyPageUpdateUserInfoDTO myPageUpdateUserInfoDTO) {
+        return sqlSessionTemplate.update("myPageMapper.updateUserInfo", myPageUpdateUserInfoDTO);
+    }
+
 }

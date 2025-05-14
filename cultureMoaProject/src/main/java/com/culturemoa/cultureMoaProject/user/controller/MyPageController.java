@@ -1,7 +1,9 @@
 package com.culturemoa.cultureMoaProject.user.controller;
 
 import com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO;
+import com.culturemoa.cultureMoaProject.user.dto.MyPageGetUserInfoDTO;
 import com.culturemoa.cultureMoaProject.user.dto.MyPagePasswordCheckDTO;
+import com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO;
 import com.culturemoa.cultureMoaProject.user.service.MyPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,22 @@ public class MyPageController {
             return ResponseEntity.ok(isMyInfoPasswordCheck);
     }
 
-    @GetMapping("/checksocial")
+    @GetMapping("/checkSocial")
     public ResponseEntity<MyPageCheckSocialDTO> myInfoSocialCheck (HttpServletRequest pRequest) {
         MyPageCheckSocialDTO whereSocial = myPageService.myPageSocialCheck(pRequest);
         return ResponseEntity.ok(whereSocial);
     }
 
+    @PostMapping("/getUserInfo")
+    public ResponseEntity<MyPageGetUserInfoDTO> myPageGetUserInfo (HttpServletRequest pRequest) {
+        return ResponseEntity.ok(myPageService.getUserInfo(pRequest));
+    }
+
+    @PostMapping("/updateInfo")
+    public ResponseEntity<?> myPageUpdateUserInfo (
+            HttpServletRequest pRequest,
+            @RequestBody MyPageUpdateUserInfoDTO myPageUpdateUserInfoDTO) {
+        myPageService.updateUserInfoByToken(pRequest,myPageUpdateUserInfoDTO);
+        return ResponseEntity.ok("Update Success");
+    }
 }

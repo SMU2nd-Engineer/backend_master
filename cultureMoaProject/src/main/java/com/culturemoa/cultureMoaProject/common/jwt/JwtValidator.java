@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.common.jwt;
 
+import com.culturemoa.cultureMoaProject.user.exception.JwtException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -32,7 +33,7 @@ public class JwtValidator {
         }
         catch (ExpiredJwtException e) {
             System.out.println("토큰이 만료되었습니다.");
-            throw new RuntimeException("Expired JWT Token");
+            throw new JwtException();
         } catch (Exception e) {
             System.out.println("토큰 검증 중 예외 발생");
             return false;
