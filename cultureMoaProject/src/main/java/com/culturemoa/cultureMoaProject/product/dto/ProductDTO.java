@@ -1,89 +1,45 @@
 package com.culturemoa.cultureMoaProject.product.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDTO {
     private Long idx;
     private Long category_idx;
     private String title;
-    private LocalDateTime sDate;
+    private LocalDateTime sDate =LocalDateTime.now();
     private LocalDateTime eDate;
-    private String useId;
+    private String userId;
     private Long price;
-    private Long flag;
+    private boolean flag;
+    private String imageUrl;
+    private String content;
 
-    public ProductDTO(Long idx, Long category_idx, String title, LocalDateTime sDate, LocalDateTime eDate, String useId, Long price, Long flag) {
-        this.idx = idx;
-        this.category_idx = category_idx;
-        this.title = title;
-        this.sDate = sDate;
-        this.eDate = eDate;
-        this.useId = useId;
-        this.price = price;
-        this.flag = flag;
-    }
+//    private ProductDetailDTO detail;
 
-    public Long getIdx() {
-        return idx;
-    }
-
-    public void setIdx(Long idx) {
-        this.idx = idx;
-    }
-
-    public Long getCategory_idx() {
-        return category_idx;
-    }
-
-    public void setCategory_idx(Long category_idx) {
-        this.category_idx = category_idx;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDateTime getsDate() {
-        return sDate;
-    }
-
-    public void setsDate(LocalDateTime sDate) {
-        this.sDate = sDate;
-    }
-
-    public LocalDateTime geteDate() {
-        return eDate;
-    }
-
-    public void seteDate(LocalDateTime eDate) {
-        this.eDate = eDate;
-    }
-
-    public String getUseId() {
-        return useId;
-    }
-
-    public void setUseId(String useId) {
-        this.useId = useId;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
-    public Long getFlag() {
-        return flag;
-    }
-
-    public void setFlag(Long flag) {
-        this.flag = flag;
-    }
+//    public ProductDTO(Long idx, Long category_idx, String title, LocalDateTime sDate, LocalDateTime eDate, String useId, Long price, Long flag, String imageUrl, String content) {
+//        this.idx = idx;
+//        this.category_idx = category_idx;
+//        this.title = title;
+//        this.sDate = sDate = LocalDateTime.now();
+//        this.eDate = eDate;
+//        this.useId = useId;
+//        this.price = price;
+//        this.flag = flag;
+//        this.imageUrl = imageUrl;
+//        this.content = content;
+//    }
+//    public ProductDTO(){
+//        this.sDate = LocalDateTime.now();
+//    }
 }
+
