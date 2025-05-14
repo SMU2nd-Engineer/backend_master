@@ -38,11 +38,13 @@ public class TokenController {
 
         // refreshToken 검증 1 : 리프레시 토큰이 있는지 없는지 확인
         if (refreshToken == null) {
-            return ResponseEntity.status(403).body("refreshToken is Empty");
+            //없으면 401로 반환하여 로그아웃 유도
+            return ResponseEntity.status(401).body("refreshToken is Empty");
         }
 
         if(!jwtValidator.validatorToken(refreshToken)) {
-            return ResponseEntity.status(403).body("Expired_data");
+            //없으면 401로 반환하여 로그아웃 유도
+            return ResponseEntity.status(401).body("Expired_data");
         }
 
         String userId = jwtProvider.getUserIdFromToken(refreshToken);

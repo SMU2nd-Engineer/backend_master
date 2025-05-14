@@ -20,9 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private final JwtValidator jwtValidator;
+    private final JwtProvider jwtProvider;
 
     // JwtProvider는 토큰을 생성 및 검증하는 클래스, 생성자로 주입 받음
-    public JwtAuthenticationFilter(JwtValidator jwtValidator) {
+    public JwtAuthenticationFilter(JwtValidator jwtValidator, JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
         this.jwtValidator = jwtValidator;
     }
 
@@ -63,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         System.out.println(" return 이 걸리지 않고서 여기가 실행됨");
-        String token = resolveToken(pRequest);
+        String token = jwtProvider.resolveToken(pRequest);
         System.out.println(token);
         if (token == null) { // 토큰이 비어있을 경우 401 반환
             pResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
@@ -92,20 +94,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return; // 요청 중단
         }
 //        filterChain.doFilter(request, response); // 다음 필터로 전달 - 스프링 시큐리티 - 잘 못 되코드로 일단 주석 처리
-    }
-
-    /**
-     * resolveToken
-     * 요청 헤더에서 "Authorization" 값을 가져와서 'Bearer ' 이후 토큰만 추출
-     * @param request : 요청 값 담은 변수
-     * @return : 헤더에서 토큰을 반환
-     */
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7); // "Bearer " 이후 토큰 값 반환
-        }
-        return null;
     }
 
 }

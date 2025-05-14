@@ -1,6 +1,7 @@
 package com.culturemoa.cultureMoaProject.common.security;
 
 import com.culturemoa.cultureMoaProject.common.jwt.JwtAuthenticationFilter;
+import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,10 +28,12 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtValidator jwtValidator;
+    private final JwtProvider jwtProvider;
 
     // JwtProvider는 토큰을 생성 및 검증하는 클래스, 생성자로 주입 받음
-    public SecurityConfig(JwtValidator jwtValidator) {
+    public SecurityConfig(JwtValidator jwtValidator, JwtProvider jwtProvider) {
         this.jwtValidator = jwtValidator;
+        this.jwtProvider = jwtProvider;
     }
 
     /**
@@ -59,7 +62,7 @@ public class SecurityConfig {
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
             .logout(logout -> logout.disable()) // 시큐리티 기본 로그아웃으로 get 요청을 방지
-            .addFilterBefore(new JwtAuthenticationFilter(jwtValidator), UsernamePasswordAuthenticationFilter.class); // JWT 필터 등록 (기존 필터 앞에 추가)
+            .addFilterBefore(new JwtAuthenticationFilter(jwtValidator, jwtProvider), UsernamePasswordAuthenticationFilter.class); // JWT 필터 등록 (기존 필터 앞에 추가)
         return http.build();
     }
 
