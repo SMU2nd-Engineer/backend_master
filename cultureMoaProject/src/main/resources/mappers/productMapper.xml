@@ -5,12 +5,31 @@
 
     </resultMap>
 
-    <select id="getAllProduct" resultType="Map" >
+    <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
         SELECT MAIN.IDX, CATEGORY_IDX, TITLE, SDATE, EDATE,
-                USERID, PRICE, FLAG, IMAGE_URL, TEXT
+                USERID, PRICE, FLAG, IMAGE_URL, CONTENT
         FROM PRODUCT_TBL MAIN
         LEFT OUTER JOIN PRODUCT_DETAIL_TBL DETAIL ON
                 MAIN.IDX = DETAIL.PRODUCT_IDX
     </select>
 
+    <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="int">
+        SELECT MAIN.IDX, CATEGORY_IDX, TITLE, SDATE, EDATE,
+               USERID, PRICE, FLAG, IMAGE_URL, CONTENT
+        FROM PRODUCT_TBL MAIN
+        LEFT OUTER JOIN PRODUCT_DETAIL_TBL DETAIL ON
+                MAIN.IDX = DETAIL.PRODUCT_IDX
+        WHERE MAIN.IDX = #{idx}
+    </select>
+
+    <insert id="insertProduct" useGeneratedKeys="true" keyProperty="idx" >
+        INSERT INTO  PRODUCT_TBL (
+                    CATEGORY_IDX, TITLE, SDATE, EDATE, USERID, PRICE, FLAG)
+               VALUES (
+                    #{category_idx}, #{title}, #{sDate}, #{eDate}, #{userId}, #{price}, #{flag})
+    </insert>
+    <insert id="insertProductDetail" >
+        INSERT INTO PRODUCT_DETAIL_TBL ( PRODUCT_IDX, IMAGE_URL, CONTENT)
+        VALUES (#{product_idx}, #{imageUrl}, #{content} )
+    </insert>
 </mapper>
