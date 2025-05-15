@@ -121,6 +121,20 @@ public class MyPageService {
     }
 
     /**
+     * getTotalRatingByToken
+     * 헤더에서 유저 정보를 추출하여 총점수와 총합계를 추출하는 서비스
+     * @param pRequest : 헤더에서 토큰을 추출하기 위한 변수
+     * @return MyPageTotalRatingDTO 총점수와 총개수가 들어갈 DTO
+     */
+    public MyPageTotalRatingDTO getTotalRatingByToken(HttpServletRequest pRequest) {
+        String userId = getUserIdByAccessToken(pRequest);
+
+        return myPageDAO.getTotalRatingByUserId(userId);
+    }
+
+    // ------------------------------------------ //
+
+    /**
      * getUserIdByAccessToken
      * 헤더에서 userId를 추출해서 사용하기 위한 공통 함수
      * @param pRequest : 헤더에 토큰을 가져오기 위한 변수

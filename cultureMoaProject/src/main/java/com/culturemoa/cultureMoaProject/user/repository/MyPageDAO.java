@@ -52,8 +52,22 @@ public class MyPageDAO {
         return sqlSessionTemplate.update("myPageMapper.updateUserInfo", myPageUpdateUserInfoDTO);
     }
 
+    /**
+     * 찜 목록 데이터 가져오기 dao
+     * @param userId : 토큰에서 추출한 id
+     * @return List<MyPageWishListDTO> : 찜으로 선택한 상품 정보가 리스트로 담김
+     */
     public List<MyPageWishListDTO> getMyWishListInfoByUserId (String userId) {
         return sqlSessionTemplate.selectList("myPageMapper.getWishListInfo", userId);
     }
 
+    /**
+     * 총 별점 점수를 가져오기 위한 dao
+     * @param userId : 토큰에서 추출한 id
+     * @return : 총 별점의 점수와, 총 개수가 담긴 dto
+     */
+    public MyPageTotalRatingDTO getTotalRatingByUserId (String userId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getTotalRating", userId);
+    }
+    
 }

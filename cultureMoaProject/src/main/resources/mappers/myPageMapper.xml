@@ -33,11 +33,19 @@
 <!--  마이페이지 찜 목록 정보 가져오기  -->
     <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageWishListDTO">
         select P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
-        from USER_PICK as UP
-        join USER_TBL as UT on UT.IDX = UP.USER_IDX
-        join PRODUCT as P on P.IDX = UP.PRODUCT_IDX
-        join PRODUCT_DETAIL AS PD on PD.PRODUCT_IDX = P.IDX
-        where UT.ID = #{userId}
-        order by DESC
+        from USER_PICK_TBL as UP
+        join USER_TBL as U on U.IDX = UP.USER_IDX
+        join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
+        join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
+        where U.ID = #{userId}
+        order by UP.SDATE DESC;
+    </select>
+
+<!--  마이페이지 메인에서 별점에 표시한 점수를 가져오기  -->
+    <select id="getTotalRating" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageTotalRatingDTO" >
+        select sum(RATING) as myPageTotalRating, count(*) as totalRatingCount
+        from USER_REVIEW_TBL as UR
+        join USER_TBL as U on U.IDX = UR.USER_IDX
+        where U.ID = #{userId}
     </select>
 </mapper>
