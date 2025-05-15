@@ -24,31 +24,45 @@
     </select>
 
     <!-- CONTENTS_TBL의 검색어 조회 - search -->
-    <select id="getContentSearch" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
+    <select id="getContentKeywordSearch" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
         SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE, CONT.DIVISION,
         CONT.CONTENT, CONT.SDATE,
-        USERT.NICKNAME
+        USERT.NICKNAME,
+        CATE.NAME
         FROM CONTENTS_TBL CONT
-        LEFT OUTER JOIN USER_TBL USERT ON
-        CONT.USER_IDX = USERT.IDX
+        LEFT OUTER JOIN USER_TBL USERT ON CONT.USER_IDX = USERT.IDX
+        LEFT OUTER JOIN USER_TBL CATE ON
+
         <!--        WHERE CONT.EDATE = NULL -->
         <where>
+            <!-- edate: 종료일/삭제일로 삭제되지 않았거나, 아직 유효한 게시글만 보여주는 필터 조건이고,
+                DB에서 삭제하지 않고 EDATE에 날짜만 남기는 방식임 -->
             CONT.EDATE IS NULL
-            <!-- Null 값이면 검색 조건 생략하고 빈문자 열인지 확인 -->
+            <!-- Contents_tbl의 category, title, sdate와 USER_tbl의 nickname을 키워드로 검색 -->
 <!--            <if test="keyword != null and keyword != ''">-->
-<!--                CAST(CONT.CATEGORY_IDX AS CHAR) LIKE CONCAT('%', #{keyword}, '%')-->
-<!--                OR CONT.TITLE LIKE CONCAT('%', #{keyword}, '%'))-->
+<!--                &lt;!&ndash; CAST(CONT.CATEGORY_IDX AS CHAR)-->
+<!--                     : CONT.CATEGORY_IDX가 숫자일 경우 문자열로 형변환하여 출력&ndash;&gt;-->
+<!--                AND (CAST(CONT.CATEGORY_IDX AS CHAR) LIKE concat('%', #{keyword}, '%')-->
+<!--                 OR CONT.TITLE LIKE concat('%', #{keyword}, '%')-->
+<!--                 OR CONT.SDATE LIKE concat('%', #{keyword}, '%')-->
+<!--                 OR USERT.NICKNAME LIKE concat('%', #{keyword}, '%'))-->
 <!--            </if>-->
-            <!-- category, title을 키워드로 검색 -->
-<!--            <if test="keyword != null">-->
-<!--                AND (category LIKE concat('%', #{keyword}, '%')-->
-<!--                OR title LIKE concat('%', #{keyword}, '%'))-->
-<!--            </if>-->
-            <!-- category, title을 키워드로 검색 - 내가 짠 코드-->
-<!--            <if test="category_idx != null">-->
-<!--                AND (category_idx LIKE concat('%', #{keyword}, '%')-->
-<!--                OR title LIKE concat('%', #{keyword}, '%'))-->
-<!--            </if>-->
+            <!-- '팝니다', '삽니다' 선택한 핉터 -->
+            <if test="division != null and division != ''">
+                <!-- Contents_tbl의 division -->
+                AND CONT.DIVISION = #{division}
+            </if>
+            <!-- "keyword != null and keyword != ''"
+                 : 키워드 검색 - keyword가 Null이 아니고, 빈 문자열 입력 방지하는 조건 -->
+            <if test="keyword != null and keyword != ''">
+                <!-- Contents_tbl의 category, title, division, sdate와 USER_tbl의 nickname을 키워드로 검색 -->
+                AND (
+                    CONT.DIVISION LIKE CONCAT('%', #{keyword}, '%')
+                    OR CONT.TITLE LIKE CONCAT('%', #{keyword}, '%')
+                    OR CONT.SDATE LIKE CONCAT('%', #{keyword}, '%')
+                    OR USERT.NICKNAME LIKE CONCAT('%', #{keyword}, '%')
+                )
+            </if>
 
         </where>
 
