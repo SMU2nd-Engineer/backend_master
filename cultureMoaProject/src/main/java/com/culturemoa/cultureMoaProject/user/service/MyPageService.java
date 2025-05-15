@@ -2,10 +2,7 @@ package com.culturemoa.cultureMoaProject.user.service;
 
 import com.culturemoa.cultureMoaProject.common.jwt.JwtAuthenticationFilter;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
-import com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPageGetUserInfoDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPagePasswordCheckDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO;
+import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.exception.UserNotFoundException;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 마이페이지 관련 서비스 클래스
@@ -109,6 +107,17 @@ public class MyPageService {
             throw new DontUpdateException();
         }
 
+    }
+
+    /**
+     * 헤더에서 userId를 추출하여 찜 목록을 가져오는 서비스
+     * @param pRequest : 헤더에서 토큰을 추출하기 위한 파라미터
+     * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
+     */
+    public List<MyPageWishListDTO> getWishListByToken(HttpServletRequest pRequest) {
+        String userId = getUserIdByAccessToken(pRequest);
+
+        return myPageDAO.getMyWishListInfoByUserId(userId);
     }
 
     /**

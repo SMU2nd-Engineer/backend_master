@@ -1,12 +1,11 @@
 package com.culturemoa.cultureMoaProject.user.repository;
 
-import com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPageGetUserInfoDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPagePasswordCheckDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO;
+import com.culturemoa.cultureMoaProject.user.dto.*;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 마이페이지 관련 DAO 클래스
@@ -51,6 +50,10 @@ public class MyPageDAO {
      */
     public int updateUserInfo(MyPageUpdateUserInfoDTO myPageUpdateUserInfoDTO) {
         return sqlSessionTemplate.update("myPageMapper.updateUserInfo", myPageUpdateUserInfoDTO);
+    }
+
+    public List<MyPageWishListDTO> getMyWishListInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getWishListInfo", userId);
     }
 
 }

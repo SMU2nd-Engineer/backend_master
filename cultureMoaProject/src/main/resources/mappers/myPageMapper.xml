@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="myPageMapper">
 
-    <!--    유저 id를 이용하여 패스워드 가져오기    -->
+<!--    유저 id를 이용하여 패스워드 가져오기    -->
     <select id="findPasswordByTokenId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePasswordCheckDTO">
         select PASSWORD from USER_TBL where ID = #{id} and WDATE is null
     </select>
 
-    <!--    유저 id를 이용하여 소셜 정보 가져옴    -->
+<!--    유저 id를 이용하여 소셜 정보 가져옴    -->
     <select id="findSocialLoginByTokenId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO" >
     <!--   별칭 지정으로 dto와 맞춤     -->
         select SOCIAL_LOGIN as socialLogin from USER_TBL where ID=#{tokenUserId} and WDATE is null
@@ -18,7 +18,7 @@
         select NAME, NICKNAME, ADDRESS, EMAIL from USER_TBL where ID=#{tokenUserId} and WDATE is null
     </select>
 
-    <!--  유저 아이디를 통해서 마이페이지 갱신된 정보를 업데이트  -->
+<!--  유저 아이디를 통해서 마이페이지 갱신된 정보를 업데이트  -->
     <update id="updateUserInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO" >
         update USER_TBL
         <set>
@@ -29,4 +29,15 @@
         </set>
         where ID = #{id} and WDATE is null
     </update>
+
+<!--  마이페이지 찜 목록 정보 가져오기  -->
+    <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageWishListDTO">
+        select P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
+        from USER_PICK as UP
+        join USER_TBL as UT on UT.IDX = UP.USER_IDX
+        join PRODUCT as P on P.IDX = UP.PRODUCT_IDX
+        join PRODUCT_DETAIL AS PD on PD.PRODUCT_IDX = P.IDX
+        where UT.ID = #{userId}
+        order by DESC
+    </select>
 </mapper>
