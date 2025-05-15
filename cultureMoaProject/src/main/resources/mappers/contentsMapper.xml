@@ -20,7 +20,7 @@
         FROM CONTENTS_TBL CONT
         LEFT OUTER JOIN USER_TBL USERT ON
         CONT.USER_IDX = USERT.IDX
-        WHERE CONT.EDATE = NULL
+        WHERE CONT.EDATE is NULL
     </select>
 
     <!-- CONTENTS_TBL의 검색어 조회 - search -->
