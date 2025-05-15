@@ -1,9 +1,6 @@
 package com.culturemoa.cultureMoaProject.payment.service.kakao;
 
-import com.culturemoa.cultureMoaProject.payment.dto.KakaoReadyResponseDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentApproveRequestDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentReadyRequestDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentResponseDTO;
+import com.culturemoa.cultureMoaProject.payment.dto.*;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,26 +17,24 @@ import java.util.Map;
  * 카카오페이 결제 준비와 승인 작업을 처리하는 로직을 담당
  */
 
-@Service
+@Service("kakao")
 @RequiredArgsConstructor
 public class KakaoPaymentService implements PaymentGatewayService {
     // 스프링에서 HTTP 요청을 보내기 위해 사용되는 객체
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
     // 카카오페이 결제 준비 API의 URL
-    private static final String KAKAO_READY_URL = "http://open-api.kakaopay.com/online/v1/payment/ready";
+    private static final String KAKAO_READY_URL = "https://open-api.kakaopay.com/online/v1/payment/ready";
     // 카카오페이 결제 승인 API의 URL
     private static final String KAKAO_APROVE_URL = "https://open-api.kakaopay.com/online/v1/payment/approve";
-    // 카카오 API에서 제공하는 REST API 키(요청시 인증을 위한 헤더에 사용)
-    @Value("${kakao.pay.secret-key}")
-    private String secretKey;
-
+    private final KakaoPayProperties kakaoPayProperties;
     // 카카오페이 결제 준비 API를 호출하는 역할
     @Override
     public PaymentResponseDTO readyToPay(PaymentReadyRequestDTO requestDTO) {
+
         // HTTP 요청 헤더를 설정하는 객체
         HttpHeaders headers = new HttpHeaders();
         // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
-        headers.set("Authorization", "SECRET_KEY" + secretKey);
+        headers.set("Authorization", "SECRET_KEY " + kakaoPayProperties.getSecretKey());
         // 요청 본문의 데이터 형식을 설정
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -70,6 +65,10 @@ public class KakaoPaymentService implements PaymentGatewayService {
         return new PaymentResponseDTO(
                 body.getTid(),
                 body.getNextRedirectPcUrl(),
+                body.getNextRedirectMobileUrl(),
+                body.getNextRedirectAppUrl(),
+                body.getAndroidAppScheme(),
+                body.getIosAppScheme(),
                 body.getCreatedAt()
         );
     }
@@ -80,7 +79,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
         // HTTP 요청 헤더를 설정하는 객체
         HttpHeaders headers = new HttpHeaders();
         // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
-        headers.set("Authorization", "SECRET_KEY" + secretKey);
+        headers.set("Authorization", "SECRET_KEY " + kakaoPayProperties.getSecretKey());
         // 요청 본문의 데이터 형식을 설정
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -106,6 +105,6 @@ public class KakaoPaymentService implements PaymentGatewayService {
 
     @Override
     public String getPayMethod() {
-        return "KAKAO";
+        return "kakao";
     }
 }

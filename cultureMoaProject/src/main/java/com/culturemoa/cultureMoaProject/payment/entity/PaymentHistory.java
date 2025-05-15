@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 /**
  * PaymentHistory
  * DB에 저장할 결제 이력 데이터 관리
- * aid : DB에서 AUTO_INCREMENT
+ * idx : DB에서 AUTO_INCREMENT
  * tid : PG사에서 받은 결제 고유번호
  * amount : 결제 금액
  * payMethod : 결제 수단(kakao 외에 다른 결제 기능 확장성을 고려)
@@ -19,15 +19,13 @@ import java.time.LocalDateTime;
  * tradeType : DIRECT, DELIVERY
  * deliveryAddress : 배송지(필요시)
  */
-
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class PaymentHistory {
 
-    private int aid;
+    private int idx;
     private String tid;
     private int amount;
     private String payMethod;

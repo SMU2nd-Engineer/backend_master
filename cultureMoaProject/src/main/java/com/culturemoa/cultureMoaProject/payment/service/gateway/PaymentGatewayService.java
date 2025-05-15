@@ -3,6 +3,7 @@ package com.culturemoa.cultureMoaProject.payment.service.gateway;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentReadyRequestDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentApproveRequestDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentResponseDTO;
+import org.springframework.stereotype.Service;
 
 /**
  * PaymentGatewayService

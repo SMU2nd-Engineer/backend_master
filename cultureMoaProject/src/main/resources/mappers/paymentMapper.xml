@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="paymentMapper">
+    <!-- 결제 기록 DB 저장 -->
+    <insert id="insertPaymentHistory" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory" useGeneratedKeys="true" keyProperty="idx">
+        insert into PAYMENT_HISTORY
+        (TID, AMOUNT, PAY_METHOD, STATUS, BUYER_ID, SELLER_ID, PRODUCT_ID, TRADE_TYPE, DELIVERY_ADDRESS)
+        values
+        (#{tid}, #{amount}, #{payMethod}, #{status}, #{buyerId}, #{sellerId}, #{productId}, #{tradeType}, #{deliveryAddress})
+    </insert>
+</mapper>

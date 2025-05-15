@@ -3,35 +3,38 @@ package com.culturemoa.cultureMoaProject.payment.controller;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentReadyRequestDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentResponseDTO;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payment")
+@RequiredArgsConstructor
 public class PaymentController {
 
-    private  final List<PaymentGatewayService> paymentServices;
-
-    public PaymentController(List<PaymentGatewayService> paymentServices){
-        this.paymentServices = paymentServices;
-    }
+    // PG사 구분을 위한 서비스 매핑
+    private final Map<String, PaymentGatewayService> paymentGatewayServices;
 
     @PostMapping("/ready")
-    public ResponseEntity<PaymentResponseDTO> readyToPay(@RequestBody PaymentReadyRequestDTO requestDTO){
-        PaymentGatewayService service = getServiceByPayMethod(requestDTO.getPayMethod());
-        PaymentResponseDTO response = service.readyToPay(requestDTO);
+    public ResponseEntity<PaymentResponseDTO> readyPayment(
+            @RequestParam String payMethod,
+            @RequestBody PaymentReadyRequestDTO request
+            ){
+        // payMethod를 기반으로 어떤 PG사를 이용할지 선택
+        PaymentGatewayService service = getPaymentService(payMethod);
+        // service객체의 readyToPay 메서드 호출하고 결과를 PaymentResponseDTO로 반환
+        PaymentResponseDTO response = service.readyToPay(request);
+        // HTTP 상태코드 200(ok)과 함께 response를 JSON으로 변환하여 클라이언트에 응답
         return ResponseEntity.ok(response);
     }
 
-    private PaymentGatewayService getServiceByPayMethod(String payMethod) {
-        return paymentServices.stream()
-                .filter(service -> service.getPayMethod().equalsIgnoreCase(payMethod))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("지원하지 않는 결제 방법"));
+    private PaymentGatewayService getPaymentService(String payMethod) {
+        PaymentGatewayService service = paymentGatewayServices.get(payMethod.toLowerCase());
+        if(service == null){
+            throw new IllegalArgumentException("지원하지 않는 결제 수단입니다: " + payMethod);
+        }
+        return service;
     }
 }
