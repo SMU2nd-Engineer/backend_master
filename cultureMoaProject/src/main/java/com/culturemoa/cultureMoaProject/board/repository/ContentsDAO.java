@@ -24,4 +24,10 @@ public class ContentsDAO {
     public List<ContentInfoDTO> getContentInfos() {
         return sqlSessionTemplate.selectList("contentsMapper.getContentInfos");
     }
+
+    public List<ContentInfoDTO> getContentSearchs() {
+        return sqlSessionTemplate.selectList("contentsMapper.getContentSearchs");
+    }
+
+
 }

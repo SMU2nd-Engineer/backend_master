@@ -24,4 +24,8 @@ public class ContentsService {
     public List<ContentInfoDTO> getContentInfos() {
         return contentsDAO.getContentInfos();
     }
+    public List<ContentInfoDTO> getContentSearchs() {
+        return contentsDAO.getContentSearchs();
+    }
+
 }

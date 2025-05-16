@@ -25,13 +25,20 @@ public class ContentsController {
 //        return contentsService.getAllContents();
 //    }
 
-    // 콘텐츠와 user 유저 조인 조회
+    // 콘텐츠와 user 유저 조인해서 모든 데이터 조회
     @GetMapping("/list")
     public List<ContentInfoDTO> getContentInfos() {
         System.out.println(contentsService.getContentInfos());
 
         return contentsService.getContentInfos();
+    }
 
+    // 콘텐츠와 user 유저 조인한  데이터 + 키워드 검색
+    @GetMapping("/search")
+    public List<ContentInfoDTO> getContentSearchs() {
+        System.out.println(contentsService.getContentSearchs());
+
+        return contentsService.getContentSearchs();
     }
 
 }
