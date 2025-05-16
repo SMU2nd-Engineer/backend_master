@@ -34,10 +34,12 @@ public class PaymentController {
 
     @PostMapping("/approve")
     public ResponseEntity<KakaoApproveResponseDTO> approvePayment(
-            @RequestParam String pgToken,
-            @RequestBody PaymentApproveRequestDTO request
-            ) {
-        PaymentGatewayService service = getPaymentService(pgToken);
+            @RequestBody PaymentApproveRequestDTO request,
+            @RequestParam String payMethod
+    ) {
+        PaymentGatewayService service = getPaymentService(payMethod);
+        System.out.println("approvePayment called with pgToken: " + request.getPgToken());
+
         KakaoApproveResponseDTO response = service.approvePayment(request);
         return ResponseEntity.ok(response);
     }
