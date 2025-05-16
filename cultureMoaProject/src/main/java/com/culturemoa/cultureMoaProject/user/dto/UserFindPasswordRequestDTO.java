@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserFindPasswordRequestDTO {
     private String id;
-    private String email;
     private String name;
+    private String email;
 }

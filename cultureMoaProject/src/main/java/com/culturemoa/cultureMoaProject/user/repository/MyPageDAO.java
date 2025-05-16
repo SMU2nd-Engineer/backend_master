@@ -1,12 +1,11 @@
 package com.culturemoa.cultureMoaProject.user.repository;
 
-import com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPageGetUserInfoDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPagePasswordCheckDTO;
-import com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO;
+import com.culturemoa.cultureMoaProject.user.dto.*;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 마이페이지 관련 DAO 클래스
@@ -53,4 +52,22 @@ public class MyPageDAO {
         return sqlSessionTemplate.update("myPageMapper.updateUserInfo", myPageUpdateUserInfoDTO);
     }
 
+    /**
+     * 찜 목록 데이터 가져오기 dao
+     * @param userId : 토큰에서 추출한 id
+     * @return List<MyPageWishListDTO> : 찜으로 선택한 상품 정보가 리스트로 담김
+     */
+    public List<MyPageWishListDTO> getMyWishListInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getWishListInfo", userId);
+    }
+
+    /**
+     * 총 별점 점수를 가져오기 위한 dao
+     * @param userId : 토큰에서 추출한 id
+     * @return : 총 별점의 점수와, 총 개수가 담긴 dto
+     */
+    public MyPageTotalRatingDTO getTotalRatingByUserId (String userId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getTotalRating", userId);
+    }
+    
 }

@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserFindIdResponseDTO {
     private String id;
+    private String socialLogin;
 }

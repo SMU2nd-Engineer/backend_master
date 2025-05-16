@@ -128,7 +128,7 @@ public class UserController {
      * @return : 200을 전달
      */
     @PostMapping("/passwordFind")
-    public ResponseEntity<?> passwordFind (UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
+    public ResponseEntity<?> passwordFind (@RequestBody UserFindPasswordRequestDTO userFindPasswordRequestDTO) {
         userService.passwordFind(userFindPasswordRequestDTO);
         return ResponseEntity.ok("정보가 일치합니다.");
     }
