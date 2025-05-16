@@ -45,7 +45,7 @@
     </select>
 
 
-<!--  마이페이지 메인에서 별점에 표시한 점수를 가져오기  -->
+<!--  마이페이지 메인에서 별점에 표시할 점수 가져오기  -->
     <select id="getTotalRating" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageTotalRatingDTO" >
         select sum(RATING) as myPageTotalRating, count(*) as totalRatingCount
         from USER_REVIEW_TBL as UR
@@ -106,6 +106,15 @@
         select CC.TEXT, CC,IDX, CC.SDATE
         from CONTENTS_COMMENT_TBL as CC
         join USER_TBL as U on U.IDX = CC.USER_IDX
+        where U.ID = #{userId}
+        order by CC.SDATE DESC;
+    </select>
+
+<!--  마이페이지 리뷰 탭에서 사용자 정보 가져오기  -->
+    <select id="getMyTextReviewListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageCommentDTO" >
+        select UR.TEXT, UR,IDX, UR.SDATE
+        from USER_REVIEW_TBL as UR
+        join USER_TBL as U on U.IDX = UR.USER_IDX
         where U.ID = #{userId}
         order by CC.SDATE DESC;
     </select>
