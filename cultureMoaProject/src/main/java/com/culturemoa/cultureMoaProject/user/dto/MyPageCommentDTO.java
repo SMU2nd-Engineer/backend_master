@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MyPageCommentDTO {
-    private String comment;
-    private LocalDateTime date;
+    private int idx;
+    private String text;
+    private LocalDateTime sDate;
 }

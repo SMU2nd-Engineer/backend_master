@@ -124,4 +124,26 @@ public class MyPageController {
         return ResponseEntity.ok(myPageProductListDTO);
     }
 
+    /**
+     * 마이페이지 게시판-게시판 내용 가져올 컨트롤러
+     * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
+     * @return 사용자 작성 게시판 정보가 담긴 리스트
+     */
+    @GetMapping("/getMyBoardList")
+    public ResponseEntity<?> getMyBoardList (HttpServletRequest pRequest) {
+        List<MyPageBoardDTO> myPageProductListDTO = myPageService.getMyBoardByToken(pRequest);
+        return ResponseEntity.ok(myPageProductListDTO);
+    }
+
+    /**
+     * 마이페이지 게시판-댓글 내용 가져올 컨트롤러
+     * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
+     * @return 사용자 작성 댓글 정보가 담긴 리스트
+     */
+    @GetMapping("/getMyCommentList")
+    public ResponseEntity<?> getMyCommentList (HttpServletRequest pRequest) {
+        List<MyPageCommentDTO> myPageProductListDTO = myPageService.getMyCommentToken(pRequest);
+        return ResponseEntity.ok(myPageProductListDTO);
+    }
+
 }

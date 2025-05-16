@@ -97,4 +97,22 @@ public class MyPageDAO {
         return sqlSessionTemplate.selectList("myPageMapper.getMyBuyListInfo", userId);
     }
 
+    /**
+     * 마이페이지 게시판 탭의 게시판 부분의 정보를 가져올 dao
+     * @param userId : 조회할 userID
+     * @return : 사용자가 작성한 게시판 정보가 담긴 DTO 리스트
+     */
+    public List<MyPageBoardDTO> getMyBoardByUserId(String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMyBoardListInfo", userId);
+    }
+
+    /**
+     * 마이페이지 게시판 탭의 댓글 부분의 정보를 가져올 dao
+     * @param userId : 조회할 userID
+     * @return : 사용자가 작성한 게시판 정보가 담긴 DTO 리스트
+     */
+    public List<MyPageCommentDTO> getMyCommentByUserId(String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMyCommentListInfo", userId);
+    }
+
 }

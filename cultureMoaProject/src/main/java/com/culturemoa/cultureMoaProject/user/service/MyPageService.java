@@ -161,6 +161,25 @@ public class MyPageService {
         return myPageDAO.getMyBuyProductByUserId(userId);
     }
 
+    /**
+     * 마이페이지 게시판 - 게시판 내용을 가져올 서비스
+     * @param pRequest : 헤더에서 토큰을 추출하기 위한 파라미터
+     * @return : List<MyPageBoardDTO>에 사용자가 작성한 게시판 정보가 담김
+     */
+    public List<MyPageBoardDTO> getMyBoardByToken(HttpServletRequest pRequest) {
+        String userId = getUserIdByAccessToken(pRequest);
+        return myPageDAO.getMyBoardByUserId(userId);
+    }
+
+    /**
+     * 마이페이지 게시판 - 댓글 내용을 가져올 서비스
+     * @param pRequest : 헤더에서 토큰을 추출하기 위한 파라미터
+     * @return : List<MyPageCommentDTO>에 사용자가 작성한 게시판 정보가 담김
+     */
+    public List<MyPageCommentDTO> getMyCommentToken(HttpServletRequest pRequest) {
+        String userId = getUserIdByAccessToken(pRequest);
+        return myPageDAO.getMyCommentByUserId(userId);
+    }
 
     // ------------------------------------------ //
 
