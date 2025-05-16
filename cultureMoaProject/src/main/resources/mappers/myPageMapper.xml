@@ -31,8 +31,8 @@
     </update>
 
 <!--  마이페이지 찜 목록 정보 가져오기  -->
-    <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageWishListDTO">
-        select P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
+    <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO">
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
         from USER_PICK_TBL as UP
         join USER_TBL as U on U.IDX = UP.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
@@ -47,5 +47,37 @@
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.USER_IDX
         where U.ID = #{userId}
+    </select>
+
+<!--  마이페이지 메인에서 찜 목록 최신 2개만 가져오기  -->
+    <select id="getMainPeakListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO">
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
+        from USER_PICK_TBL as UP
+        join USER_TBL as U on U.IDX = UP.USER_IDX
+        join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
+        join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
+        where U.ID = #{userId}
+        order by UP.SDATE DESC;
+        limit 2;
+    </select>
+<!--  마이페이지에 거래 내역에서 판매한 상품 목록을 가져오기  -->
+    <select id="getMySellListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO" >
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
+        from USER_TRANSACTION_TBL as UT
+        join USER_TBL as U on U.IDX = UT.USER_IDX
+        join PRODUCT_TBL as P on P.IDX = UT.PRODUCT_IDX
+        join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
+        where U.ID = #{userId} and UT.DIVISION = 0
+        order by UT.SDATE DESC;
+    </select>
+<!--  마이페이지에 거래 내역에서 구매한 상품 목록을 가져오기  -->
+    <select id="getMyBuyListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO" >
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
+        from USER_TRANSACTION_TBL as UT
+        join USER_TBL as U on U.IDX = UT.USER_IDX
+        join PRODUCT_TBL as P on P.IDX = UT.PRODUCT_IDX
+        join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
+        where U.ID = #{userId} and UT.DIVISION = 1
+        order by UT.SDATE DESC;
     </select>
 </mapper>

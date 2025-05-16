@@ -50,7 +50,7 @@ public class MyPageController {
      * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
      * @return : 개인정보를 MyPageGetUserInfoDTO 담아서 전달
      */
-    @PostMapping("/getUserInfo")
+    @GetMapping("/getUserInfo")
     public ResponseEntity<MyPageGetUserInfoDTO> myPageGetUserInfo (HttpServletRequest pRequest) {
         return ResponseEntity.ok(myPageService.getUserInfo(pRequest));
     }
@@ -74,10 +74,10 @@ public class MyPageController {
      * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
      * @return : MyPageWishListDTO 배열을 반환
      */
-    @PostMapping("/wishListInfo")
-    public ResponseEntity<List<MyPageWishListDTO>> getMyWishListInfo (HttpServletRequest pRequest) {
-        List<MyPageWishListDTO> myPageWishListDTO = myPageService.getWishListByToken(pRequest);
-        return ResponseEntity.ok(myPageWishListDTO);
+    @GetMapping("/peakListInfo")
+    public ResponseEntity<List<MyPageProductListDTO>> getMyPeakListInfo (HttpServletRequest pRequest) {
+        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getWishListByToken(pRequest);
+        return ResponseEntity.ok(myPageProductListDTO);
     }
 
     /**
@@ -85,9 +85,43 @@ public class MyPageController {
      * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
      * @return : 정보가 담긴 MyPageTotalRatingDTO를 반환
      */
-    @PostMapping("/myTotalRating")
+    @GetMapping("/myTotalRating")
     public ResponseEntity<?> getMyTotalRating (HttpServletRequest pRequest) {
         MyPageTotalRatingDTO MyPageTotalRatingDTO = myPageService.getTotalRatingByToken(pRequest);
         return ResponseEntity.ok(MyPageTotalRatingDTO);
     }
+
+    /**
+     * 메인페이지 용 으로 2개만 추출하기 위한 서비스
+     * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
+     * @return : 찜 목록이 최대 2개까지 담긴 데이터
+     */
+    @GetMapping("/getLastestPeak")
+    public ResponseEntity<?> getLastestPeakInfo (HttpServletRequest pRequest) {
+        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getWishListByToken(pRequest);
+        return ResponseEntity.ok(myPageProductListDTO);
+    }
+
+    /**
+     * 판매 내역 조회 위한 컨트롤러
+     * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
+     * @return 판매 내역이 담긴 리스트
+     */
+    @GetMapping("/getMySellList")
+    public ResponseEntity<?> getSellProductInfo (HttpServletRequest pRequest) {
+        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getSellListByToken(pRequest);
+        return ResponseEntity.ok(myPageProductListDTO);
+    }
+
+    /**
+     * 구매 내역 조회 위한 컨트롤러
+     * @param pRequest : 헤더에서 id 찾기 위해 넣는 변수
+     * @return 구매 내역이 담긴 리스트
+     */
+    @GetMapping("/getMyBuyList")
+    public ResponseEntity<?> getBuyProductInfo (HttpServletRequest pRequest) {
+        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getBuyListByToken(pRequest);
+        return ResponseEntity.ok(myPageProductListDTO);
+    }
+
 }

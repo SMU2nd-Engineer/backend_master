@@ -1,6 +1,5 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
-import com.culturemoa.cultureMoaProject.common.jwt.JwtAuthenticationFilter;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
@@ -114,7 +113,7 @@ public class MyPageService {
      * @param pRequest : 헤더에서 토큰을 추출하기 위한 파라미터
      * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
      */
-    public List<MyPageWishListDTO> getWishListByToken(HttpServletRequest pRequest) {
+    public List<MyPageProductListDTO> getWishListByToken(HttpServletRequest pRequest) {
         String userId = getUserIdByAccessToken(pRequest);
 
         return myPageDAO.getMyWishListInfoByUserId(userId);
@@ -131,6 +130,37 @@ public class MyPageService {
 
         return myPageDAO.getTotalRatingByUserId(userId);
     }
+
+    /**
+     * 헤더에서 userId를 추출하여 메인 페이지에 쓸 찜 목록을 가져오는 서비스
+     * @param pRequest : 헤더에서 토큰을 추출하기 위한 파라미터
+     * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
+     */
+    public List<MyPageProductListDTO> getMainPeakListByToken(HttpServletRequest pRequest) {
+        String userId = getUserIdByAccessToken(pRequest);
+        return myPageDAO.getMyMainPeakListInfoByUserId(userId);
+    }
+
+    /**
+     * 마이페이지 판매 내역을 위한 서비스
+     * @param pRequest : 헤더에서 토큰을 추출하기 위한 파라미터
+     * @return List<MyPageWishListDTO>로 조죄한 판매 내역 정보가 담김
+     */
+    public List<MyPageProductListDTO> getSellListByToken(HttpServletRequest pRequest) {
+        String userId = getUserIdByAccessToken(pRequest);
+        return myPageDAO.getMySellProductByUserId(userId);
+    }
+
+    /**
+     * 마이페이지 구매 내역을 위한 서비스
+     * @param pRequest : 헤더에서 토큰을 추출하기 위한 파라미터
+     * @return List<MyPageWishListDTO>로 조죄한 구매 내역 정보가 담김
+     */
+    public List<MyPageProductListDTO> getBuyListByToken(HttpServletRequest pRequest) {
+        String userId = getUserIdByAccessToken(pRequest);
+        return myPageDAO.getMyBuyProductByUserId(userId);
+    }
+
 
     // ------------------------------------------ //
 
