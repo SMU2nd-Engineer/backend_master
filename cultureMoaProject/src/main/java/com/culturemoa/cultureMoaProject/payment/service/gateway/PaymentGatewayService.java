@@ -1,9 +1,9 @@
 package com.culturemoa.cultureMoaProject.payment.service.gateway;
 
+import com.culturemoa.cultureMoaProject.payment.dto.KakaoApproveResponseDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentReadyRequestDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentApproveRequestDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentResponseDTO;
-import org.springframework.stereotype.Service;
 
 /**
  * PaymentGatewayService
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
  */
 public interface PaymentGatewayService {
     // 결제 준비 단계(결제 페이지 이동 링크 발급, TID 발급 등)
-    PaymentResponseDTO readyToPay(PaymentReadyRequestDTO requestDTO);
+    PaymentResponseDTO readyToPay(PaymentReadyRequestDTO request);
     // 사용자가 결제 완료 후, 결제 승인 처리(최종 결제 확정)
-    void approvePayment(PaymentApproveRequestDTO approveDTO);
+    KakaoApproveResponseDTO approvePayment(PaymentApproveRequestDTO request);
     // 결제 수단 문자열로 반환
     String getPayMethod();
 }

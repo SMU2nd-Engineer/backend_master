@@ -1,5 +1,7 @@
 package com.culturemoa.cultureMoaProject.payment.controller;
 
+import com.culturemoa.cultureMoaProject.payment.dto.KakaoApproveResponseDTO;
+import com.culturemoa.cultureMoaProject.payment.dto.PaymentApproveRequestDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentReadyRequestDTO;
 import com.culturemoa.cultureMoaProject.payment.dto.PaymentResponseDTO;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
@@ -27,6 +29,16 @@ public class PaymentController {
         // service객체의 readyToPay 메서드 호출하고 결과를 PaymentResponseDTO로 반환
         PaymentResponseDTO response = service.readyToPay(request);
         // HTTP 상태코드 200(ok)과 함께 response를 JSON으로 변환하여 클라이언트에 응답
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/approve")
+    public ResponseEntity<KakaoApproveResponseDTO> approvePayment(
+            @RequestParam String pgToken,
+            @RequestBody PaymentApproveRequestDTO request
+            ) {
+        PaymentGatewayService service = getPaymentService(pgToken);
+        KakaoApproveResponseDTO response = service.approvePayment(request);
         return ResponseEntity.ok(response);
     }
 

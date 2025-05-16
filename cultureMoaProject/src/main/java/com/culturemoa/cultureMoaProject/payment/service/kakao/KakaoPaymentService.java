@@ -3,7 +3,6 @@ package com.culturemoa.cultureMoaProject.payment.service.kakao;
 import com.culturemoa.cultureMoaProject.payment.dto.*;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -74,7 +73,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
     }
 
     @Override
-    public void approvePayment(PaymentApproveRequestDTO approveDTO) {
+    public KakaoApproveResponseDTO approvePayment(PaymentApproveRequestDTO approveDTO) {
         // 카카오페이 API 호출 -> 결제 승인
         // HTTP 요청 헤더를 설정하는 객체
         HttpHeaders headers = new HttpHeaders();
@@ -95,12 +94,13 @@ public class KakaoPaymentService implements PaymentGatewayService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
 
         // 승인 호출 (성공 or 실패 판단용)
-        restTemplate.postForEntity(
+        ResponseEntity<KakaoApproveResponseDTO> response = restTemplate.postForEntity(
                 KAKAO_APROVE_URL,
                 request,
-                String.class
+                KakaoApproveResponseDTO.class
         );
 
+        return response.getBody();
     }
 
     @Override
