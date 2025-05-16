@@ -25,17 +25,17 @@ public class TicketController {
         return ticketService.getAllTicket();
     }
 
-    // 장르별
-    // 전체 장르 목록 반환
-    @GetMapping("/genre")
-    public List<String> getAllGenres() {
-        return ticketService.getAllGenres();
-    }
-    // 선택된 장르의 티켓 리스트 반환
-    @GetMapping("/genre/{genreName}")
-    public List<TicketDTO> getTicketsByGenre(@PathVariable String genreName) {
-        return ticketService.getTicketsByGenre(genreName);
-    }
+//    // 장르별
+//    // 전체 장르 목록 반환
+//    @GetMapping("/genre")
+//    public List<String> getAllGenres() {
+//        return ticketService.getAllGenres();
+//    }
+//    // 선택된 장르의 티켓 리스트 반환
+//    @GetMapping("/genre/{genreName}")
+//    public List<TicketDTO> getTicketsByGenre(@PathVariable String genreName) {
+//        return ticketService.getTicketsByGenre(genreName);
+//    }
 
 //    // 날짜별
 //    // 전체 날짜별 + 장르별 개수 목록
