@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class ProductDTO {
     private Long idx;
     private Long category_idx;
+    private Long categorygenre_idx;
     private String title;
     private LocalDateTime sDate =LocalDateTime.now();
     private LocalDateTime eDate;
@@ -23,6 +24,7 @@ public class ProductDTO {
     private boolean flag;
     private String imageUrl;
     private String content;
+
 
 //    private ProductDetailDTO detail;
 
