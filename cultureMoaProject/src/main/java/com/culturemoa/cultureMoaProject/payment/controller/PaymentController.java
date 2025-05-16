@@ -44,6 +44,16 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/cancel")
+    public void cancel() {
+
+    }
+
+    @GetMapping("/fail")
+    public void fail(){
+
+    }
+
     private PaymentGatewayService getPaymentService(String payMethod) {
         PaymentGatewayService service = paymentGatewayServices.get(payMethod.toLowerCase());
         if(service == null){
