@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.product.repository;
 
 import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductDetailDTO;
+import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -10,8 +11,12 @@ import java.util.List;
 
 @Repository
 public class ProductDAO {
+    private final SqlSessionTemplate sqlSessionTemplate;
+
     @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+    public ProductDAO(SqlSessionTemplate sqlSessionTemplate) {
+        this.sqlSessionTemplate = sqlSessionTemplate;
+    }
 
     public List<ProductDTO> getAllProduct() {
         return sqlSessionTemplate.selectList("productMapper.getAllProduct");
@@ -27,4 +32,10 @@ public class ProductDAO {
     public void insertProductDetail(ProductDetailDTO productdetail){
         sqlSessionTemplate.insert("productMapper.insertProductDetail", productdetail);
     }
+
+    public List<ProductDTO> searchProducts(ProductSearchDTO searchDTO) {
+        return sqlSessionTemplate.selectList("productMapper.searchProducts", searchDTO);
+    }
+
+
 }

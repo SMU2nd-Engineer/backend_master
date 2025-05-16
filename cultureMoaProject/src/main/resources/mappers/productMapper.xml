@@ -4,17 +4,18 @@
     <resultMap id="getAllProduct" type="hashmap">
 
     </resultMap>
-
+    <!-- 전체 정보 가져오기 -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
-        SELECT MAIN.IDX, CATEGORY_IDX, TITLE, SDATE, EDATE,
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
                 USERID, PRICE, FLAG, IMAGE_URL, CONTENT
         FROM PRODUCT_TBL MAIN
         LEFT OUTER JOIN PRODUCT_DETAIL_TBL DETAIL ON
                 MAIN.IDX = DETAIL.PRODUCT_IDX
     </select>
 
+    <!-- 해당 idx에 맞는 정보 가져오기 -->
     <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="int">
-        SELECT MAIN.IDX, CATEGORY_IDX, TITLE, SDATE, EDATE,
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
                USERID, PRICE, FLAG, IMAGE_URL, CONTENT
         FROM PRODUCT_TBL MAIN
         LEFT OUTER JOIN PRODUCT_DETAIL_TBL DETAIL ON
@@ -22,14 +23,46 @@
         WHERE MAIN.IDX = #{idx}
     </select>
 
+    <!-- 상품 등록 (카테고리 번호, 상품 장르, 상품 이름, 날짜, 아이디, 가격) -->
     <insert id="insertProduct" useGeneratedKeys="true" keyProperty="idx" >
         INSERT INTO  PRODUCT_TBL (
-                    CATEGORY_IDX, TITLE, SDATE, EDATE, USERID, PRICE, FLAG)
+                    CATEGORY_IDX, CATEGORYGENRE_IDX,  TITLE, SDATE, EDATE, USERID, PRICE, FLAG)
                VALUES (
-                    #{category_idx}, #{title}, #{sDate}, #{eDate}, #{userId}, #{price}, #{flag})
+                    #{category_idx}, #{categorygenre_idx}, #{title}, #{sDate}, #{eDate}, #{userId}, #{price}, #{flag})
     </insert>
+
+    <!-- 상품 상세 정보 등록 (상품코드번호, 이미지 주소, 상세설명 ) -->
     <insert id="insertProductDetail" >
         INSERT INTO PRODUCT_DETAIL_TBL ( PRODUCT_IDX, IMAGE_URL, CONTENT)
         VALUES (#{product_idx}, #{imageUrl}, #{content} )
     </insert>
+
+    <!-- 상품 검색 (상품이름, 상품장르, 카테고리, 상세설명)-->
+    <select id="searchProducts" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO">
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
+                USERID, PRICE, FLAG, IMAGE_URL, CONTENT
+        FROM PRODUCT_TBL MAIN
+        LEFT OUTER JOIN PRODUCT_DETAIL_TBL DETAIL ON
+                 MAIN.IDX = DETAIL.PRODUCT_IDX
+        <where>
+<!--            <if test="searchDTO.getCategory_idx() > 0">-->
+<!--                CATEGORY_IDX = #{searchDTO.getCategory_idx()}-->
+<!--            </if>-->
+<!--            <if test="searchDTO.geCategorygenre_idx() > 0">-->
+<!--                CATEGORYGENRE_IDX = #{searchDTO.geCategorygenre_idx()}-->
+<!--            </if>-->
+<!--            <if test="searchDTO.getKeyword() > 0">-->
+<!--                KEYWORD = #{searchDTO.getKeyword()}-->
+<!--            </if>-->
+            <if test="keyword > 0">
+                CATEGORY_IDX = #{keyword}
+            </if>
+            <if test="category_idx > 0">
+                CATEGORYGENRE_IDX = #{category_idx}
+            </if>
+            <if test="categorygenre_idx > 0">
+                KEYWORD = #{categorygenre_idx}
+            </if>
+        </where>
+    </select>
 </mapper>

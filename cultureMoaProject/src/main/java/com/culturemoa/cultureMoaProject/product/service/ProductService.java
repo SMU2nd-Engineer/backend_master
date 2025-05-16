@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.product.service;
 
 import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductDetailDTO;
+import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import com.culturemoa.cultureMoaProject.product.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,9 @@ public class ProductService {
         productDAO.insertProductDetail(detail);
     }
 
-
+    public List<ProductDTO> searchProducts(ProductSearchDTO searchDTO) {
+        return productDAO.searchProducts(searchDTO);
+    }
 
 
 }

@@ -1,6 +1,7 @@
 package com.culturemoa.cultureMoaProject.product.controller;
 
 import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
+import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import com.culturemoa.cultureMoaProject.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,13 @@ public class ProductController {
         productDTO.setFlag(false);
         productService.insertProduct(productDTO);
         return productDTO;
+    }
+
+    @GetMapping("/search")
+    public List<ProductDTO> searchProducts (ProductSearchDTO searchDTO){
+//        System.out.print(productService.searchProduct());
+
+        return productService.searchProducts(searchDTO);
     }
 }
 
