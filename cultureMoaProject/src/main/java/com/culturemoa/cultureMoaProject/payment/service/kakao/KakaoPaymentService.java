@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * KakaoPaymentService
@@ -62,7 +63,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
         KakaoReadyResponseDTO body = response.getBody();
 
         return new PaymentResponseDTO(
-                body.getTid(),
+                Objects.requireNonNull(body).getTid(),
                 body.getNextRedirectPcUrl(),
                 body.getNextRedirectMobileUrl(),
                 body.getNextRedirectAppUrl(),
