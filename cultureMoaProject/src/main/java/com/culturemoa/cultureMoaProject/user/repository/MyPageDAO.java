@@ -62,15 +62,6 @@ public class MyPageDAO {
     }
 
     /**
-     * 총 별점 점수를 가져오기 위한 dao
-     * @param userId : 토큰에서 추출한 id
-     * @return : 총 별점의 점수와, 총 개수가 담긴 dto
-     */
-    public MyPageTotalRatingDTO getTotalRatingByUserId (String userId) {
-        return sqlSessionTemplate.selectOne("myPageMapper.getTotalRating", userId);
-    }
-
-    /**
      * 마이페이지 메인에 전달할 찜 목록 2개 DAO
      * @param userId : 조회할 userID
      * @return 최대 2개가 담긴 DTO 리스트
@@ -113,6 +104,25 @@ public class MyPageDAO {
      */
     public List<MyPageCommentDTO> getMyCommentByUserId(String userId) {
         return sqlSessionTemplate.selectList("myPageMapper.getMyCommentListInfo", userId);
+    }
+
+    /**
+     * 총 별점 점수를 가져오기 위한 dao
+     * @param userId : 토큰에서 추출한 id
+     * @return : 총 별점의 점수와, 총 개수가 담긴 dto
+     */
+    public MyPageAverageRatingDTO getAverageRatingByUserId (String userId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getTotalRating", userId);
+    }
+
+
+    /**
+     * 별점을 제외한 나머지 리뷰 탭의 정보를 가져오는 DAO
+     * @param userId : 토큰에서 추출한 id
+     * @return : List<ReviewListDTO>
+     */
+    public List<ReviewListDTO> getMyReviewInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMyReviewListInfo", userId);
     }
 
 }

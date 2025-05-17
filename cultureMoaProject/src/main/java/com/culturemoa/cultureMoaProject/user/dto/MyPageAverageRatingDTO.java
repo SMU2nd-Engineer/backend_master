@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyPageTotalRatingDTO {
+public class MyPageAverageRatingDTO {
     public double myPageTotalRating;
-    public int totalRatingCount;
 }

@@ -45,15 +45,6 @@
     </select>
 
 
-<!--  마이페이지 메인에서 별점에 표시할 점수 가져오기  -->
-    <select id="getTotalRating" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageTotalRatingDTO" >
-        select sum(RATING) as myPageTotalRating, count(*) as totalRatingCount
-        from USER_REVIEW_TBL as UR
-        join USER_TBL as U on U.IDX = UR.USER_IDX
-        where U.ID = #{userId}
-    </select>
-
-
 <!--  마이페이지 메인에서 찜 목록 최신 2개만 가져오기  -->
     <select id="getMainPeakListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO">
         select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
@@ -74,19 +65,19 @@
         join USER_TBL as U on U.IDX = UT.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UT.PRODUCT_IDX
         join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
-        where U.ID = #{userId} and UT.DIVISION = 0
+        where U.ID = #{userId}
         order by UT.SDATE DESC;
     </select>
 
 
 <!--  마이페이지에 거래 내역에서 구매한 상품 목록을 가져오기  -->
     <select id="getMyBuyListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO" >
-        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl, UT.DIVISION
         from USER_TRANSACTION_TBL as UT
         join USER_TBL as U on U.IDX = UT.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UT.PRODUCT_IDX
         join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
-        where U.ID = #{userId} and UT.DIVISION = 1
+        where U.ID = #{userId}
         order by UT.SDATE DESC;
     </select>
 
@@ -103,19 +94,30 @@
 
 <!--  마이페이지 게시판 탭에서 사용자 작성 댓글 정보 가져오기  -->
     <select id="getMyCommentListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageCommentDTO" >
-        select CC.TEXT, CC,IDX, CC.SDATE
+        select CC.TEXT, CC.IDX, CC.SDATE
         from CONTENTS_COMMENT_TBL as CC
         join USER_TBL as U on U.IDX = CC.USER_IDX
         where U.ID = #{userId}
         order by CC.SDATE DESC;
     </select>
 
-<!--  마이페이지 리뷰 탭에서 사용자 정보 가져오기  -->
-    <select id="getMyTextReviewListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageCommentDTO" >
-        select UR.TEXT, UR,IDX, UR.SDATE
+
+<!--  마이페이지 메인에서 별점에 표시할 평균 점수 가져오기  -->
+    <select id="getTotalRating" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageAverageRatingDTO" >
+        select avg(RATING) as myPageTotalRating
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.USER_IDX
         where U.ID = #{userId}
-        order by CC.SDATE DESC;
     </select>
+
+
+<!--  마이페이지 리뷰 탭 사용할 사용자 리뷰 정보 가져오기  -->
+    <select id="getMyReviewListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.ReviewListDTO" >
+        select UR.REVIEW, UR.IDX, UR.SDATE, UR.EVALUATION
+        from USER_REVIEW_TBL as UR
+        join USER_TBL as U on U.IDX = UR.USER_IDX
+        where U.ID = #{userId}
+        order by UR.SDATE DESC;
+    </select>
+
 </mapper>

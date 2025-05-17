@@ -1,9 +1,13 @@
 package com.culturemoa.cultureMoaProject.common.jwt;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -41,10 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest pRequest, @NonNull HttpServletResponse pResponse, @NonNull FilterChain pFilterChain)
             throws ServletException, IOException {
         // 토큰 검증 예외 처리(로그인, 회원가입, 아이디/비밀번호 찾기 등 토큰 발급이 필요 없는 경우 추가하기 위해서 넣음)
-        // 디버깅 코드
+        // 디버깅 코드 - 나중에 지울것
         System.out.println("[Filter] JwtAuthenticationFilter 실행됨");
         System.out.println("[Filter] 요청 URI: " + pRequest.getRequestURI());
         String requestURI = pRequest.getRequestURI();
+
         // 모든 경로를 jwt 토큰 검증을 빼기 위하여 설정 나중에 필요한 항목만 넣어주어야 함.
         if (requestURI.startsWith("/")
 //        requestURI.equals("/login")
@@ -65,35 +70,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         System.out.println(" return 이 걸리지 않고서 여기가 실행됨");
-        String token = jwtProvider.resolveToken(pRequest);
-        System.out.println(token);
+        String token = jwtProvider.resolveToken(pRequest); // 헤더에서 토큰만 추출
         if (token == null) { // 토큰이 비어있을 경우 401 반환
-            pResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
-            pResponse.setContentType("application/json"); // axios에서 정확히 받도록
-            pResponse.setCharacterEncoding("UTF-8"); // 한글 깨지지 않도록 설정
-            pResponse.getWriter().write("{\"error\": \"토큰이 없습니다.\"}");
+            sendErrorResponse(pResponse, "토큰이 없습니다.");
             return; // 요청 중단
         }
         try {
+            if( !jwtValidator.validatorToken(token)) {
+                sendErrorResponse(pResponse, "유효하지 않은 토큰입니다.");
+                return; // 요청 중단
+            }
+            // 인증 객체에 담을 정보 추출 - 아이디 및 권한 설정을 위한 정보
+            String userId = jwtProvider.getUserIdFromToken(token); // 아이디 추출
+            // 권한 설정
+            String role = userId.equals("admin123") ? "ROLE_ADMIN" : "ROLE_USER"; //  관례를 지켜서 권한 설정
+            // GrantedAuthority 구현한 클래스인 SimpleGrantedAuthority 사용 하나 확장성을 위해 List로 설정
+            List<GrantedAuthority> authorityList =
+                    // 인텔리제이 추천 및 스프링 추천 방식인 불변 리스트를 만드는 Java 유틸리티 메서드 사용
+                    Collections.singletonList(new SimpleGrantedAuthority(role)); // 인텔리제이 추천 및 스프링 추천인
+
             // 검증 진행 후 검증이 true 이면 시큐리티 인증 되도록 authentication 변수 생성
-            if( jwtValidator.validatorToken(token)) {
                 UsernamePasswordAuthenticationToken authentication =
                         // 추가 적인 권한을 설정 할려면 인자를 null이 아닌 권한으로 설정할 것.
-                        new UsernamePasswordAuthenticationToken(token, null, null);
+                        new UsernamePasswordAuthenticationToken(token, null, authorityList);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 pFilterChain.doFilter(pRequest, pResponse); // 다음 단계로 가도록 넣어준 코드
                 return;
-            }
 
         } catch (RuntimeException e) {
             // 토큰이 유효하지 않으니 401 error 반환하도록 구성
-            pResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
-            pResponse.setContentType("application/json"); // axios에서 정확히 받도록
-            pResponse.setCharacterEncoding("UTF-8"); // 한글 깨지지 않도록 설정
-            pResponse.getWriter().write("{\"error\": \"유효하지 않은 토큰입니다.\"}");
+            sendErrorResponse(pResponse, "유효하지 않은 코드입니다.");
             return; // 요청 중단
         }
-//        filterChain.doFilter(request, response); // 다음 필터로 전달 - 스프링 시큐리티 - 잘 못 되코드로 일단 주석 처리
+    }
+
+    private void sendErrorResponse(HttpServletResponse pResponse, String message) throws IOException {
+        pResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+        pResponse.setContentType("application/json"); // axios에서 정확히 받도록
+        pResponse.setCharacterEncoding("UTF-8"); // 한글 깨지지 않도록 설정
+        pResponse.getWriter().write("{\"error\": \"" + message + "\"}");
     }
 
 }
