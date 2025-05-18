@@ -5,6 +5,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,7 +84,41 @@ public class UserDAO {
         return sqlSessionTemplate.selectOne("userMapper.passwordFindMatch", userFindPasswordRequestDTO);
     }
 
+    /**
+     * 회원 탈퇴 로직
+     * @param userWithdrawalDTO : 탈퇴 회원 정보를 담을 DTO
+     * @return : userWithdrawalDTO
+     */
     public int updateWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
-        return sqlSessionTemplate.delete("userMapper.updateWithdrawal", userWithdrawalDTO);
+        return sqlSessionTemplate.update("userMapper.updateWithdrawal", userWithdrawalDTO);
     }
+
+    /**
+     * 선호도 조사 페이지를 위한 쿼리
+     * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
+     */
+    public List<UserCategorySubDTO> getCategorySubInfo () {
+        return sqlSessionTemplate.selectList("userMapper.getCategorySubInfo");
+    }
+
+    /**
+     * 유저 선호도 값을 DB에 넣기
+     * @param userChooseFavoriteDTO : 유전 선호도 배열과 IDX, SDATE
+     * @return : 성공적으로 들어갔는지 아닌지 확인하기 위한 INT
+     */
+    public int insertUserFavorites (UserChooseFavoriteDTO userChooseFavoriteDTO) {
+        return sqlSessionTemplate.insert("userMapper.insertFavorite", userChooseFavoriteDTO);
+        
+    }
+
+    /**
+     * 선호도에 넣을 USER_IDX를 얻기 위한 DAO
+     * @param userId : 인증객체에서 추출한 유저 아이디
+     * @return : USER_IDX
+     */
+    public int getUserIdx (String userId) {
+        return sqlSessionTemplate.selectOne("userMapper.getUserIdx", userId);
+    }
+
+
 }

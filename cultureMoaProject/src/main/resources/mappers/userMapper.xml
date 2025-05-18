@@ -48,4 +48,24 @@
         set WDATE = #{wDate}, EDATE = #{eDate}
         where ID = #{id} and WDATE is null
     </update>
+
+<!--  회원가입시 선호도 체크에 사용할 category sub 테이블 조회  -->
+    <select id="getCategorySubInfo" resultType="com.culturemoa.cultureMoaProject.user.dto.UserCategorySubDTO">
+        select IDX, NAME from CATEGORYSUB_TBL;
+    </select>
+
+<!--  회원가입에서 선호도 선택할 경우 값 넣기  -->
+    <insert id="insertFavorite" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserChooseFavoriteDTO" >
+        insert into USER_FAVORITE_TBL
+        ( USER_IDX, CATEGORYSUB_IDX, SDATE)
+        values
+        <foreach collection="favorites" item="favorite" separator="," >
+            (#{userIdx}, #{favorite}, #{sDate})
+        </foreach>
+    </insert>
+
+<!--  유저 아이디로 유저 idx 추출  -->
+    <select id="getUserIdx" parameterType="String" resultType="int" >
+        select IDX from USER_TBL where ID = #{userId}
+    </select>
 </mapper>
