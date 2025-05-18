@@ -64,21 +64,23 @@ public class MyPageController {
     }
 
     /**
+     * 메인페이지 데이터를 추출하기 위한 컨트롤러
+     * @return : 찜 목록이 최대 2개까지 담긴 데이터
+     */
+    @GetMapping("/getMyMainInfo")
+    public ResponseEntity<?> getLastestPeakInfo () {
+        MyPageMainDTO myPageMainDTO = myPageService.getMainInfoListByAuth();
+        System.out.println(myPageMainDTO);
+        return ResponseEntity.ok(myPageMainDTO);
+    }
+
+
+    /**
      * 찜 목록 조회 후 데이터 전달하는 컨트롤러
      * @return : MyPageWishListDTO 배열을 반환
      */
     @GetMapping("/peakListInfo")
     public ResponseEntity<List<MyPageProductListDTO>> getMyPeakListInfo () {
-        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getWishListByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
-    }
-
-    /**
-     * 메인페이지 용 으로 2개만 추출하기 위한 서비스
-     * @return : 찜 목록이 최대 2개까지 담긴 데이터
-     */
-    @GetMapping("/getLastestPeak")
-    public ResponseEntity<?> getLastestPeakInfo () {
         List<MyPageProductListDTO> myPageProductListDTO = myPageService.getWishListByAuth();
         return ResponseEntity.ok(myPageProductListDTO);
     }

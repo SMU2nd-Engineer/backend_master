@@ -53,6 +53,37 @@ public class MyPageDAO {
     }
 
     /**
+     * 마이페이지 메인에 전달할 찜 목록 2개 DAO
+     * @param userId : 조회할 userID
+     * @return 최대 2개가 담긴 DTO 리스트
+     */
+    public List<MyPageProductListDTO> getMyMainPeakListInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMainPeakListInfo", userId);
+    }
+
+
+    /**
+     * 마이페이지 메인에 전달할 구매 목록 4개 DAO
+     * @param userId : 조회할 userID
+     * @return 최대 4개가 담긴 DTO 리스트
+     */
+    public List<MyPageProductListDTO> getMyMainSellListInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMainSellListInfo", userId);
+    }
+
+
+    /**
+     * 마이페이지 메인에 전달할 리뷰 정보 5개가 담긴 DAO
+     * @param userId : 조회할 userID
+     * @return 최대 5개가 담긴 DTO 리스트
+     */
+    public List<ReviewListDTO> getMyMainReviewListInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMainReviewListInfo", userId);
+    }
+
+
+
+    /**
      * 찜 목록 데이터 가져오기 dao
      * @param userId : 토큰에서 추출한 id
      * @return List<MyPageWishListDTO> : 찜으로 선택한 상품 정보가 리스트로 담김
@@ -61,14 +92,6 @@ public class MyPageDAO {
         return sqlSessionTemplate.selectList("myPageMapper.getWishListInfo", userId);
     }
 
-    /**
-     * 마이페이지 메인에 전달할 찜 목록 2개 DAO
-     * @param userId : 조회할 userID
-     * @return 최대 2개가 담긴 DTO 리스트
-     */
-    public List<MyPageProductListDTO> getMyMainPeakListInfoByUserId (String userId) {
-        return sqlSessionTemplate.selectList("myPageMapper.getMainPeakListInfo", userId);
-    }
 
     /**
      * 마이페이지 판매 내역쪽에 전달할 dao

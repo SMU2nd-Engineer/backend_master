@@ -115,12 +115,16 @@ public class MyPageService {
     }
 
     /**
-     * 헤더에서 userId를 추출하여 메인 페이지에 쓸 찜 목록을 가져오는 서비스
-     * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
+     * 헤더에서 userId를 추출하여 메인 페이지에 쓸 찜, 판매, 거래 후기 목록을 가져오는 서비스
+     * @return MyPageMainDTO로 별점과 각 항목의 리스트가 담긴 DTO
      */
-    public List<MyPageProductListDTO> getMainPeakListByAuth() {
+    public MyPageMainDTO getMainInfoListByAuth() {
         String userId = myPageGetUserId();
-        return myPageDAO.getMyMainPeakListInfoByUserId(userId);
+        MyPageAverageRatingDTO myPageAverageRating = myPageDAO.getAverageRatingByUserId(userId);
+        List<MyPageProductListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
+        List<MyPageProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
+        List<ReviewListDTO> myMainReview = myPageDAO.getMyMainReviewListInfoByUserId(userId);
+        return new MyPageMainDTO(myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
     }
 
     /**
