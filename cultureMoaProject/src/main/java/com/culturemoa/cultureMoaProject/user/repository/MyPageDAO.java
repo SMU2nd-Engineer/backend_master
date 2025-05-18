@@ -125,4 +125,32 @@ public class MyPageDAO {
         return sqlSessionTemplate.selectList("myPageMapper.getMyReviewListInfo", userId);
     }
 
+    /**
+     * 선호도 조사 페이지를 위한 쿼리
+     * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
+     */
+    public List<UserCategorySubDTO> getCategorySubInfo () {
+        return sqlSessionTemplate.selectList("myPageMapper.getCategorySubInfo");
+    }
+
+    /**
+     * 유저 선호도의 카테고리 서브 값 가져오기
+     * @param UserIdx : 사용자 idx
+     * @return : 카테고리 서브 idx가 담긴 배열
+     */
+    public List<Integer> getUserFavoritesList (int UserIdx) {
+        return sqlSessionTemplate.selectList("myPageMapper.getUserFavorites", UserIdx);
+    }
+
+
+    /**
+     * 유저 선호도 업데이트 - 테이블에서 행 삭제 후 삽입
+     * @param userMyPageFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
+     * @return 업데이트 성공 여부를 담은 int 값
+     */
+    public int updateUserFavoritesList (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+        sqlSessionTemplate.delete("myPageMapper.deleteUserFavorites", userMyPageFavoriteDTO.getUserIdx());
+        return sqlSessionTemplate.update("myPageMapper.insertUserFavorites", userMyPageFavoriteDTO);
+    }
+
 }

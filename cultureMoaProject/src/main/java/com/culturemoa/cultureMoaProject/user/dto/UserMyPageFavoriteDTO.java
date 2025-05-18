@@ -16,8 +16,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserChooseFavoriteDTO {
-    private List<String> favorites;
+public class UserMyPageFavoriteDTO {
+    private List<?> favorites;
     private int userIdx;
     private LocalDateTime sDate;
 }

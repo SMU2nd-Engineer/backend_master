@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * 회원 가입, 일반 또는 소셜 로그인, 아이디&닉네임 중복 체크, 비밀번호 변경, 아이디 찾기 컨트롤러
  */
@@ -161,25 +159,16 @@ public class UserController {
         return ResponseEntity.ok("회원탈퇴가 정상적으로 이루어졌습니다.");
     }
 
-    /**
-     * 선호도 카테고리 얻기 컨트롤러
-     * @return : 카테고리 이름과 idx 정보를 전달
-     */
-    @GetMapping("/getCategory")
-    public ResponseEntity<?> getCategorySubInfo () {
-        List<UserCategorySubDTO> userCategoryInfo = userService.getUserCategoryInfo();
-        return ResponseEntity.ok(userCategoryInfo);
-    }
 
     /**
      * 선호도 넣기 컨트롤러
-     * @param userChooseFavoriteDTO : 프론트에서 받은 데이터를 저장할 DTO
+     * @param userMyPageFavoriteDTO : 프론트에서 받은 데이터를 저장할 DTO
      * @return : 성공했을 경우 message 전달
      */
     @PostMapping("/registrationFavorites")
-    public ResponseEntity<?> insertFavorites (@RequestBody UserChooseFavoriteDTO userChooseFavoriteDTO) {
+    public ResponseEntity<?> insertFavorites (@RequestBody UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
         System.out.println("여기실행함.");
-        userService.insertUserFavoriteWithIdxAndDate(userChooseFavoriteDTO);
+        userService.insertUserFavoriteWithIdxAndDate(userMyPageFavoriteDTO);
         return ResponseEntity.ok("선호도가 정상적으로 등록되었습니다.");
     }
 

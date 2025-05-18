@@ -120,4 +120,30 @@
         order by UR.SDATE DESC;
     </select>
 
+<!--  선호도 체크에 사용할 category sub 테이블 조회  -->
+    <select id="getCategorySubInfo" resultType="com.culturemoa.cultureMoaProject.user.dto.UserCategorySubDTO">
+        select IDX, NAME from CATEGORYSUB_TBL where SUB_IDX &lt; 4000;
+    </select>
+
+<!--  유저 선호도 체크 값 불러오기  -->
+    <select id="getUserFavorites" parameterType="int" resultType="int">
+        select CATEGORYSUB_IDX
+        from USER_FAVORITE_TBL
+        where USER_IDX = #{userIdx}
+    </select>
+
+<!--  유저 선호도 삭제 후 삽입 방식 사용하기  -->
+    <delete id="deleteUserFavorites" parameterType="int">
+        delete from USER_FAVORITE_TBL where USER_IDX = #{userIdx}
+    </delete>
+    <!--  유저 선호도 삭제 후 삽입 방식 사용하기  -->
+    <insert id="insertUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserMyPageFavoriteDTO">
+        insert into USER_FAVORITE_TBL
+        ( USER_IDX, CATEGORYSUB_IDX, SDATE)
+        values
+        <foreach collection="favorites" item="favorite" separator="," >
+            (#{userIdx}, #{favorite}, #{sDate})
+        </foreach>
+    </insert>
+
 </mapper>

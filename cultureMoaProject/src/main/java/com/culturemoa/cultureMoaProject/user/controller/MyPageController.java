@@ -133,4 +133,35 @@ public class MyPageController {
         return ResponseEntity.ok(myPageReviewDTO);
     }
 
+
+    /**
+     * 선호도 카테고리 얻기 컨트롤러
+     * @return : 카테고리 이름과 idx 정보를 전달
+     */
+    @GetMapping("/getCategory")
+    public ResponseEntity<?> getCategorySubInfo () {
+        List<UserCategorySubDTO> userCategoryInfo = myPageService.getUserCategoryInfo();
+        return ResponseEntity.ok(userCategoryInfo);
+    }
+
+    /**
+     * 유저 선호도 정보를 가져오는 컨트롤러
+     * @return : 유저 선호도 정보가 담긴 dto 나머지는 null 또는 ""
+     */
+    @GetMapping("/userFavorites")
+    public ResponseEntity<?> getUserFavorites () {
+        UserMyPageFavoriteDTO userMyPageFavoriteDTO = myPageService.getUserFavoritesInfo();
+        return ResponseEntity.ok(userMyPageFavoriteDTO);
+    }
+
+    /**
+     * 유저 선호도 변경 컨트롤러
+     * @param userMyPageFavoriteDTO : 선호도 정보가 담긴 배열을 받을 dto
+     * @return : 응답 메시지 송신
+     */
+    @PostMapping("/updateFavorites")
+    public ResponseEntity<?> updateUserFavorites(@RequestBody UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+        myPageService.updateUserFavoriteInfo(userMyPageFavoriteDTO);
+        return ResponseEntity.ok("선호도 업데이트가 정상적으로 완료되었습니다.");
+    }
 }

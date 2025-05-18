@@ -2,10 +2,12 @@ package com.culturemoa.cultureMoaProject.user.service;
 
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.user.dto.*;
+import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
 import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.exception.UserNotFoundException;
 import com.culturemoa.cultureMoaProject.user.repository.MyPageDAO;
+import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,9 @@ public class MyPageService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserDAO userDAO;
 
 
     /**
@@ -175,4 +180,36 @@ public class MyPageService {
         return (String) auth.getPrincipal(); // String 자료형으로 다운
     }
 
+    /**
+     * 카테고리 정보를 얻기 위한 서비스
+     * @return : List<UserCategorySubDTO>
+     */
+    public List<UserCategorySubDTO> getUserCategoryInfo () {
+        return myPageDAO.getCategorySubInfo();
+    }
+
+    /**
+     * 유저 선호도 담아서 dto로 반환
+     * @return : 선호도 idx 값이 담긴 dto
+     */
+    public UserMyPageFavoriteDTO getUserFavoritesInfo() {
+        // 유저 정보에서 idx 추출하기
+        String userId = myPageGetUserId();
+        int userIdx = userDAO.getUserIdx(userId);
+        List<Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
+        UserMyPageFavoriteDTO userMyPageFavoriteDTO = new UserMyPageFavoriteDTO();
+        userMyPageFavoriteDTO.setFavorites(favorites);
+        return userMyPageFavoriteDTO;
+    }
+
+    public void updateUserFavoriteInfo (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+        String userId = myPageGetUserId();
+        int userIdx = userDAO.getUserIdx(userId);
+        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+        userMyPageFavoriteDTO.setUserIdx(userIdx);
+        userMyPageFavoriteDTO.setSDate(localDateTime);
+        if(myPageDAO.updateUserFavoritesList(userMyPageFavoriteDTO) == 0) {
+            throw new DontUpdateException();
+        }
+    }
 }

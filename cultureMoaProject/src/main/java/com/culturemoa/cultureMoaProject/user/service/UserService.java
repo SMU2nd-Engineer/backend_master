@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +32,7 @@ public class UserService {
     
     @Autowired
     private AuthJwtService authJwtService;
+
 
     /**
      * 프론트에서 전달받은 데이터를 활용하여 유저 정보 등록
@@ -197,31 +197,20 @@ public class UserService {
         }
     }
 
-    /**
-     * 카테고리 정보를 얻기 위한 서비스
-     * @return : List<UserCategorySubDTO>
-     */
-    public List<UserCategorySubDTO> getUserCategoryInfo () {
-        System.out.println( userDAO.getCategorySubInfo());
-        return userDAO.getCategorySubInfo();
-    }
+
 
 
     /**
      * 사용자 선호도 삽입 진행
-     * @param userChooseFavoriteDTO : 프론트에서 받은 사용자 선호도 배열이 들어있는 dto
+     * @param userMyPageFavoriteDTO : 프론트에서 받은 사용자 선호도 배열이 들어있는 dto
      */
-    public void insertUserFavoriteWithIdxAndDate (UserChooseFavoriteDTO userChooseFavoriteDTO) {
-        System.out.println("서비스 여기실행함.");
+    public void insertUserFavoriteWithIdxAndDate (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
         String userId = myPageGetUserId();
-        System.out.println("서비스 여기실행함. 아이디 확인하기" + userId);
         int userIdx = userDAO.getUserIdx(userId);
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-        userChooseFavoriteDTO.setUserIdx(userIdx);
-        userChooseFavoriteDTO.setSDate(localDateTime);
-        System.out.println("서비스2 여기실행함.");
-        System.out.println("dto 확인하기" + userChooseFavoriteDTO);
-        if(userDAO.insertUserFavorites(userChooseFavoriteDTO) == 0) {
+        userMyPageFavoriteDTO.setUserIdx(userIdx);
+        userMyPageFavoriteDTO.setSDate(localDateTime);
+        if(userDAO.insertUserFavorites(userMyPageFavoriteDTO) == 0) {
             throw new DontInsertException();
         }
     }
@@ -230,7 +219,7 @@ public class UserService {
     /**
      * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
      */
-    private String myPageGetUserId () {
+    protected String myPageGetUserId () {
         // 사용자 정보를 인증 객체에서 가져오기
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return (String) auth.getPrincipal(); // String 자료형으로 다운

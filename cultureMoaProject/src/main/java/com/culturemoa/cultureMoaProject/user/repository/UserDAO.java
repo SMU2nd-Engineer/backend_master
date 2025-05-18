@@ -5,7 +5,6 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,21 +92,14 @@ public class UserDAO {
         return sqlSessionTemplate.update("userMapper.updateWithdrawal", userWithdrawalDTO);
     }
 
-    /**
-     * 선호도 조사 페이지를 위한 쿼리
-     * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
-     */
-    public List<UserCategorySubDTO> getCategorySubInfo () {
-        return sqlSessionTemplate.selectList("userMapper.getCategorySubInfo");
-    }
 
     /**
      * 유저 선호도 값을 DB에 넣기
-     * @param userChooseFavoriteDTO : 유전 선호도 배열과 IDX, SDATE
+     * @param userMyPageFavoriteDTO : 유전 선호도 배열과 IDX, SDATE
      * @return : 성공적으로 들어갔는지 아닌지 확인하기 위한 INT
      */
-    public int insertUserFavorites (UserChooseFavoriteDTO userChooseFavoriteDTO) {
-        return sqlSessionTemplate.insert("userMapper.insertFavorite", userChooseFavoriteDTO);
+    public int insertUserFavorites (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+        return sqlSessionTemplate.insert("userMapper.insertFavorite", userMyPageFavoriteDTO);
         
     }
 
