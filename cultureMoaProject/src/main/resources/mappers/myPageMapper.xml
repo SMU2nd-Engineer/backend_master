@@ -158,14 +158,18 @@
         </if>
     </update>
 
-<!--  유저 선호도 중 새로운 관심사인 경우 삽입 방식   -->
-    <insert id="insertUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageEditFavoriteDTO">
+<!--  유저 선호도 on duplicate key 사용하여 새로운 관심사인 경우 삽입 및 중복인 경우 update 방식   -->
+    <insert id="insertOrUpdateUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageEditFavoriteDTO">
             insert into USER_FAVORITE_TBL
             ( USER_IDX, CATEGORYSUB_IDX, SDATE, IS_FAVORITE)
             values
             <foreach collection="insertNewFavorites" item="favorite" separator="," >
                 (#{userIdx}, #{favorite}, #{sDate}, 1)
             </foreach>
+            on duplicate key
+            update
+            IS_FAVORITE = 1,
+            EDATE = #{eDate}
     </insert>
 
 </mapper>

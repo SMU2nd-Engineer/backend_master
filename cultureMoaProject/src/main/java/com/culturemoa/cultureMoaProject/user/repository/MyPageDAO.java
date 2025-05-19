@@ -170,12 +170,12 @@ public class MyPageDAO {
     }
 
     /**
-     * 유저 선호도 업데이트 - 테이블에서 행 삭제 후 삽입
+     * 유저 선호도 업데이트 2 - 새로운 항목이면 삽입 아닐 경우 업데이트
      * @param myPageEditFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
      * @return 업데이트 성공 여부를 담은 int 값
      */
     public int insertUserFavoritesList (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
-        return sqlSessionTemplate.insert("myPageMapper.insertUserFavorites", myPageEditFavoriteDTO);
+        return sqlSessionTemplate.insert("myPageMapper.insertOrUpdateUserFavorites", myPageEditFavoriteDTO);
     }
 
 }

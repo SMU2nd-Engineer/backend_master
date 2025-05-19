@@ -200,7 +200,6 @@ public class MyPageService {
         myPageEditFavoriteDTO.setEDate(localDateTime);
         System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
 
-
         int updateResult = 0;
         int insertResult = 0;
 
@@ -209,11 +208,10 @@ public class MyPageService {
             updateResult = myPageDAO.updateUserFavoritesList(myPageEditFavoriteDTO);
         }
 
+        // 갑은 등록되어 있으나 0인 것은 1로 새로운 것은 insert
         if (myPageEditFavoriteDTO.getInsertNewFavorites() != null && !myPageEditFavoriteDTO.getInsertNewFavorites().isEmpty()) {
             insertResult = myPageDAO.insertUserFavoritesList(myPageEditFavoriteDTO);
         }
-        System.out.println("insertResult: " + insertResult);
-        System.out.println("updateResult: " + updateResult);
         
         // 업데이트가 이루어지지 않았을 경우 예외 처리
         if(updateResult == 0 && insertResult == 0) {
@@ -222,14 +220,5 @@ public class MyPageService {
         }
     }
 
-
-//    /**
-//     * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
-//     */
-//    private String myPageGetUserId () {
-//        // 사용자 정보를 인증 객체에서 가져오기
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        return (String) auth.getPrincipal(); // String 자료형으로 다운
-//    }
 
 }
