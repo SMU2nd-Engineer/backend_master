@@ -35,6 +35,7 @@ public class PaymentReadyRequestDTO {
     private String partnerOrderId;
     private String partnerUserId;
     private String itemName;
+    private String itemID;
     private int quantity;
     private int amount;
     private int taxFreeAmount;
@@ -42,5 +43,10 @@ public class PaymentReadyRequestDTO {
     private String cancelUrl;
     private String failUrl;
     private String payMethod;
+
+    private String buyerId;
+    private String sellerId;
+    private String tradeType;
+    private String deliveryAddress;
 }
 
