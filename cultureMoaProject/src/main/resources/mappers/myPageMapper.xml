@@ -83,21 +83,9 @@
 
 
 
-<!--  마이페이지에 거래 내역에서 판매한 상품 목록을 가져오기  -->
-    <select id="getMySellListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO" >
-        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
-        from USER_TRANSACTION_TBL as UT
-        join USER_TBL as U on U.IDX = UT.USER_IDX
-        join PRODUCT_TBL as P on P.IDX = UT.PRODUCT_IDX
-        join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
-        where U.ID = #{userId}
-        order by UT.SDATE DESC;
-    </select>
-
-
-<!--  마이페이지에 거래 내역에서 구매한 상품 목록을 가져오기  -->
-    <select id="getMyBuyListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO" >
-        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl, UT.DIVISION
+<!--  마이페이지에 거래 내역 상품 목록을 가져오기  -->
+    <select id="getMySellAndByListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO" >
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl, DIVISION
         from USER_TRANSACTION_TBL as UT
         join USER_TBL as U on U.IDX = UT.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UT.PRODUCT_IDX
@@ -157,11 +145,12 @@
         where USER_IDX = #{userIdx}
     </select>
 
-<!--  유저 선호도 삭제 후 삽입 방식 사용하기  -->
+<!--  유저 선호도 수정시 삭제 후 삽입 방식 사용하기  -->
     <delete id="deleteUserFavorites" parameterType="int">
         delete from USER_FAVORITE_TBL where USER_IDX = #{userIdx}
     </delete>
-    <!--  유저 선호도 삭제 후 삽입 방식 사용하기  -->
+
+<!--  유저 선호도 수정 삽입 방식   -->
     <insert id="insertUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserMyPageFavoriteDTO">
         insert into USER_FAVORITE_TBL
         ( USER_IDX, CATEGORYSUB_IDX, SDATE)

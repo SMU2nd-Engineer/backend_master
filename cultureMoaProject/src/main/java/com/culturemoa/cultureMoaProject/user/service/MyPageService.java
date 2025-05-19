@@ -128,22 +128,14 @@ public class MyPageService {
     }
 
     /**
-     * 마이페이지 판매 내역을 위한 서비스
+     * 마이페이지 구매/판매 내역을 위한 서비스
      * @return List<MyPageWishListDTO>로 조죄한 판매 내역 정보가 담김
      */
-    public List<MyPageProductListDTO> getSellListByAuth() {
+    public List<MyPageProductListDTO> getSellAndBuyListByAuth() {
         String userId = myPageGetUserId();
-        return myPageDAO.getMySellProductByUserId(userId);
+        return myPageDAO.getMySellAndBuyProductByUserId(userId);
     }
 
-    /**
-     * 마이페이지 구매 내역을 위한 서비스
-     * @return List<MyPageWishListDTO>로 조죄한 구매 내역 정보가 담김
-     */
-    public List<MyPageProductListDTO> getBuyListByAuth() {
-        String userId = myPageGetUserId();
-        return myPageDAO.getMyBuyProductByUserId(userId);
-    }
 
     /**
      * 마이페이지 게시판 - 게시판 내용을 가져올 서비스

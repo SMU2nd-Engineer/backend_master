@@ -59,7 +59,7 @@
         </foreach>
     </insert>
 
-<!--  유저 아이디로 유저 idx 추출  -->
+<!--  유저 아이디로 유저 idx 추출, 마이페이지에서도 사용함-->
     <select id="getUserIdx" parameterType="String" resultType="int" >
         select IDX from USER_TBL where ID = #{userId}
     </select>

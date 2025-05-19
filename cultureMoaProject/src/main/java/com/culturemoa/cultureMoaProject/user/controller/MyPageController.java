@@ -86,24 +86,15 @@ public class MyPageController {
     }
 
     /**
-     * 판매 내역 조회 위한 컨트롤러
+     * 구매 / 판매 내역 조회 위한 컨트롤러
      * @return 판매 내역이 담긴 리스트
      */
-    @GetMapping("/getMySellList")
+    @GetMapping("/getMyTransactionList")
     public ResponseEntity<?> getSellProductInfo () {
-        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getSellListByAuth();
+        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getSellAndBuyListByAuth();
         return ResponseEntity.ok(myPageProductListDTO);
     }
 
-    /**
-     * 구매 내역 조회 위한 컨트롤러
-     * @return 구매 내역이 담긴 리스트
-     */
-    @GetMapping("/getMyBuyList")
-    public ResponseEntity<?> getBuyProductInfo () {
-        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getBuyListByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
-    }
 
     /**
      * 마이페이지 게시판-게시판 내용 가져올 컨트롤러

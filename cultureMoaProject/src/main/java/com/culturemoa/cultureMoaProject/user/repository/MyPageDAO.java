@@ -94,21 +94,12 @@ public class MyPageDAO {
 
 
     /**
-     * 마이페이지 판매 내역쪽에 전달할 dao
+     * 마이페이지 구매/판매 내역쪽에 전달할 dao
      * @param userId : 조회할 userID
      * @return 판매 내역이 담긴 DTO 리스트
      */
-    public List<MyPageProductListDTO> getMySellProductByUserId(String userId) {
-        return sqlSessionTemplate.selectList("myPageMapper.getMySellListInfo", userId);
-    }
-
-    /**
-     * 마이페이지 구매 내역쪽에 전달할 dao
-     * @param userId : 조회할 userID
-     * @return 구매 내역이 담긴 DTO 리스트
-     */
-    public List<MyPageProductListDTO> getMyBuyProductByUserId(String userId) {
-        return sqlSessionTemplate.selectList("myPageMapper.getMyBuyListInfo", userId);
+    public List<MyPageProductListDTO> getMySellAndBuyProductByUserId(String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMySellAndByListInfo", userId);
     }
 
     /**
