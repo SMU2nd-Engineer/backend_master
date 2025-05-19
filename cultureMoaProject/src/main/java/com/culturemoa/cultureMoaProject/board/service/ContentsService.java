@@ -43,6 +43,12 @@ public class ContentsService {
         if (keyword != null && !keyword.isEmpty()) {
             searchMap.put("keyword", keyword);
         }
+
+//        // Map에 추가
+//        if (searchType != null && !searchType.isEmpty()) {
+//            searchMap.put("searchType", searchType);
+//        }
+
         // DAO로 Map 전달
         return contentsDAO.getContentSearchs(searchMap);
     }

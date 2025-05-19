@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="contentsMapper">
 
-    <!-- Contents 조회 -->
+<!--     Contents 조회 -->
 <!--    <select id="getAllContents" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsDTO" >-->
 <!--        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE, CONT.DIVISION,-->
 <!--               CONT.CONTENT, CONT.SDATE-->
@@ -43,6 +43,11 @@
                 <!-- Contents_tbl의 category_idx -->
                 AND CONT.CATEGORY_IDX = #{category_idx}
             </if>
+            <!-- 키워드로 검색어 입력했을때 제목(title), 내용(content) 조회 -->
+<!--            <if test="">-->
+
+<!--            </if>-->
+
             <!-- 제목+내용 구분값이 달라서 if문을 구분해서 작성해야함 (일단 숫자로 해놓고 나중에 바꿔야함 프론트엔드에서도) -->
             <if test="searchType==0">
                 <!-- Contents_tbl의 title(제목), content(내용)
