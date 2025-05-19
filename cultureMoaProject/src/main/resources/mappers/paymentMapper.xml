@@ -5,9 +5,15 @@
 <mapper namespace="paymentMapper">
     <!-- 결제 기록 DB 저장 -->
     <insert id="insertPaymentHistory" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory" useGeneratedKeys="true" keyProperty="idx">
-        insert into PAYMENT_HISTORY
-        (TID, AMOUNT, PAY_METHOD, STATUS, BUYER_ID, SELLER_ID, PRODUCT_ID, TRADE_TYPE, DELIVERY_ADDRESS)
+        insert into PAYMENT_HISTORY_TBL
+        (TID, AMOUNT, PAY_METHOD, BUYER_ID, SELLER_ID, PRODUCT_ID, TRADE_TYPE, DELIVERY_ADDRESS)
         values
-        (#{tid}, #{amount}, #{payMethod}, #{status}, #{buyerId}, #{sellerId}, #{productId}, #{tradeType}, #{deliveryAddress})
+        (#{tid}, #{amount}, #{payMethod}, #{buyerId}, #{sellerId}, #{productId}, #{tradeType}, #{deliveryAddress})
+    </insert>
+    <insert id="insertPaymentStatus" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus" useGeneratedKeys="true" keyProperty="idx">
+        insert into PAYMENT_STATUS_TBL
+        (TID, STATUS, STATUS_AT)
+        values
+        (#{tid}, #{status}, #{statusAt})
     </insert>
 </mapper>

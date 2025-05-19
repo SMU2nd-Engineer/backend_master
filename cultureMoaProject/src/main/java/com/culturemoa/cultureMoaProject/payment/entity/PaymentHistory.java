@@ -19,18 +19,15 @@ import java.time.LocalDateTime;
  * tradeType : DIRECT, DELIVERY
  * deliveryAddress : 배송지(필요시)
  */
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentHistory {
-
     private int idx;
     private String tid;
     private int amount;
     private String payMethod;
-    private String status;
-    private LocalDateTime createdAt = LocalDateTime.now();
     private String buyerId;
     private String sellerId;
     private String productId;
