@@ -74,6 +74,17 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    /**
+     * 삽입 오류 방지
+     * @param e : 에러
+     * @return : 500번 에러던짐
+     */
+    @ExceptionHandler(DontInsertException.class)
+    public ResponseEntity<?> handleDontInsertException (DontInsertException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralError(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류: " + e.getMessage());

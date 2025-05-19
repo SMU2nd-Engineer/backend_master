@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 찜 목록을 조회한 데이터를 담아서 프론트에 던져줄 DTO
+ * 찜 목록, 판매, 구매 등 상품 정보를 담을 DTO
  * title : 상품 제목
  * imageUrl : 이미지 경로
  * price : 가격
@@ -15,10 +15,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyPageWishListDTO {
+public class MyPageProductListDTO {
+    private int idx;
     private String title;
     private String imageUrl;
     private String price;
-    private String text;
+    private String content;
     private int flag;
+    private int division;
 }
