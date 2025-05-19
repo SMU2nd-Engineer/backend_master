@@ -20,9 +20,18 @@ public class TicketController {
         this.ticketService = ticketService;
     }
     // 티켓 전체
-    @GetMapping
+    @GetMapping("/list")
     public List<TicketDTO> getAllTicket(){
         return ticketService.getAllTicket();
+    }
+
+    // 검색
+    @GetMapping("/search")
+    public List<TicketDTO> searchTickets(
+            @RequestParam(value = "categories", required = false) String categories,
+            @RequestParam(value = "query", required = false) String query) {
+        // categories나 query가 없으면 빈 문자열 또는 null일 수 있음
+        return ticketService.searchTickets(categories, query);
     }
 
 //    // 장르별

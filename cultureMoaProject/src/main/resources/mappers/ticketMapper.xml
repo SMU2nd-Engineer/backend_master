@@ -6,6 +6,25 @@
         FROM TICKET_TBL
     </select>
 
+    <!--  상품 검색  -->
+    <select id="getSearch" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">
+        SELECT sub_idx, title, company, link, sDate, eDate, place, price, grade, cast, runningTime, img, etc
+        FROM TICKET_TBL
+        <where>
+            <!-- 카테고리 필터: categories가 전달되면 IN 절 생성 -->
+            <if test="categories != null and categories.size() > 0">
+                AND sub_idx IN
+                <foreach item="item" collection="categories" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="query != null and query != ''">
+                AND (title LIKE CONCAT('%', #{query}, '%') OR cast LIKE CONCAT('%', #{query}, '%'))
+            </if>
+        </where>
+    </select>
+
 <!--    &lt;!&ndash; 장르별 &ndash;&gt;-->
 <!--    &lt;!&ndash; 전체 장르 목록만 조회 (중복 제거) &ndash;&gt;-->
 <!--    <select id="getAllGenres" resultType="String" >-->

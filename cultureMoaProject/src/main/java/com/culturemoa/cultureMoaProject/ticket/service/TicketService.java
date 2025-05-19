@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
@@ -18,9 +20,23 @@ public class TicketService {
     public TicketService(TicketDAO ticketDAO) {
         this.ticketDAO = ticketDAO;
     }
+
     // 티켓 전체
     public List<TicketDTO> getAllTicket(){
         return ticketDAO.getAllTicket();
+    }
+
+    // 검색 기능 메서드
+    public List<TicketDTO> searchTickets(String categoriesStr, String query) {
+        List<Integer> categories = List.of(); // 빈 리스트 초기화
+
+        if (categoriesStr != null && !categoriesStr.isEmpty()) {
+            categories = Arrays.stream(categoriesStr.split(","))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+        }
+
+        return ticketDAO.getSearch(categories, query);
     }
 
 //    // 장르별

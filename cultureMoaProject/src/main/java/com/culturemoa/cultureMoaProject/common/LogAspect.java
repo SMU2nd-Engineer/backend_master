@@ -40,21 +40,21 @@ public class LogAspect {
      * @return ReturnObject
      * @throws Throwable
      */
-    @Around("userPointCut()")
-    public Object userLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        return printLog(proceedingJoinPoint, "userPointCut");
-    }
-
-    /**
-     * 채팅 로그 Aspect
-     * @param proceedingJoinPoint 포인트컷
-     * @return ReturnObject
-     * @throws Throwable
-     */
-    @Around("chatPointCut()")
-    public Object chatLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        return printLog(proceedingJoinPoint, "chatPointCut");
-    }
+//    @Around("userPointCut()")
+//    public Object userLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+//        return printLog(proceedingJoinPoint, "userPointCut");
+//    }
+//
+//    /**
+//     * 채팅 로그 Aspect
+//     * @param proceedingJoinPoint 포인트컷
+//     * @return ReturnObject
+//     * @throws Throwable
+//     */
+//    @Around("chatPointCut()")
+//    public Object chatLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+//        return printLog(proceedingJoinPoint, "chatPointCut");
+//    }
 
     /**
      * 로그 작성 및 포인트컷 실행 메서드
