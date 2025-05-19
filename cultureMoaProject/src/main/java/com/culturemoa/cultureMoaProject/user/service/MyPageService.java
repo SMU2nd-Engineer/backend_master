@@ -1,23 +1,16 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
-import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
-import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
 import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
-import com.culturemoa.cultureMoaProject.user.exception.UserNotFoundException;
 import com.culturemoa.cultureMoaProject.user.repository.MyPageDAO;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -184,27 +177,47 @@ public class MyPageService {
      * db에서 유저 선호도를 조사해서 dto로 반환
      * @return : 선호도 idx 값이 담긴 dto
      */
-    public UserMyPageFavoriteDTO getUserFavoritesInfo() {
+    public UserRegisterFavoriteDTO getUserFavoritesInfo() {
         // 유저 정보에서 idx 추출하기
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         List<Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
-        UserMyPageFavoriteDTO userMyPageFavoriteDTO = new UserMyPageFavoriteDTO();
-        userMyPageFavoriteDTO.setFavorites(favorites);
-        return userMyPageFavoriteDTO;
+        UserRegisterFavoriteDTO userRegisterFavoriteDTO = new UserRegisterFavoriteDTO();
+        userRegisterFavoriteDTO.setFavorites(favorites);
+        return userRegisterFavoriteDTO;
     }
 
     /**
      * 유저 선호도 수정했을 때 정보를 받아와서 처리할 서비스
-     * @param userMyPageFavoriteDTO : 유저 선호도를 담아서 사용함.
+     * @param myPageEditFavoriteDTO : 유저 선호도를 담아서 사용함.
      */
-    public void updateUserFavoriteInfo (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+    public void updateUserFavoriteInfo (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-        userMyPageFavoriteDTO.setUserIdx(userIdx);
-        userMyPageFavoriteDTO.setSDate(localDateTime);
-        if(myPageDAO.updateUserFavoritesList(userMyPageFavoriteDTO) == 0) {
+        myPageEditFavoriteDTO.setUserIdx(userIdx);
+        myPageEditFavoriteDTO.setSDate(localDateTime);
+        myPageEditFavoriteDTO.setEDate(localDateTime);
+        System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
+
+
+        int updateResult = 0;
+        int insertResult = 0;
+
+        // 기존 값에서 변경된 부분 업데이트
+        if (myPageEditFavoriteDTO.getNotFavorites() != null && !myPageEditFavoriteDTO.getNotFavorites().isEmpty()) {
+            updateResult = myPageDAO.updateUserFavoritesList(myPageEditFavoriteDTO);
+        }
+
+        if (myPageEditFavoriteDTO.getInsertNewFavorites() != null && !myPageEditFavoriteDTO.getInsertNewFavorites().isEmpty()) {
+            insertResult = myPageDAO.insertUserFavoritesList(myPageEditFavoriteDTO);
+        }
+        System.out.println("insertResult: " + insertResult);
+        System.out.println("updateResult: " + updateResult);
+        
+        // 업데이트가 이루어지지 않았을 경우 예외 처리
+        if(updateResult == 0 && insertResult == 0) {
+            System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
             throw new DontUpdateException();
         }
     }

@@ -162,13 +162,13 @@ public class UserController {
 
     /**
      * 선호도 넣기 컨트롤러
-     * @param userMyPageFavoriteDTO : 프론트에서 받은 데이터를 저장할 DTO
+     * @param userRegisterFavoriteDTO : 프론트에서 받은 데이터를 저장할 DTO
      * @return : 성공했을 경우 message 전달
      */
     @PostMapping("/registrationFavorites")
-    public ResponseEntity<?> insertFavorites (@RequestBody UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+    public ResponseEntity<?> insertFavorites (@RequestBody UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
         System.out.println("여기실행함.");
-        userService.insertUserFavoriteWithIdxAndDate(userMyPageFavoriteDTO);
+        userService.insertUserFavoriteWithIdxAndDate(userRegisterFavoriteDTO);
         return ResponseEntity.ok("선호도가 정상적으로 등록되었습니다.");
     }
 

@@ -50,7 +50,7 @@
     </update>
 
 <!--  회원가입에서 선호도 선택할 경우 값 넣기  -->
-    <insert id="insertFavorite" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserMyPageFavoriteDTO" >
+    <insert id="insertFavorite" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserRegisterFavoriteDTO" >
         insert into USER_FAVORITE_TBL
         ( USER_IDX, CATEGORYSUB_IDX, SDATE, IS_FAVORITE)
         values

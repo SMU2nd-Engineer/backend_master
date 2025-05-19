@@ -142,22 +142,30 @@
     <select id="getUserFavorites" parameterType="int" resultType="int">
         select CATEGORYSUB_IDX
         from USER_FAVORITE_TBL
-        where USER_IDX = #{userIdx}
+        where USER_IDX = #{userIdx} and IS_FAVORITE = 1
     </select>
 
-<!--  유저 선호도 수정시 삭제 후 삽입 방식 사용하기  -->
-    <delete id="deleteUserFavorites" parameterType="int">
-        delete from USER_FAVORITE_TBL where USER_IDX = #{userIdx}
-    </delete>
+<!--  유저 선호도 수정시 더이상 관심사 아닌 것 업데이트 하기  -->
+    <update id="updateUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageEditFavoriteDTO">
+        <if test="notFavorites != null and notFavorites.size() > 0">
+            update USER_FAVORITE_TBL
+                set IS_FAVORITE = 0, EDATE = #{eDate}
+                where USER_IDX = #{userIdx}
+                and CATEGORYSUB_IDX in
+            <foreach collection="notFavorites" item="notFavorite" open="(" separator="," close=")" >
+                 #{notFavorite}
+            </foreach>
+        </if>
+    </update>
 
-<!--  유저 선호도 수정 삽입 방식   -->
-    <insert id="insertUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserMyPageFavoriteDTO">
-        insert into USER_FAVORITE_TBL
-        ( USER_IDX, CATEGORYSUB_IDX, SDATE)
-        values
-        <foreach collection="favorites" item="favorite" separator="," >
-            (#{userIdx}, #{favorite}, #{sDate})
-        </foreach>
+<!--  유저 선호도 중 새로운 관심사인 경우 삽입 방식   -->
+    <insert id="insertUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageEditFavoriteDTO">
+            insert into USER_FAVORITE_TBL
+            ( USER_IDX, CATEGORYSUB_IDX, SDATE, IS_FAVORITE)
+            values
+            <foreach collection="insertNewFavorites" item="favorite" separator="," >
+                (#{userIdx}, #{favorite}, #{sDate}, 1)
+            </foreach>
     </insert>
 
 </mapper>
