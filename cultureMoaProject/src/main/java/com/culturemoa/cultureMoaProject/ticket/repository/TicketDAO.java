@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TicketDAO {
@@ -22,6 +24,15 @@ public class TicketDAO {
     public List<TicketDTO> getAllTicket() {
         return sqlSessionTemplate.selectList("ticketMapper.getAllTicket");
     }
+
+    public List<TicketDTO> getSearch(List<Integer> categories, String query) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("categories", categories);  // 리스트 형태로 넘기기
+        params.put("query", query);
+
+        return sqlSessionTemplate.selectList("ticketMapper.getSearch", params);
+    }
+
 
 //    // 장르별
 //    // 전체 장르 목록
