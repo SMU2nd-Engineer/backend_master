@@ -1,12 +1,16 @@
 package com.culturemoa.cultureMoaProject.payment.service.kakao;
 
 import com.culturemoa.cultureMoaProject.payment.dto.*;
+import com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory;
+import com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus;
+import com.culturemoa.cultureMoaProject.payment.repository.PaymentDAO;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -27,6 +31,8 @@ public class KakaoPaymentService implements PaymentGatewayService {
     // 카카오페이 결제 승인 API의 URL
     private static final String KAKAO_APROVE_URL = "https://open-api.kakaopay.com/online/v1/payment/approve";
     private final KakaoPayProperties kakaoPayProperties;
+    private final PaymentDAO paymentDAO;
+
     // 카카오페이 결제 준비 API를 호출하는 역할
     @Override
     public PaymentResponseDTO readyToPay(PaymentReadyRequestDTO requestDTO) {
@@ -61,6 +67,26 @@ public class KakaoPaymentService implements PaymentGatewayService {
         );
         // 카카오페이 API의 응답 데이터를 객체로 받기
         KakaoReadyResponseDTO body = response.getBody();
+        System.out.println("itemID: " + requestDTO.getItemId());
+        // DB 저장
+        PaymentHistory history = new PaymentHistory();
+        history.setTid(body.getTid());
+        history.setAmount(requestDTO.getAmount());
+        history.setPayMethod(getPayMethod());
+        history.setProductId(requestDTO.getItemId());
+        history.setTradeType(requestDTO.getTradeType());
+        history.setDeliveryAddress(requestDTO.getDeliveryAddress());
+        history.setBuyerId(requestDTO.getBuyerId());
+        history.setSellerId(requestDTO.getSellerId());
+
+        paymentDAO.insertPaymentHistory(history);
+
+        PaymentStatus status = new PaymentStatus();
+        status.setTid(body.getTid());
+        status.setStatus("결제준비");
+        status.setStatusAt(body.getCreatedAt());
+        
+        paymentDAO.insertPaymentStatus(status);
 
         return new PaymentResponseDTO(
                 Objects.requireNonNull(body).getTid(),
@@ -95,13 +121,21 @@ public class KakaoPaymentService implements PaymentGatewayService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
 
         // 승인 호출 (성공 or 실패 판단용)
-        ResponseEntity<KakaoApproveResponseDTO> response = restTemplate.postForEntity(
+        KakaoApproveResponseDTO response = restTemplate.postForEntity(
                 KAKAO_APROVE_URL,
                 request,
                 KakaoApproveResponseDTO.class
-        );
+        ).getBody();
 
-        return response.getBody();
+        // DB저장
+        PaymentStatus status = new PaymentStatus();
+        status.setTid(approveDTO.getTid());
+        status.setStatus("결제승인");
+        status.setStatusAt(response.getApprovedAt());
+
+        paymentDAO.insertPaymentStatus(status);
+
+        return response;
     }
 
     @Override

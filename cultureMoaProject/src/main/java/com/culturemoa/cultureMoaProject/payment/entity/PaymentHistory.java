@@ -28,8 +28,6 @@ public class PaymentHistory {
     private String tid;
     private int amount;
     private String payMethod;
-    private String status;
-    private LocalDateTime createdAt;
     private String buyerId;
     private String sellerId;
     private String productId;

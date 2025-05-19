@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,7 +39,7 @@ public class KakaoApproveResponseDTO {
     private int quantity;
 
     @JsonProperty("approved_at")
-    private String approvedAt;
+    private LocalDateTime approvedAt;
     
     @JsonProperty("payload")
     private String payload;

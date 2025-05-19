@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 /**
  * PaymentResponseDTO
  * 결제 응답 DTO
@@ -30,5 +32,5 @@ public class PaymentResponseDTO {
     private String nextRedirectAppUrl;
     private String androidAppScheme;
     private String iosAppScheme;
-    private String createdAt;
+    private LocalDateTime createdAt;
 }
