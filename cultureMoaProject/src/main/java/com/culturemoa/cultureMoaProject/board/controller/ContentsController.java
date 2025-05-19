@@ -4,10 +4,7 @@ import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
 import com.culturemoa.cultureMoaProject.board.service.ContentsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +22,8 @@ public class ContentsController {
 //        return contentsService.getAllContents();
 //    }
 
-    // 콘텐츠와 user 유저 조인해서 모든 데이터 조회
+    // 게시판 테이블 idx == user 테이블 idx 면
+    // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자-nickname) 데이터 출력
     @GetMapping("/list")
     public List<ContentInfoDTO> getContentInfos() {
         System.out.println(contentsService.getContentInfos());
@@ -33,12 +31,26 @@ public class ContentsController {
         return contentsService.getContentInfos();
     }
 
-    // 콘텐츠와 user 유저 조인한  데이터 + 키워드 검색
-    @GetMapping("/search")
-    public List<ContentInfoDTO> getContentSearchs() {
-        System.out.println(contentsService.getContentSearchs());
+    // 게시판의 정보와 user의 idx를 조인한 데이터목록 출력
+    // + 카테고리와 키워드 검색
+//    @GetMapping("/search")
+//    public List<ContentInfoDTO> getContentSearchs(Long category_idx, String keyword) {
+//        System.out.println(contentsService.getContentSearchs());
+//
+//        return contentsService.getContentSearchs();
+//    }
 
-        return contentsService.getContentSearchs();
+    // 게시판의 정보와 user의 idx를 조인한 게시글(데이터)목록에서 카테고리와 키워드 검색
+    // 검색 조건이 여러개 일때 파라미터를 선택적으로 받음 (required = false)
+    // 제목+내용/작성자, 대분류 선택하고 검색어 입력하면 조건에 맞는 검색 데이터 조회하여 출력
+    @GetMapping("/search")
+    public List<ContentInfoDTO> getContentSearchs(
+            @RequestParam(required = false) Long category_idx,
+            @RequestParam(required = false) String keyword
+    ) {
+        // Map 사용하지 않고 파라미터를 서비스에 전달
+        return contentsService.getContentSearchs(category_idx, keyword);
     }
 
 }
+

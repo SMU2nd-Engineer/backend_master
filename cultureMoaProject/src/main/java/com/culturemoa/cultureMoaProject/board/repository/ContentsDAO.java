@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ContentsDAO {
@@ -25,8 +26,9 @@ public class ContentsDAO {
         return sqlSessionTemplate.selectList("contentsMapper.getContentInfos");
     }
 
-    public List<ContentInfoDTO> getContentSearchs() {
-        return sqlSessionTemplate.selectList("contentsMapper.getContentSearchs");
+    // ContentsService.Map을 받아서 조건에 맞는 쿼리 실행 : 검색된 게시글 조회하여 불러옴
+    public List<ContentInfoDTO> getContentSearchs(Map<String, Object> searchMap) {
+        return sqlSessionTemplate.selectList("contentsMapper.getContentSearchs", searchMap);
     }
 
 
