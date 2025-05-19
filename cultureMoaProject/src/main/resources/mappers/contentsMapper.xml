@@ -24,46 +24,39 @@
     </select>
 
     <!-- CONTENTS_TBL의 검색어 조회 - search -->
-    <select id="getContentKeywordSearch" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
+    <select id="getContentSearchs" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
         SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE, CONT.DIVISION,
         CONT.CONTENT, CONT.SDATE,
-        USERT.NICKNAME,
-        CATE.NAME
+        USERT.NICKNAME
         FROM CONTENTS_TBL CONT
-        LEFT OUTER JOIN USER_TBL USERT ON CONT.USER_IDX = USERT.IDX
-        LEFT OUTER JOIN USER_TBL CATE ON
+        LEFT OUTER JOIN USER_TBL USERT ON
+        CONT.USER_IDX = USERT.IDX
 
-        <!--        WHERE CONT.EDATE = NULL -->
         <where>
             <!-- edate: 종료일/삭제일로 삭제되지 않았거나, 아직 유효한 게시글만 보여주는 필터 조건이고,
                 DB에서 삭제하지 않고 EDATE에 날짜만 남기는 방식임 -->
             CONT.EDATE IS NULL
-            <!-- Contents_tbl의 category, title, sdate와 USER_tbl의 nickname을 키워드로 검색 -->
-<!--            <if test="keyword != null and keyword != ''">-->
-<!--                &lt;!&ndash; CAST(CONT.CATEGORY_IDX AS CHAR)-->
-<!--                     : CONT.CATEGORY_IDX가 숫자일 경우 문자열로 형변환하여 출력&ndash;&gt;-->
-<!--                AND (CAST(CONT.CATEGORY_IDX AS CHAR) LIKE concat('%', #{keyword}, '%')-->
-<!--                 OR CONT.TITLE LIKE concat('%', #{keyword}, '%')-->
-<!--                 OR CONT.SDATE LIKE concat('%', #{keyword}, '%')-->
-<!--                 OR USERT.NICKNAME LIKE concat('%', #{keyword}, '%'))-->
-<!--            </if>-->
-            <!-- '팝니다', '삽니다' 선택한 핉터 -->
-            <if test="division != null and division != ''">
-                <!-- Contents_tbl의 division -->
-                AND CONT.DIVISION = #{division}
+
+            <!-- '팝니다', '삽니다' 선택한 필터 category_idx(일단 숫자로 해놓고 나중에 바꿔야함 프론트엔드에서도) -->
+<!--            <if test="category_idx != category_idx and category_idx != ''">-->
+            <if test="category_idx != null">
+                <!-- Contents_tbl의 category_idx -->
+                AND CONT.CATEGORY_IDX = #{category_idx}
             </if>
-            <!-- "keyword != null and keyword != ''"
-                 : 키워드 검색 - keyword가 Null이 아니고, 빈 문자열 입력 방지하는 조건 -->
-            <if test="keyword != null and keyword != ''">
-                <!-- Contents_tbl의 category, title, division, sdate와 USER_tbl의 nickname을 키워드로 검색 -->
+            <!-- 제목+내용 구분값이 달라서 if문을 구분해서 작성해야함 (일단 숫자로 해놓고 나중에 바꿔야함 프론트엔드에서도) -->
+            <if test="searchType==0">
+                <!-- Contents_tbl의 title(제목), content(내용)
+                  눈에 안보이는것 까지 검색(게시판에 없는 칼럼 : content(내용) -->
                 AND (
-                    CONT.DIVISION LIKE CONCAT('%', #{keyword}, '%')
-                    OR CONT.TITLE LIKE CONCAT('%', #{keyword}, '%')
-                    OR CONT.SDATE LIKE CONCAT('%', #{keyword}, '%')
-                    OR USERT.NICKNAME LIKE CONCAT('%', #{keyword}, '%')
+                    CONT.TITLE LIKE '%${keyword}%'
+                    OR CONT.CONTENT LIKE '%${keyword}%'
                 )
             </if>
-
+            <!-- 새로생성(프론트엔드+DTO생성) - searchType: 제목+내용/작성자(nickname) 의 구분값
+                 USER_tbl의 nickname을 키워드로 검색 -->
+            <if test="searchType==1">
+               AND USERT.NICKNAME LIKE '%${keyword}%'
+            </if>
         </where>
 
     </select>
