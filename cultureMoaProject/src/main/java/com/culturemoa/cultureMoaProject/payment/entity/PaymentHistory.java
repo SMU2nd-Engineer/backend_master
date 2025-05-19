@@ -30,7 +30,10 @@ public class PaymentHistory {
     private int amount;
     private String payMethod;
     private String status;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime statusAt;
+//    private LocalDateTime createdAt = LocalDateTime.now();
+//    private LocalDateTime approvedAt;
+//    private LocalDateTime canceledAt;
     private String buyerId;
     private String sellerId;
     private String productId;

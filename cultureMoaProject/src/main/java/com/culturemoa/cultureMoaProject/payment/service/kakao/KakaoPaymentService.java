@@ -40,7 +40,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
 
         // 카카오페이 API에 요청할 파라미터
         Map<String, Object> params = new HashMap<>();
-        params.put("cid", requestDTO.getCid());
+        params.put("cid", kakaoPayProperties.getCid());
         params.put("partner_order_id", requestDTO.getPartnerOrderId());
         params.put("partner_user_id", requestDTO.getPartnerUserId());
         params.put("item_name", requestDTO.getItemName());
@@ -85,7 +85,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
 
         // 카카오페이 API에 요청할 파라미터
         Map<String, Object> params = new HashMap<>();
-        params.put("cid", approveDTO.getCid());
+        params.put("cid", kakaoPayProperties.getCid());
         params.put("tid", approveDTO.getTid());
         params.put("partner_order_id", approveDTO.getPartnerOrderId());
         params.put("partner_user_id", approveDTO.getPartnerUserId());
@@ -105,7 +105,27 @@ public class KakaoPaymentService implements PaymentGatewayService {
     }
 
     @Override
+    public void cancelPayment(String tid) {
+        // HTTP 요청 헤더를 설정하는 객체
+        HttpHeaders headers = new HttpHeaders();
+        // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
+        headers.set("Authorization", "SECRET_KEY " + kakaoPayProperties.getSecretKey());
+        // 요청 본문의 데이터 형식을 설정
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> params = new HashMap<>();
+
+
+    }
+
+    @Override
+    public void handleFailedPayment(String methodResultMessage) {
+
+    }
+
+    @Override
     public String getPayMethod() {
         return "kakao";
     }
 }
+

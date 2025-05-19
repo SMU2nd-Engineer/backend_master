@@ -10,4 +10,10 @@
         values
         (#{tid}, #{amount}, #{payMethod}, #{status}, #{buyerId}, #{sellerId}, #{productId}, #{tradeType}, #{deliveryAddress})
     </insert>
+    <insert id="insertPaymentStatus" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory" useGeneratedKeys="true" keyProperty="idx">
+        insert into PAYMENT_STATUS
+        (TID, STATUS, STATUS_AT)
+        values
+        (#{tid}, #{status}, #{statusAt)
+    </insert>
 </mapper>

@@ -42,7 +42,7 @@ public class KakaoApproveResponseDTO {
     @JsonProperty("payload")
     private String payload;
 
-    // --- 내부 클래스 : 금액 정보 ---
+//     --- 내부 클래스 : 금액 정보 ---
     @Getter
     @Setter
     public static class Amount {
