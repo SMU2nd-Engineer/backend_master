@@ -7,6 +7,8 @@ import com.culturemoa.cultureMoaProject.user.exception.*;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +33,13 @@ public class UserService {
     @Autowired
     private AuthJwtService authJwtService;
 
+
     /**
      * 프론트에서 전달받은 데이터를 활용하여 유저 정보 등록
      * 등록시 유저 비번의 경우 암호화해서 넣음
      * @param pUserDTO : josn 형태로 전달 받은 데이터를 dto를 활용하여 받아서 인자로 넣음
      */
-    public void registerUser(UserRegisterRequestDTO pUserDTO) {
+    public JwtDTO registerUser(HttpServletResponse pResponse, UserRegisterRequestDTO pUserDTO) {
 
         // 비밀번호 암호화
         pUserDTO.setPassword(passwordEncoder.encode(pUserDTO.getPassword()));
@@ -48,6 +51,10 @@ public class UserService {
         }
         // DAO로 데이터 넣기
         userDAO.insertUser(pUserDTO);
+
+        // 회원 가입 후 로그인과 같은 효과를 주기 위하여 토큰을 발급하기
+        return authJwtService.tokenCreateSave(pResponse, pUserDTO.getId());
+
     }
 
     /**
@@ -171,6 +178,10 @@ public class UserService {
 
     }
 
+    /**
+     * 회원 탈퇴 서비스
+     * @param userWithdrawalDTO : 탈퇴 회원의 정보가 담긴 DTO
+     */
     public void userWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
         // 회원 탈퇴 날짜 넣기
         userWithdrawalDTO.setWDate(LocalDateTime.now().withNano(0)); // 나노초 제거
@@ -185,4 +196,33 @@ public class UserService {
             throw new DBManipulationFailException();
         }
     }
+
+
+
+
+    /**
+     * 사용자 선호도 삽입 진행
+     * @param userMyPageFavoriteDTO : 프론트에서 받은 사용자 선호도 배열이 들어있는 dto
+     */
+    public void insertUserFavoriteWithIdxAndDate (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+        String userId = myPageGetUserId();
+        int userIdx = userDAO.getUserIdx(userId);
+        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+        userMyPageFavoriteDTO.setUserIdx(userIdx);
+        userMyPageFavoriteDTO.setSDate(localDateTime);
+        if(userDAO.insertUserFavorites(userMyPageFavoriteDTO) == 0) {
+            throw new DontInsertException();
+        }
+    }
+
+
+    /**
+     * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
+     */
+    protected String myPageGetUserId () {
+        // 사용자 정보를 인증 객체에서 가져오기
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (String) auth.getPrincipal(); // String 자료형으로 다운
+    }
+
 }

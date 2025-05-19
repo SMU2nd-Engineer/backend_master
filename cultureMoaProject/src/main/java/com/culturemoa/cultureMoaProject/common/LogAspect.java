@@ -40,10 +40,10 @@ public class LogAspect {
      * @return ReturnObject
      * @throws Throwable
      */
-    @Around("userPointCut()")
-    public Object userLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        return printLog(proceedingJoinPoint, "userPointCut");
-    }
+//    @Around("userPointCut()")
+//    public Object userLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+//        return printLog(proceedingJoinPoint, "userPointCut");
+//    }
 
     /**
      * 채팅 로그 Aspect

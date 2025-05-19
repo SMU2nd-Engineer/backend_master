@@ -83,7 +83,34 @@ public class UserDAO {
         return sqlSessionTemplate.selectOne("userMapper.passwordFindMatch", userFindPasswordRequestDTO);
     }
 
+    /**
+     * 회원 탈퇴 로직
+     * @param userWithdrawalDTO : 탈퇴 회원 정보를 담을 DTO
+     * @return : userWithdrawalDTO
+     */
     public int updateWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
-        return sqlSessionTemplate.delete("userMapper.updateWithdrawal", userWithdrawalDTO);
+        return sqlSessionTemplate.update("userMapper.updateWithdrawal", userWithdrawalDTO);
     }
+
+
+    /**
+     * 유저 선호도 값을 DB에 넣기
+     * @param userMyPageFavoriteDTO : 유전 선호도 배열과 IDX, SDATE
+     * @return : 성공적으로 들어갔는지 아닌지 확인하기 위한 INT
+     */
+    public int insertUserFavorites (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+        return sqlSessionTemplate.insert("userMapper.insertFavorite", userMyPageFavoriteDTO);
+        
+    }
+
+    /**
+     * 선호도에 넣을 USER_IDX를 얻기 위한 DAO
+     * @param userId : 인증객체에서 추출한 유저 아이디
+     * @return : USER_IDX
+     */
+    public int getUserIdx (String userId) {
+        return sqlSessionTemplate.selectOne("userMapper.getUserIdx", userId);
+    }
+
+
 }
