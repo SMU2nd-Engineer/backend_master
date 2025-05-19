@@ -1,6 +1,7 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
+import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
 import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
@@ -28,7 +29,7 @@ import java.util.List;
 public class MyPageService {
 
     @Autowired
-    MyPageDAO myPageDAO;
+    private MyPageDAO myPageDAO;
 
     // 디버그 용
     private static final Logger logger = LoggerFactory.getLogger(MyPageService.class);
@@ -38,7 +39,10 @@ public class MyPageService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserDAO userDAO;
+    private UserDAO userDAO;
+
+    @Autowired
+    private HandleAuthentication handleAuth;
 
 
     /**
@@ -48,7 +52,7 @@ public class MyPageService {
      */
     public Boolean myPagePasswordCheck(
             MyPagePasswordCheckDTO myPagePasswordCheckDTO) {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         // 가져온 id와 들어있는 데이터로 dao에 요청을 진행하여 password를 받아옴
         MyPagePasswordCheckDTO getDBPassword = myPageDAO.getPassword(userId);
         // 받아온 데이터에서 password를 reqeust의 패스워드와 매칭하기 다르면 오류 발생.
@@ -61,11 +65,11 @@ public class MyPageService {
     }
 
     /**
-     * 토큰에서 헤더 정보를 추출하여 소셜 로그인 정보를 가져오는 메서드
+     * 소셜 로그인 정보를 가져오는 메서드
      * @return : MyPageCheckSocialDTO
      */
     public MyPageCheckSocialDTO myPageSocialCheck() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         return myPageDAO.getSocialLogin(userId);
     }
 
@@ -74,7 +78,7 @@ public class MyPageService {
      * @return : 개인 정보가 담긴 DTO 객체
      */
     public MyPageGetUserInfoDTO getUserInfo() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         // 추출한 id로 정보를 요청
         return myPageDAO.getUserInfoById(userId);
     }
@@ -84,7 +88,7 @@ public class MyPageService {
      * @param myPageUpdateUserInfoDTO : 업데이트 한 개인정보가 담긴 값
      */
     public void updateUserInfoByAuth(MyPageUpdateUserInfoDTO myPageUpdateUserInfoDTO) {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         // 암호 공백 또는 빈값이 아닐 경우 암호화해서 넣기
         String password = myPageUpdateUserInfoDTO.getPassword();
         if(password != null && !password.isEmpty()){
@@ -110,7 +114,7 @@ public class MyPageService {
      * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
      */
     public List<MyPageProductListDTO> getWishListByAuth() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         return myPageDAO.getMyWishListInfoByUserId(userId);
     }
 
@@ -119,7 +123,7 @@ public class MyPageService {
      * @return MyPageMainDTO로 별점과 각 항목의 리스트가 담긴 DTO
      */
     public MyPageMainDTO getMainInfoListByAuth() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         MyPageAverageRatingDTO myPageAverageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<MyPageProductListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
         List<MyPageProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
@@ -132,7 +136,7 @@ public class MyPageService {
      * @return List<MyPageWishListDTO>로 조죄한 판매 내역 정보가 담김
      */
     public List<MyPageProductListDTO> getSellAndBuyListByAuth() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         return myPageDAO.getMySellAndBuyProductByUserId(userId);
     }
 
@@ -142,7 +146,7 @@ public class MyPageService {
      * @return : List<MyPageBoardDTO>에 사용자가 작성한 게시판 정보가 담김
      */
     public List<MyPageBoardDTO> getMyBoardByAuth() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         return myPageDAO.getMyBoardByUserId(userId);
     }
 
@@ -151,7 +155,7 @@ public class MyPageService {
      * @return : List<MyPageCommentDTO>에 사용자가 작성한 게시판 정보가 담김
      */
     public List<MyPageCommentDTO> getMyCommentByAuth() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         return myPageDAO.getMyCommentByUserId(userId);
     }
 
@@ -160,21 +164,13 @@ public class MyPageService {
      * @return : 별점 평균과 함께 리뷰 정보를 전달하는 객체
      */
     public MyPageReviewDTO getMyReviewInfoByAuth() {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         // 평균 별점 점수 가져오기
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<ReviewListDTO> ReviewList = myPageDAO.getMyReviewInfoByUserId(userId);
         return new MyPageReviewDTO(ReviewList, averageRating);
     }
 
-    /**
-     * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
-     */
-    private String myPageGetUserId () {
-        // 사용자 정보를 인증 객체에서 가져오기
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (String) auth.getPrincipal(); // String 자료형으로 다운
-    }
 
     /**
      * 카테고리 정보를 얻기 위한 서비스
@@ -185,12 +181,12 @@ public class MyPageService {
     }
 
     /**
-     * 유저 선호도 담아서 dto로 반환
+     * db에서 유저 선호도를 조사해서 dto로 반환
      * @return : 선호도 idx 값이 담긴 dto
      */
     public UserMyPageFavoriteDTO getUserFavoritesInfo() {
         // 유저 정보에서 idx 추출하기
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         List<Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
         UserMyPageFavoriteDTO userMyPageFavoriteDTO = new UserMyPageFavoriteDTO();
@@ -198,8 +194,12 @@ public class MyPageService {
         return userMyPageFavoriteDTO;
     }
 
+    /**
+     * 유저 선호도 수정했을 때 정보를 받아와서 처리할 서비스
+     * @param userMyPageFavoriteDTO : 유저 선호도를 담아서 사용함.
+     */
     public void updateUserFavoriteInfo (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         userMyPageFavoriteDTO.setUserIdx(userIdx);
@@ -208,4 +208,15 @@ public class MyPageService {
             throw new DontUpdateException();
         }
     }
+
+
+//    /**
+//     * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
+//     */
+//    private String myPageGetUserId () {
+//        // 사용자 정보를 인증 객체에서 가져오기
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        return (String) auth.getPrincipal(); // String 자료형으로 다운
+//    }
+
 }
