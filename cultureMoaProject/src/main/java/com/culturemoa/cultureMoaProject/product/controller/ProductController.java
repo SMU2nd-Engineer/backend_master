@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("product")
-@CrossOrigin(origins = "*")
 public class ProductController {
     @Autowired
     private ProductService productService;
@@ -43,10 +42,9 @@ public class ProductController {
         return productDTO;
     }
 
-    @GetMapping("/search")
-    public List<ProductDTO> searchProducts (ProductSearchDTO searchDTO){
+    @PostMapping("/search")
+    public List<ProductDTO> searchProducts (@RequestBody ProductSearchDTO searchDTO){
 //        System.out.print(productService.searchProduct());
-
         return productService.searchProducts(searchDTO);
     }
 }
