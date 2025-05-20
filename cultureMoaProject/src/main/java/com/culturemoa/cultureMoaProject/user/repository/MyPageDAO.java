@@ -142,6 +142,10 @@ public class MyPageDAO {
         return sqlSessionTemplate.selectList("myPageMapper.getMyReviewListInfo", userId);
     }
 
+    public List<MyPageEvaluationDTO> getMyEvaluationByUserIdx (int UserIdx) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMyEvaluationInfo", UserIdx);
+    }
+
     /**
      * 선호도 조사 페이지를 위한 쿼리
      * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김

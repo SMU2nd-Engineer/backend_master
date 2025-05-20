@@ -61,7 +61,7 @@
 
 <!--  마이페이지 메인에서 사용할 거래 내역 5개 가져오기   -->
     <select id="getMainReviewListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.ReviewListDTO" >
-        select UR.REVIEW, UR.IDX, UR.SDATE, UR.EVALUATION
+        select UR.REVIEW, UR.IDX, UR.SDATE
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.USER_IDX
         where U.ID = #{userId}
@@ -115,7 +115,7 @@
     </select>
 
 
-<!--  마이페이지 메인에서 별점에 표시할 평균 점수 가져오기  -->
+<!--  마이페이지 메인에서 별점에 표시할 리뷰 평균 점수 가져오기  -->
     <select id="getTotalRating" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageAverageRatingDTO" >
         select avg(RATING) as myPageTotalRating
         from USER_REVIEW_TBL as UR
@@ -126,11 +126,23 @@
 
 <!--  마이페이지 리뷰 탭 사용할 사용자 리뷰 정보 가져오기  -->
     <select id="getMyReviewListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.ReviewListDTO" >
-        select UR.REVIEW, UR.IDX, UR.SDATE, UR.EVALUATION
+        select UR.REVIEW, UR.IDX, UR.SDATE
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.USER_IDX
         where U.ID = #{userId}
         order by UR.SDATE DESC;
+    </select>
+
+<!--  마이페이지 리뷰 탭 사용할 사용자 리뷰 거래 평가 정보 가져오기  -->
+    <select id="getMyEvaluationInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageEvaluationDTO">
+        select CS.IDX as categorySubIdx, CS.NAME as evaluationName, COUNT(URE.REVIEW_IDX) as countEvaluation
+        from CATEGORYSUB_TBL as CS
+        left join USER_REVIEW_EVALUATION_TBL as URE on CS.IDX = URE.CATEGORYSUB_IDX and URE.IS_EVALUATION = 1
+        left join USER_REVIEW_TBL as UR on URE.REVIEW_IDX = UR.IDX
+        left join USER_TRANSACTION_TBL UT ON UR.TRANSACTION_IDX = UT.IDX AND UT.USER_IDX=#{userIdx}
+        where CS.IDX between 5001 and 5005
+        group by CS.IDX
+        order by CS.IDX
     </select>
 
 <!--  선호도 체크에 사용할 category sub 테이블 조회  -->

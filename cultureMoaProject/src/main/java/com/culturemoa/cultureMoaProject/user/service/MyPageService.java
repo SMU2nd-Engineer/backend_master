@@ -153,15 +153,17 @@ public class MyPageService {
     }
 
     /**
-     * 마이페이지 리뷰에 정보를 전달하기 위한 서비스
-     * @return : 별점 평균과 함께 리뷰 정보를 전달하는 객체
+     * 마이페이지 리뷰 정보를 전달하기 위한 서비스
+     * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 정보를 전달하는 객체
      */
     public MyPageReviewDTO getMyReviewInfoByAuth() {
         String userId = handleAuth.getUserIdByAuth();
+        int userIdx = userDAO.getUserIdx(userId);
         // 평균 별점 점수 가져오기
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
-        List<ReviewListDTO> ReviewList = myPageDAO.getMyReviewInfoByUserId(userId);
-        return new MyPageReviewDTO(ReviewList, averageRating);
+        List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
+        List<MyPageEvaluationDTO> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userIdx);
+        return new MyPageReviewDTO(reviewList, averageRating,myEvaluationList);
     }
 
 

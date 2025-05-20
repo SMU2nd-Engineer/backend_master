@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReviewListDTO {
     private int idx;
-    private int evaluation;
     private String review;
     private LocalDateTime sDate;
 }
