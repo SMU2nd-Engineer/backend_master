@@ -45,11 +45,12 @@ public class ContentsController {
     // 제목+내용/작성자, 대분류 선택하고 검색어 입력하면 조건에 맞는 검색 데이터 조회하여 출력
     @GetMapping("/search")
     public List<ContentInfoDTO> getContentSearchs(
-            @RequestParam(required = false) Long category_idx,
-            @RequestParam(required = false) String keyword
+            @RequestParam(name = "category", required = false) Long category_idx,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String searchType
     ) {
         // Map 사용하지 않고 파라미터를 서비스에 전달
-        return contentsService.getContentSearchs(category_idx, keyword);
+        return contentsService.getContentSearchs(category_idx, keyword, searchType);
     }
 
 }

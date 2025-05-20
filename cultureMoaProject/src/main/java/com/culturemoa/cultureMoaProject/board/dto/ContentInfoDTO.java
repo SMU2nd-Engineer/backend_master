@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 /**
  * ContentsJoinUserDTO: 게시판 전체 정보와 user 테이블의 idx가
  일치하는 작성자(회원 닉네임) 정보를 전달하는 객체
- * idx : 회원 고유 번호
+ * user_idx : 회원 고유 번호
  * category_idx : 상품 카테고리 - 구분(팝니다/삽니다)
  * division : 구분(팝니다/삽니다) - 삭제 예정
  * content: 게시글 내용
