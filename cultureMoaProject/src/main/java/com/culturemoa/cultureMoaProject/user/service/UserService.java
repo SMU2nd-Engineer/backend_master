@@ -66,8 +66,6 @@ public class UserService {
     public JwtDTO loginAndIssuanceToken (UserLoginDTO pRequest, HttpServletResponse pResponse) {
         // dao를 통하여 db의 패스워드 가져오기
         UserLoginDTO userLogin = userDAO.findByLoginInfo(pRequest);
-
-
         // 사용자 입력 값, 조회하여 가져온 passowrd를 매칭하여 다르면 오류 발생.
         if(!passwordEncoder.matches(pRequest.getPassword(), userLogin.getPassword())) {
             throw new InvalidPasswordException(); // 비밀번호 일치하지 않음.
@@ -80,7 +78,6 @@ public class UserService {
         } else {
             throw new DontMatchUserInfoException();
         }
-
     }
 
     /**
