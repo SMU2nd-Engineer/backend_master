@@ -5,6 +5,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -139,6 +142,10 @@ public class MyPageDAO {
         return sqlSessionTemplate.selectList("myPageMapper.getMyReviewListInfo", userId);
     }
 
+    public List<MyPageEvaluationDTO> getMyEvaluationByUserIdx (int UserIdx) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMyEvaluationInfo", UserIdx);
+    }
+
     /**
      * 선호도 조사 페이지를 위한 쿼리
      * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
@@ -158,13 +165,21 @@ public class MyPageDAO {
 
 
     /**
-     * 유저 선호도 업데이트 - 테이블에서 행 삭제 후 삽입
-     * @param userMyPageFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
+     * 유저 선호도 업데이트1 - update( 500에러 문제로 insert / update 분리)
+     * @param myPageEditFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
      * @return 업데이트 성공 여부를 담은 int 값
      */
-    public int updateUserFavoritesList (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
-        sqlSessionTemplate.delete("myPageMapper.deleteUserFavorites", userMyPageFavoriteDTO.getUserIdx());
-        return sqlSessionTemplate.update("myPageMapper.insertUserFavorites", userMyPageFavoriteDTO);
+    public int updateUserFavoritesList (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
+        return sqlSessionTemplate.update("myPageMapper.updateUserFavorites", myPageEditFavoriteDTO);
+    }
+
+    /**
+     * 유저 선호도 업데이트 2 - 새로운 항목이면 삽입 아닐 경우 업데이트
+     * @param myPageEditFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
+     * @return 업데이트 성공 여부를 담은 int 값
+     */
+    public int insertUserFavoritesList (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertOrUpdateUserFavorites", myPageEditFavoriteDTO);
     }
 
 }

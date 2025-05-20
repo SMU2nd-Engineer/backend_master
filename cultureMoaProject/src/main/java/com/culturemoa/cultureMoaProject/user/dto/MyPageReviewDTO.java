@@ -15,4 +15,5 @@ import java.util.List;
 public class MyPageReviewDTO {
     private List<ReviewListDTO> reviewLists;
     private MyPageAverageRatingDTO myAverageRating;
+    private List<MyPageEvaluationDTO> myEvaluationList;
 }

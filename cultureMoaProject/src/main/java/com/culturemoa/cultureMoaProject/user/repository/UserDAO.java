@@ -95,11 +95,11 @@ public class UserDAO {
 
     /**
      * 유저 선호도 값을 DB에 넣기
-     * @param userMyPageFavoriteDTO : 유전 선호도 배열과 IDX, SDATE
+     * @param userRegisterFavoriteDTO : 유전 선호도 배열과 IDX, SDATE
      * @return : 성공적으로 들어갔는지 아닌지 확인하기 위한 INT
      */
-    public int insertUserFavorites (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
-        return sqlSessionTemplate.insert("userMapper.insertFavorite", userMyPageFavoriteDTO);
+    public int insertUserFavorites (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
+        return sqlSessionTemplate.insert("userMapper.insertFavorite", userRegisterFavoriteDTO);
         
     }
 

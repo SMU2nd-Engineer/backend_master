@@ -1,23 +1,16 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
-import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
-import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
 import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
-import com.culturemoa.cultureMoaProject.user.exception.UserNotFoundException;
 import com.culturemoa.cultureMoaProject.user.repository.MyPageDAO;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -160,15 +153,17 @@ public class MyPageService {
     }
 
     /**
-     * 마이페이지 리뷰에 정보를 전달하기 위한 서비스
-     * @return : 별점 평균과 함께 리뷰 정보를 전달하는 객체
+     * 마이페이지 리뷰 정보를 전달하기 위한 서비스
+     * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 정보를 전달하는 객체
      */
     public MyPageReviewDTO getMyReviewInfoByAuth() {
         String userId = handleAuth.getUserIdByAuth();
+        int userIdx = userDAO.getUserIdx(userId);
         // 평균 별점 점수 가져오기
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
-        List<ReviewListDTO> ReviewList = myPageDAO.getMyReviewInfoByUserId(userId);
-        return new MyPageReviewDTO(ReviewList, averageRating);
+        List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
+        List<MyPageEvaluationDTO> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userIdx);
+        return new MyPageReviewDTO(reviewList, averageRating,myEvaluationList);
     }
 
 
@@ -184,39 +179,48 @@ public class MyPageService {
      * db에서 유저 선호도를 조사해서 dto로 반환
      * @return : 선호도 idx 값이 담긴 dto
      */
-    public UserMyPageFavoriteDTO getUserFavoritesInfo() {
+    public UserRegisterFavoriteDTO getUserFavoritesInfo() {
         // 유저 정보에서 idx 추출하기
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         List<Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
-        UserMyPageFavoriteDTO userMyPageFavoriteDTO = new UserMyPageFavoriteDTO();
-        userMyPageFavoriteDTO.setFavorites(favorites);
-        return userMyPageFavoriteDTO;
+        UserRegisterFavoriteDTO userRegisterFavoriteDTO = new UserRegisterFavoriteDTO();
+        userRegisterFavoriteDTO.setFavorites(favorites);
+        return userRegisterFavoriteDTO;
     }
 
     /**
      * 유저 선호도 수정했을 때 정보를 받아와서 처리할 서비스
-     * @param userMyPageFavoriteDTO : 유저 선호도를 담아서 사용함.
+     * @param myPageEditFavoriteDTO : 유저 선호도를 담아서 사용함.
      */
-    public void updateUserFavoriteInfo (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+    public void updateUserFavoriteInfo (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-        userMyPageFavoriteDTO.setUserIdx(userIdx);
-        userMyPageFavoriteDTO.setSDate(localDateTime);
-        if(myPageDAO.updateUserFavoritesList(userMyPageFavoriteDTO) == 0) {
+        myPageEditFavoriteDTO.setUserIdx(userIdx);
+        myPageEditFavoriteDTO.setSDate(localDateTime);
+        myPageEditFavoriteDTO.setEDate(localDateTime);
+        System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
+
+        int updateResult = 0;
+        int insertResult = 0;
+
+        // 기존 값에서 변경된 부분 업데이트
+        if (myPageEditFavoriteDTO.getNotFavorites() != null && !myPageEditFavoriteDTO.getNotFavorites().isEmpty()) {
+            updateResult = myPageDAO.updateUserFavoritesList(myPageEditFavoriteDTO);
+        }
+
+        // 갑은 등록되어 있으나 0인 것은 1로 새로운 것은 insert
+        if (myPageEditFavoriteDTO.getInsertNewFavorites() != null && !myPageEditFavoriteDTO.getInsertNewFavorites().isEmpty()) {
+            insertResult = myPageDAO.insertUserFavoritesList(myPageEditFavoriteDTO);
+        }
+        
+        // 업데이트가 이루어지지 않았을 경우 예외 처리
+        if(updateResult == 0 && insertResult == 0) {
+            System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
             throw new DontUpdateException();
         }
     }
 
-
-//    /**
-//     * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
-//     */
-//    private String myPageGetUserId () {
-//        // 사용자 정보를 인증 객체에서 가져오기
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        return (String) auth.getPrincipal(); // String 자료형으로 다운
-//    }
 
 }

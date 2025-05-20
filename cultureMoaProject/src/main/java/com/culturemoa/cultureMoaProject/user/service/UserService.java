@@ -202,15 +202,15 @@ public class UserService {
 
     /**
      * 사용자 선호도 삽입 진행
-     * @param userMyPageFavoriteDTO : 프론트에서 받은 사용자 선호도 배열이 들어있는 dto
+     * @param userRegisterFavoriteDTO : 프론트에서 받은 사용자 선호도 배열이 들어있는 dto
      */
-    public void insertUserFavoriteWithIdxAndDate (UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
+    public void insertUserFavoriteWithIdxAndDate (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
         String userId = myPageGetUserId();
         int userIdx = userDAO.getUserIdx(userId);
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-        userMyPageFavoriteDTO.setUserIdx(userIdx);
-        userMyPageFavoriteDTO.setSDate(localDateTime);
-        if(userDAO.insertUserFavorites(userMyPageFavoriteDTO) == 0) {
+        userRegisterFavoriteDTO.setUserIdx(userIdx);
+        userRegisterFavoriteDTO.setSDate(localDateTime);
+        if(userDAO.insertUserFavorites(userRegisterFavoriteDTO) == 0) {
             throw new DontInsertException();
         }
     }

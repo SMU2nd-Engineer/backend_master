@@ -2,7 +2,6 @@ package com.culturemoa.cultureMoaProject.user.controller;
 
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.service.MyPageService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -143,18 +142,18 @@ public class MyPageController {
      */
     @GetMapping("/userFavorites")
     public ResponseEntity<?> getUserFavorites () {
-        UserMyPageFavoriteDTO userMyPageFavoriteDTO = myPageService.getUserFavoritesInfo();
-        return ResponseEntity.ok(userMyPageFavoriteDTO);
+        UserRegisterFavoriteDTO userRegisterFavoriteDTO = myPageService.getUserFavoritesInfo();
+        return ResponseEntity.ok(userRegisterFavoriteDTO);
     }
 
     /**
      * 유저 선호도 변경 컨트롤러
-     * @param userMyPageFavoriteDTO : 선호도 정보가 담긴 배열을 받을 dto
+     * @param myPageEditFavoriteDTO : 선호도 정보가 담긴 배열을 받을 dto
      * @return : 응답 메시지 송신
      */
     @PostMapping("/updateFavorites")
-    public ResponseEntity<?> updateUserFavorites(@RequestBody UserMyPageFavoriteDTO userMyPageFavoriteDTO) {
-        myPageService.updateUserFavoriteInfo(userMyPageFavoriteDTO);
+    public ResponseEntity<?> updateUserFavorites(@RequestBody MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
+        myPageService.updateUserFavoriteInfo(myPageEditFavoriteDTO);
         return ResponseEntity.ok("선호도 업데이트가 정상적으로 완료되었습니다.");
     }
 }

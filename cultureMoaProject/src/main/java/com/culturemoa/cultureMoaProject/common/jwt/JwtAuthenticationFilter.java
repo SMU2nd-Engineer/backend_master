@@ -52,19 +52,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 모든 경로를 jwt 토큰 검증을 빼기 위하여 설정 나중에 필요한 항목만 넣어주어야 함.
         if (
-                requestURI.startsWith("/")
-//                requestURI.equals("/user/login") ||
-//                requestURI.equals("/refresh") ||
-//                requestURI.equals("/user/logout") ||
-//                requestURI.equals("/user/kakaoAuth")||
-//                requestURI.equals("/user/naverAuth") ||
-//                requestURI.equals("/user/googleAuth") ||
-//                requestURI.equals("/user/registration") ||
-//                requestURI.equals("/user/duplicatecheck") ||
-//                requestURI.equals("/user/idFind") ||
-//                requestURI.equals("/user/passwordFind") ||
-//                requestURI.equals("/user/passwordChange") ||
-//                requestURI.equals("/logout")
+//                requestURI.startsWith("/")
+                requestURI.equals("/user/login") ||
+                requestURI.equals("/refresh") ||
+                requestURI.equals("/user/logout") ||
+                requestURI.equals("/user/kakaoAuth")||
+                requestURI.equals("/user/naverAuth") ||
+                requestURI.equals("/user/googleAuth") ||
+                requestURI.equals("/user/registration") ||
+                requestURI.equals("/user/duplicatecheck") ||
+                requestURI.equals("/user/idFind") ||
+                requestURI.equals("/user/passwordFind") ||
+                requestURI.equals("/user/passwordChange") ||
+                requestURI.equals("/logout")
                 ) {
             System.out.println("[Filter] 예외 경로 요청 - 필터 패스: " + requestURI);
             // 검증을 건너 뛰어도 문제가 생기지 않게 하기 위해서 인증 객체를 임의 생성
