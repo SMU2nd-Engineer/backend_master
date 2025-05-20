@@ -46,10 +46,11 @@ public class ContentsController {
     @GetMapping("/search")
     public List<ContentInfoDTO> getContentSearchs(
             @RequestParam(name = "category", required = false) Long category_idx,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String searchType
     ) {
         // Map 사용하지 않고 파라미터를 서비스에 전달
-        return contentsService.getContentSearchs(category_idx, keyword);
+        return contentsService.getContentSearchs(category_idx, keyword, searchType);
     }
 
 }

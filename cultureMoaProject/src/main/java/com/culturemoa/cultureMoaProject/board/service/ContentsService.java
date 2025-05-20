@@ -29,7 +29,7 @@ public class ContentsService {
         return contentsDAO.getContentInfos();
     }
     // 제목+내용/작성자, 대분류 선택하고 검색어 입력하면 조건에 맞는 검색 데이터 조회하여 출력
-    public List<ContentInfoDTO> getContentSearchs(Long category_idx, String keyword) {
+    public List<ContentInfoDTO> getContentSearchs(Long category_idx, String keyword, String searchType) {
         // searchMap에 값을 안넣으면 xml의 if 조건에 해당 파라미터가 존재하지 않아서 바인딩 에러 발생할 수 있음
         // SQL 에서 조건을 동적으로 처리할 수 있게 하기 위함
         Map<String, Object> searchMap = new HashMap<>();
@@ -44,10 +44,10 @@ public class ContentsService {
             searchMap.put("keyword", keyword);
         }
 
-//        // Map에 추가
-//        if (searchType != null && !searchType.isEmpty()) {
-//            searchMap.put("searchType", searchType);
-//        }
+        // 구분자 : 제목+내용 / 작성자 파라미터가 null 아닌 경우에만 Map에 추가
+        if (searchType != null && !searchType.isEmpty()) {
+            searchMap.put("searchType", searchType);
+        }
 
         // DAO로 Map 전달
         return contentsDAO.getContentSearchs(searchMap);
