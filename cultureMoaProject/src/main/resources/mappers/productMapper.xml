@@ -45,6 +45,7 @@
         LEFT OUTER JOIN PRODUCT_DETAIL_TBL DETAIL ON
                  MAIN.IDX = DETAIL.PRODUCT_IDX
         <where>
+            1 = 1
 <!--            <if test="searchDTO.getCategory_idx() > 0">-->
 <!--                CATEGORY_IDX = #{searchDTO.getCategory_idx()}-->
 <!--            </if>-->
@@ -54,14 +55,14 @@
 <!--            <if test="searchDTO.getKeyword() > 0">-->
 <!--                KEYWORD = #{searchDTO.getKeyword()}-->
 <!--            </if>-->
-            <if test="keyword > 0">
-                CATEGORY_IDX = #{keyword}
+            <if test="keyword != null">
+                AND (TITLE LIKE '%${keyword}%' OR DETAIL.CONTENT LIKE '%${keyword}%')
             </if>
-            <if test="category_idx > 0">
-                CATEGORYGENRE_IDX = #{category_idx}
+            <if test="category_idx > 1000">
+                AND CATEGORY_IDX = #{category_idx}
             </if>
-            <if test="categorygenre_idx > 0">
-                KEYWORD = #{categorygenre_idx}
+            <if test="categorygenre_idx > 2000" >
+                AND CATEGORYGENRE_IDX = #{categorygenre_idx}
             </if>
         </where>
     </select>
