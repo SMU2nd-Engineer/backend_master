@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: culturemoa
+      MYSQL_DATABASE: culturemoa
+      MYSQL_USER: culturemoa
+      MYSQL_PASSWORD: culturemoa
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: culturemoa
+      MONGO_INITDB_ROOT_PASSWORD: culturemoa
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot-app
+    ports:
+      - "8100:8100"
+    depends_on:
+      - mysql
+      - mongodb
+    volumes:
+      - app_data:/app/data   # 앱 데이터용 볼륨 (필요시 수정)
+
+volumes:
+  mysql_data:
+  mongo_data:
+  app_data:
