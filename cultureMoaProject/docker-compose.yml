@@ -11,7 +11,7 @@ services:
       MYSQL_USER: culturemoa
       MYSQL_PASSWORD: culturemoa
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -23,7 +23,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: culturemoa
       MONGO_INITDB_ROOT_PASSWORD: culturemoa
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 
@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     container_name: springboot-app
     ports:
-      - "8100:8100"
+      - "8101:8100"
     depends_on:
       - mysql
       - mongodb
