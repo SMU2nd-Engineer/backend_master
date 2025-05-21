@@ -51,10 +51,10 @@ public class LogAspect {
      * @return ReturnObject
      * @throws Throwable
      */
-    @Around("chatPointCut()")
-    public Object chatLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        return printLog(proceedingJoinPoint, "chatPointCut");
-    }
+//    @Around("chatPointCut()")
+//    public Object chatLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+//        return printLog(proceedingJoinPoint, "chatPointCut");
+//    }
 
 
     /**

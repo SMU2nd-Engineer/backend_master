@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -30,63 +31,69 @@ public class KakaoPaymentService implements PaymentGatewayService {
     private static final String KAKAO_READY_URL = "https://open-api.kakaopay.com/online/v1/payment/ready";
     // 카카오페이 결제 승인 API의 URL
     private static final String KAKAO_APROVE_URL = "https://open-api.kakaopay.com/online/v1/payment/approve";
+    // 카카오페이 결제 취소 API의 URL
+    private static final String KAKAO_CANCEL_URL = "https://open-api.kakaopay.com/online/v1/payment/cancel";
     private final KakaoPayProperties kakaoPayProperties;
     private final PaymentDAO paymentDAO;
 
     // 카카오페이 결제 준비 API를 호출하는 역할
     @Override
     public PaymentResponseDTO readyToPay(PaymentReadyRequestDTO requestDTO) {
+        String tid = null;
+        try {
+            // HTTP 요청 헤더를 설정하는 객체
+            HttpHeaders headers = new HttpHeaders();
+            // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
+            headers.set("Authorization", "SECRET_KEY " + kakaoPayProperties.getSecretKey());
+            // 요청 본문의 데이터 형식을 설정
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // HTTP 요청 헤더를 설정하는 객체
-        HttpHeaders headers = new HttpHeaders();
-        // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
-        headers.set("Authorization", "SECRET_KEY " + kakaoPayProperties.getSecretKey());
-        // 요청 본문의 데이터 형식을 설정
-        headers.setContentType(MediaType.APPLICATION_JSON);
+            // 카카오페이 API에 요청할 파라미터
+            Map<String, Object> params = new HashMap<>();
+            params.put("cid", kakaoPayProperties.getCid());
+            params.put("partner_order_id", requestDTO.getPartnerOrderId());
+            params.put("partner_user_id", requestDTO.getPartnerUserId());
+            params.put("item_name", requestDTO.getItemName());
+            params.put("quantity", requestDTO.getQuantity());
+            params.put("total_amount", requestDTO.getAmount());
+            params.put("tax_free_amount", requestDTO.getTaxFreeAmount());
+            params.put("approval_url", requestDTO.getApprovalUrl());
+            params.put("cancel_url", requestDTO.getCancelUrl());
+            params.put("fail_url", requestDTO.getFailUrl());
 
-        // 카카오페이 API에 요청할 파라미터
-        Map<String, Object> params = new HashMap<>();
-        params.put("cid", kakaoPayProperties.getCid());
-        params.put("partner_order_id", requestDTO.getPartnerOrderId());
-        params.put("partner_user_id", requestDTO.getPartnerUserId());
-        params.put("item_name", requestDTO.getItemName());
-        params.put("quantity", requestDTO.getQuantity());
-        params.put("total_amount", requestDTO.getAmount());
-        params.put("tax_free_amount", requestDTO.getTaxFreeAmount());
-        params.put("approval_url", requestDTO.getApprovalUrl());
-        params.put("cancel_url", requestDTO.getCancelUrl());
-        params.put("fail_url", requestDTO.getFailUrl());
+            // HTTP 요청에 필요한 본문과 헤더를 포함하는 객체
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
+            // 카카오페이 API의 POST 요청을 보냄
+            ResponseEntity<KakaoReadyResponseDTO> response = restTemplate.postForEntity(
+                    KAKAO_READY_URL,
+                    request,
+                    KakaoReadyResponseDTO.class
+            );
+            // 카카오페이 API의 응답 데이터를 객체로 받기
+            KakaoReadyResponseDTO body = response.getBody();
+            System.out.println("itemID: " + requestDTO.getItemId());
 
-        // HTTP 요청에 필요한 본문과 헤더를 포함하는 객체
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
-        // 카카오페이 API의 POST 요청을 보냄
-        ResponseEntity<KakaoReadyResponseDTO> response = restTemplate.postForEntity(
-                KAKAO_READY_URL,
-                request,
-                KakaoReadyResponseDTO.class
-        );
-        // 카카오페이 API의 응답 데이터를 객체로 받기
-        KakaoReadyResponseDTO body = response.getBody();
-        System.out.println("itemID: " + requestDTO.getItemId());
-        // DB 저장
-        PaymentHistory history = new PaymentHistory();
-        history.setTid(body.getTid());
-        history.setAmount(requestDTO.getAmount());
-        history.setPayMethod(getPayMethod());
-        history.setProductId(requestDTO.getItemId());
-        history.setTradeType(requestDTO.getTradeType());
-        history.setDeliveryAddress(requestDTO.getDeliveryAddress());
-        history.setBuyerId(requestDTO.getBuyerId());
-        history.setSellerId(requestDTO.getSellerId());
+            tid = body.getTid();
+            // DB 저장
+            PaymentHistory history = new PaymentHistory();
+            history.setTid(body.getTid());
+            history.setAmount(requestDTO.getAmount());
+            history.setPayMethod(getPayMethod());
+            history.setProductId(requestDTO.getItemId());
+            history.setTradeType(requestDTO.getTradeType());
+            history.setDeliveryAddress(requestDTO.getDeliveryAddress());
+            history.setBuyerId(requestDTO.getBuyerId());
+            history.setSellerId(requestDTO.getSellerId());
 
-        paymentDAO.insertPaymentHistory(history);
+            paymentDAO.insertPaymentHistory(history);
 
-        PaymentStatus status = new PaymentStatus();
-        status.setTid(body.getTid());
-        status.setStatus("결제준비");
-        status.setStatusAt(body.getCreatedAt());
-        
-        paymentDAO.insertPaymentStatus(status);
+            PaymentStatus status = new PaymentStatus();
+            status.setTid(body.getTid());
+            status.setStatus("결제준비");
+            status.setStatusAt(body.getCreatedAt());
+
+            paymentDAO.insertPaymentStatus(status);
+
 
         return new PaymentResponseDTO(
                 Objects.requireNonNull(body).getTid(),
@@ -97,11 +104,60 @@ public class KakaoPaymentService implements PaymentGatewayService {
                 body.getIosAppScheme(),
                 body.getCreatedAt()
         );
+        } catch (Exception e) {
+            handleFailedPayment(tid != null ? tid : "UNKNOWN", e.getMessage());
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public KakaoApproveResponseDTO approvePayment(PaymentApproveRequestDTO approveDTO) {
         // 카카오페이 API 호출 -> 결제 승인
+        try {
+            // HTTP 요청 헤더를 설정하는 객체
+            HttpHeaders headers = new HttpHeaders();
+            // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
+            headers.set("Authorization", "SECRET_KEY " + kakaoPayProperties.getSecretKey());
+            // 요청 본문의 데이터 형식을 설정
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            // 카카오페이 API에 요청할 파라미터
+            Map<String, Object> params = new HashMap<>();
+            params.put("cid", kakaoPayProperties.getCid());
+            params.put("tid", approveDTO.getTid());
+            params.put("partner_order_id", approveDTO.getPartnerOrderId());
+            params.put("partner_user_id", approveDTO.getPartnerUserId());
+            params.put("pg_token", approveDTO.getPgToken());
+
+            // HTTP 요청에 필요한 본문과 헤더를 포함하는 객체
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
+
+            // 승인 호출 (성공 or 실패 판단용)
+            KakaoApproveResponseDTO response = restTemplate.postForEntity(
+                    KAKAO_APROVE_URL,
+                    request,
+                    KakaoApproveResponseDTO.class
+            ).getBody();
+
+            // DB저장
+            PaymentStatus status = new PaymentStatus();
+            status.setTid(approveDTO.getTid());
+            status.setStatus("결제승인");
+            status.setStatusAt(response.getApprovedAt());
+
+            paymentDAO.insertPaymentStatus(status);
+
+            return response;
+        } catch (Exception e){
+            handleFailedPayment(approveDTO.getTid(), e.getMessage());
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public KakaoCancelResponseDTO cancelPayment(String tid) {
+        int cancelAmount = paymentDAO.selectAmountByTid(tid);
+
         // HTTP 요청 헤더를 설정하는 객체
         HttpHeaders headers = new HttpHeaders();
         // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
@@ -109,52 +165,48 @@ public class KakaoPaymentService implements PaymentGatewayService {
         // 요청 본문의 데이터 형식을 설정
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // 카카오페이 API에 요청할 파라미터
+        // 요청 바드 구성
         Map<String, Object> params = new HashMap<>();
         params.put("cid", kakaoPayProperties.getCid());
-        params.put("tid", approveDTO.getTid());
-        params.put("partner_order_id", approveDTO.getPartnerOrderId());
-        params.put("partner_user_id", approveDTO.getPartnerUserId());
-        params.put("pg_token", approveDTO.getPgToken());
+        params.put("tid", tid);
+        params.put("cancel_amount", cancelAmount);
+        params.put("cancel_tax_free_amount", 0);
 
-        // HTTP 요청에 필요한 본문과 헤더를 포함하는 객체
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(params, headers);
 
-        // 승인 호출 (성공 or 실패 판단용)
-        KakaoApproveResponseDTO response = restTemplate.postForEntity(
-                KAKAO_APROVE_URL,
+        ResponseEntity<KakaoCancelResponseDTO> responseEntity = restTemplate.postForEntity(
+                KAKAO_CANCEL_URL,
                 request,
-                KakaoApproveResponseDTO.class
-        ).getBody();
+                KakaoCancelResponseDTO.class
+        );
 
-        // DB저장
+        KakaoCancelResponseDTO response = responseEntity.getBody();
+
+        if(response != null) {
+            PaymentStatus status = new PaymentStatus();
+            status.setTid(tid);
+            status.setStatus("결제취소");
+            status.setStatusAt(response.getCanceledAt());
+
+            paymentDAO.insertPaymentStatus(status);
+
+            return response;
+        } else {
+            throw new RuntimeException("카카오페이 결제 취소 응답 없음");
+        }
+
+    }
+
+    @Override
+    public void handleFailedPayment(String tid, String methodResultMessage) {
         PaymentStatus status = new PaymentStatus();
-        status.setTid(approveDTO.getTid());
-        status.setStatus("결제승인");
-        status.setStatusAt(response.getApprovedAt());
+        status.setTid(tid);
+        status.setStatus("결제실패");
+        status.setStatusAt(LocalDateTime.now());
 
         paymentDAO.insertPaymentStatus(status);
 
-        return response;
-    }
-
-    @Override
-    public void cancelPayment(String tid) {
-        // HTTP 요청 헤더를 설정하는 객체
-        HttpHeaders headers = new HttpHeaders();
-        // API 요청을 인증하기 위해 카카오페이 API키를 Authorization헤더에 추가
-        headers.set("Authorization", "SECRET_KEY " + kakaoPayProperties.getSecretKey());
-        // 요청 본문의 데이터 형식을 설정
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        Map<String, Object> params = new HashMap<>();
-
-
-    }
-
-    @Override
-    public void handleFailedPayment(String methodResultMessage) {
-
+        System.err.printf("[TID: %s] 카카오페이 결제 실패 - %s%n", tid, methodResultMessage);
     }
 
     @Override
