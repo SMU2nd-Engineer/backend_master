@@ -35,6 +35,6 @@ public class UserDTO {
     private String socialLogin;
     private LocalDateTime sDate;
     private LocalDateTime eDate;
-    private LocalDateTime wDate;
+    private LocalDateTime cDate;
 
 }

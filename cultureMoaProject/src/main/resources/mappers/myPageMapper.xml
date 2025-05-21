@@ -4,19 +4,19 @@
 
 <!--    유저 id를 이용하여 패스워드 가져오기    -->
     <select id="findPasswordByTokenId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePasswordCheckDTO">
-        select PASSWORD from USER_TBL where ID = #{id} and WDATE is null
+        select PASSWORD from USER_TBL where ID = #{id} and EDATE is null
     </select>
 
 
 <!--    유저 id를 이용하여 소셜 정보 가져옴    -->
     <select id="findSocialLoginByTokenId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageCheckSocialDTO" >
     <!--   별칭 지정으로 dto와 맞춤     -->
-        select SOCIAL_LOGIN as socialLogin from USER_TBL where ID=#{tokenUserId} and WDATE is null
+        select SOCIAL_LOGIN as socialLogin from USER_TBL where ID=#{tokenUserId} and EDATE is null
     </select>
 
     <!--  유저 id를 이용하여 사용자 정보를 가져옴  -->
     <select id="findUserInfoByTokenId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageGetUserInfoDTO" >
-        select NAME, NICKNAME, ADDRESS, EMAIL from USER_TBL where ID=#{tokenUserId} and WDATE is null
+        select NAME, NICKNAME, ADDRESS, EMAIL from USER_TBL where ID=#{tokenUserId} and EDATE is null
     </select>
 
 
@@ -24,12 +24,12 @@
     <update id="updateUserInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO" >
         update USER_TBL
         <set>
-            NAME=#{name}, NICKNAME=#{nickName}, EMAIL=#{email}, ADDRESS=#{address}, EDATE = #{eDate},
+            NAME=#{name}, NICKNAME=#{nickName}, EMAIL=#{email}, ADDRESS=#{address}, CDATE =#{cDate},
             <if test="password !='' and password != null">
                 password=#{password}
             </if>
         </set>
-        where ID = #{id} and WDATE is null
+        where ID = #{id} and EDATE is null
     </update>
 
 
@@ -85,7 +85,7 @@
 
 <!--  마이페이지에 거래 내역 상품 목록을 가져오기  -->
     <select id="getMySellAndByListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageProductListDTO" >
-        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl, DIVISION
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl, UT.CATEGORYSUB_IDX as categorySubIdx
         from USER_TRANSACTION_TBL as UT
         join USER_TBL as U on U.IDX = UT.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UT.PRODUCT_IDX
@@ -147,7 +147,7 @@
 
 <!--  선호도 체크에 사용할 category sub 테이블 조회  -->
     <select id="getCategorySubInfo" resultType="com.culturemoa.cultureMoaProject.user.dto.UserCategorySubDTO">
-        select IDX, NAME from CATEGORYSUB_TBL where SUB_IDX &lt; 4000;
+        select SUB_IDX as subIdx, NAME from CATEGORYSUB_TBL where SUB_IDX &lt; 4000;
     </select>
 
 <!--  유저 선호도 체크 값 불러오기  -->
@@ -161,7 +161,7 @@
     <update id="updateUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageEditFavoriteDTO">
         <if test="notFavorites != null and notFavorites.size() > 0">
             update USER_FAVORITE_TBL
-                set IS_FAVORITE = 0, EDATE = #{eDate}
+                set IS_FAVORITE = 0, CDATE = #{CDate}
                 where USER_IDX = #{userIdx}
                 and CATEGORYSUB_IDX in
             <foreach collection="notFavorites" item="notFavorite" open="(" separator="," close=")" >
@@ -181,7 +181,7 @@
             on duplicate key
             update
             IS_FAVORITE = 1,
-            EDATE = #{eDate}
+            CDATE = #{cDate}
     </insert>
 
 </mapper>

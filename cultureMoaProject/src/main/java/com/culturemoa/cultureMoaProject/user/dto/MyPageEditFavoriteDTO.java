@@ -24,5 +24,5 @@ public class MyPageEditFavoriteDTO {
     private List<Integer> notFavorites;
     private int userIdx;
     private LocalDateTime sDate;
-    private LocalDateTime eDate;
+    private LocalDateTime cDate;
 }

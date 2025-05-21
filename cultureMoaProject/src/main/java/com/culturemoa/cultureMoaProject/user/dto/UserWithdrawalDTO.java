@@ -18,6 +18,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserWithdrawalDTO {
     private String id;
-    private LocalDateTime wDate;
+    private LocalDateTime cDate;
     private LocalDateTime eDate;
 }

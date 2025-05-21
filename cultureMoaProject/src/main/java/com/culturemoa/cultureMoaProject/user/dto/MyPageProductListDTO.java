@@ -22,5 +22,5 @@ public class MyPageProductListDTO {
     private String price;
     private String content;
     private int flag;
-    private int division;
+    private int categorySubIdx;
 }
