@@ -150,12 +150,11 @@ public class UserController {
 
     /**
      * 회원 탈퇴 컨트롤러
-     * @param userWithdrawalDTO : 회원 탈퇴 DTO(id, wDate)
      * @return 응답 200
      */
     @PostMapping("/withdrawal")
-    public ResponseEntity<?> userWithdrwal (@RequestBody UserWithdrawalDTO userWithdrawalDTO) {
-        userService.userWithdrawal(userWithdrawalDTO);
+    public ResponseEntity<?> userWithdrwal () {
+        userService.userWithdrawal();
         return ResponseEntity.ok("회원탈퇴가 정상적으로 이루어졌습니다.");
     }
 
