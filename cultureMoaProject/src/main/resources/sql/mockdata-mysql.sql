@@ -121,10 +121,21 @@ WHERE NOT EXISTS (SELECT 1 FROM TICKET_TBL);
 -- 12. PAYMENT_HISTORY_TBL
 INSERT INTO PAYMENT_HISTORY_TBL (TID, AMOUNT, PAY_METHOD, STATUS, CREATE_AT, BUYER_ID, SELLER_ID, PRODUCT_ID, TRADE_TYPE, DELIVERY_ADDRESS)
 SELECT * FROM (
-    SELECT 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', 78085, 'KAKAOPAY', 'CANCELLED', '2025-05-20 02:26:15', 'ryugeonu', 'jiu52', '1', 'MEET', '전라남도 논산시 반포대169가 (옥순양윤동)' UNION ALL
-    SELECT 'adbd95cc-26c0-4abd-9f0c-c7e00e026d7e', 128653, 'KAKAOPAY', 'CANCELLED', '2025-05-20 02:26:15', 'sangho11', 'yeji86', '2', 'DELIVERY', '전라북도 수원시 팔달구 선릉거리' UNION ALL
-    SELECT 'dd6bed9d-ba45-4d3b-a844-606e3cfdfe2b', 79594, 'KAKAOPAY', 'CANCELLED', '2025-05-20 02:26:15', 'jiu52', 'jiu52', '3', 'MEET', '경상남도 보령시 가락408로' UNION ALL
-    SELECT 'f5591955-ce0b-4584-ac08-7488db9c6b31', 145302, 'BANK', 'PAID', '2025-05-20 02:26:15', 'sangho11', 'areum92', '4', 'DELIVERY', '제주특별자치도 안양시 동안구 봉은사3로 (현정김마을)' UNION ALL
-    SELECT '55203d3b-76c7-49bb-b54e-be54a93c7de9', 25570, 'KAKAOPAY', 'PAID', '2025-05-20 02:26:15', 'coegyeongsu', 'yeji86', '5', 'DELIVERY', '대전광역시 종로구 서초대1로 (영수이김동)'
+    SELECT 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', 78085, 'KAKAOPAY', 'ryugeonu', 'jiu52', '1', 'MEET', '전라남도 논산시 반포대169가 (옥순양윤동)' UNION ALL
+    SELECT 'adbd95cc-26c0-4abd-9f0c-c7e00e026d7e', 128653, 'KAKAOPAY', 'sangho11', 'yeji86', '2', 'DELIVERY', '전라북도 수원시 팔달구 선릉거리' UNION ALL
+    SELECT 'dd6bed9d-ba45-4d3b-a844-606e3cfdfe2b', 79594, 'KAKAOPAY', 'jiu52', 'jiu52', '3', 'MEET', '경상남도 보령시 가락408로' UNION ALL
+    SELECT 'f5591955-ce0b-4584-ac08-7488db9c6b31', 145302, 'BANK', 'sangho11', 'areum92', '4', 'DELIVERY', '제주특별자치도 안양시 동안구 봉은사3로 (현정김마을)' UNION ALL
+    SELECT '55203d3b-76c7-49bb-b54e-be54a93c7de9', 25570, 'KAKAOPAY', 'coegyeongsu', 'yeji86', '5', 'DELIVERY', '대전광역시 종로구 서초대1로 (영수이김동)'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PAYMENT_HISTORY_TBL);
+
+-- 13.
+INSERT INTO PAYMENT_STATUS_TBL (TID, STATUS, STATUS_AT)
+SELECT * FROM (
+    SELECT * FROM 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
+    SELECT * FROM 'adbd95cc-26c0-4abd-9f0c-c7e00e026d7e', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
+    SELECT * FROM 'dd6bed9d-ba45-4d3b-a844-606e3cfdfe2b', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
+    SELECT * FROM 'f5591955-ce0b-4584-ac08-7488db9c6b31', 'PAID', '2025-05-20 02:26:15' UNION ALL
+    SELECT * FROM '55203d3b-76c7-49bb-b54e-be54a93c7de9', 'PAID', '2025-05-20 02:26:15'
+) AS tmp
+WHERE NOT EXISTS (SELECT 1 FROM PAYMENT_STATUS_TBL);

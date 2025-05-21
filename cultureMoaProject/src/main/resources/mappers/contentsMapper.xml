@@ -14,7 +14,7 @@
     <!-- CONTENTS_TBL의 content와 USER_TBL의 유저 정보 조인
     edate는 끝 날짜라 값이 있으면 안됨 그래서 null이어야 함 -->
     <select id="getContentInfos" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
-        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE, CONT.DIVISION,
+        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE,
         CONT.CONTENT, CONT.SDATE,
         USERT.NICKNAME
         FROM CONTENTS_TBL CONT
@@ -25,7 +25,7 @@
 
     <!-- JOIN된 CONTENTS_TBL과 USER_TBL의 검색어 조회 - search -->
     <select id="getContentSearchs" parameterType="java.util.HashMap" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
-        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE, CONT.DIVISION,
+        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE,
         CONT.CONTENT, CONT.SDATE,
         USERT.NICKNAME
         FROM CONTENTS_TBL CONT
@@ -39,8 +39,11 @@
 
             <!-- searchType: 제목+내용/작성자(nickname) 의 구분값
             contents 테이블의 제목(title)+내용(contents) 선택 한 후 키워드로 검색 -->
-            <if test="searchType==0">
-
+            <if test="searchType == 0 and != CONT.CONTENT">
+                AND (
+                    CONT.TITLE LIKE '%${keyword}%'
+                    OR CONT.CONTENT LIKE '%${keyword}%'
+                )
 
             </if>
 
