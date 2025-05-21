@@ -53,5 +53,14 @@ public class ContentsController {
         return contentsService.getContentSearchs(category_idx, keyword, searchType);
     }
 
+    // 게시판 테이블 idx == user 테이블 idx 면
+    // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자-nickname) 데이터 출력
+    @PostMapping ("/submit")
+    public List<ContentInfoDTO> getContentInsert() {
+        System.out.println(contentsService.getContentInsert());
+
+        return contentsService.getContentInsert();
+    }
+
 }
 

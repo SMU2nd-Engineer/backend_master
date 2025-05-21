@@ -53,4 +53,9 @@ public class ContentsService {
         return contentsDAO.getContentSearchs(searchMap);
     }
 
+    // 게시판 등록 페이지 - 게시글 등록
+    public List<ContentInfoDTO> getContentInsert() {
+        return contentsDAO.getContentInsert();
+    }
+
 }
