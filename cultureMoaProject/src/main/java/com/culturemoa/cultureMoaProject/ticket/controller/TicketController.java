@@ -29,9 +29,11 @@ public class TicketController {
     @GetMapping("/search")
     public List<TicketDTO> searchTickets(
             @RequestParam(value = "categories", required = false) String categories,
-            @RequestParam(value = "query", required = false) String query) {
+            @RequestParam(value = "query", required = false) String query,
+            @RequestParam(value = "startDate", required = false) LocalDate startDate,
+            @RequestParam(value = "endDate", required = false) LocalDate endDate){
         // categories나 query가 없으면 빈 문자열 또는 null일 수 있음
-        return ticketService.searchTickets(categories, query);
+        return ticketService.searchTickets(categories, query, startDate, endDate);
     }
 
 //    // 장르별

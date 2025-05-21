@@ -25,10 +25,12 @@ public class TicketDAO {
         return sqlSessionTemplate.selectList("ticketMapper.getAllTicket");
     }
 
-    public List<TicketDTO> getSearch(List<Integer> categories, String query) {
+    public List<TicketDTO> getSearch(List<Integer> categories, String query, LocalDate startDate, LocalDate endDate) {
         Map<String, Object> params = new HashMap<>();
         params.put("categories", categories);  // 리스트 형태로 넘기기
         params.put("query", query);
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
 
         return sqlSessionTemplate.selectList("ticketMapper.getSearch", params);
     }
