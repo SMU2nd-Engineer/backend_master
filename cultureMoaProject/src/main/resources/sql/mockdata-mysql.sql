@@ -1,12 +1,12 @@
 -- 1. USER_TBL (샘플 유저 추가)
 INSERT INTO USER_TBL (ID, NAME, EMAIL, PASSWORD, ADDRESS, NICKNAME, SOCIAL_LOGIN, SDATE, CDATE)
 SELECT * FROM (
-    SELECT 'ryugeonu', '류건우', 'ryu@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 강남구(123)', '건우짱', 'kakao', '2023-01-01', '2023-01-01' UNION ALL
-    SELECT 'coegyeongsu', '고경수', 'ko@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 서초구(456)', '경수맨', 'google', '2023-01-01', '2023-01-01' UNION ALL
-    SELECT 'areum92', '김아름', 'areum@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 마포구(789)', '아름이', 'naver', '2023-01-01', '2023-01-01' UNION ALL
-    SELECT 'jiu52', '지유', 'jiu@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 송파구(789)', '지유짱', 'regularLogin', '2023-01-01', '2023-01-01' UNION ALL
-    SELECT 'sangho11', '상호', 'sangho@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 종로구(147)', '상호짱', 'regularLogin', '2023-01-01', '2023-01-01' UNION ALL
-    SELECT 'yeji86', '예지', 'yeji@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 동대문구(258)', '예지짱', 'naver', '2023-01-01', '2023-01-01'
+    SELECT 'ryugeonu', '류건우', 'ryu@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 강남구(123)', '건우짱', 'kakao', '2023-01-01', '2023-01-11' UNION ALL
+    SELECT 'coegyeongsu', '고경수', 'ko@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 서초구(456)', '경수맨', 'google', '2023-01-02', '2023-01-21' UNION ALL
+    SELECT 'areum92', '김아름', 'areum@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 마포구(789)', '아름이', 'naver', '2023-01-03', '2023-01-15' UNION ALL
+    SELECT 'jiu52', '지유', 'jiu@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 송파구(789)', '지유짱', 'regularLogin', '2023-01-04', '2023-01-16' UNION ALL
+    SELECT 'sangho11', '상호', 'sangho@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 종로구(147)', '상호짱', 'regularLogin', '2023-01-05', '2023-01-18' UNION ALL
+    SELECT 'yeji86', '예지', 'yeji@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 동대문구(258)', '예지짱', 'naver', '2023-01-06', '2023-01-23'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM USER_TBL);
 
@@ -35,7 +35,7 @@ WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_DETAIL_TBL);
 -- 4. USER_TRANSACTION_TBL
 INSERT INTO USER_TRANSACTION_TBL (USER_IDX, PRODUCT_IDX, CATEGORYSUB_IDX, SDATE)
 SELECT * FROM (
-    SELECT 1, 1, 4002, '2025-05-19' UNION ALL
+    SELECT 1 as USER_IDX , 1 as PRODUCT_IDX , 4002 as CATEGORYSUB_IDX , '2025-05-19' as SDATE UNION ALL
     SELECT 2, 2, 4003, '2025-05-19' UNION ALL
     SELECT 3, 3, 4002, '2025-05-19' UNION ALL
     SELECT 4, 4, 4003, '2025-05-19' UNION ALL
@@ -54,7 +54,7 @@ INSERT INTO USER_REVIEW_TBL (USER_IDX, TRANSACTION_IDX, RATING, REVIEW, SDATE, C
 -- 6. USER_REVIEW_EVALUATION_TBL
 INSERT INTO USER_REVIEW_EVALUATION_TBL (REVIEW_IDX, CATEGORYSUB_IDX, IS_EVALUATION, SDATE, CDATE)
 SELECT * FROM (
-    SELECT 1, 5008, 1, '2025-05-20', NULL UNION ALL  -- 늦은 시간에 연락해요
+    SELECT 1 as REVIEW_IDX, 5008 as CATEGORYSUB_IDX, 1 as IS_EVALUATION, '2025-05-20' as SDATE, NULL UNION ALL  -- 늦은 시간에 연락해요
     SELECT 2, 5005, 1, '2025-05-20', NULL UNION ALL  -- 약속 시간을 잘 지켜요
     SELECT 3, 5003, 1, '2025-05-20', NULL UNION ALL  -- 물건이 깨끗해요
     SELECT 4, 5001, 1, '2025-05-20', NULL UNION ALL  -- 답변이 빨라요
@@ -65,7 +65,7 @@ WHERE NOT EXISTS (SELECT 1 FROM USER_REVIEW_EVALUATION_TBL);
 -- 7. USER_FAVORITE_TBL
 INSERT INTO USER_FAVORITE_TBL (USER_IDX, CATEGORYSUB_IDX, SDATE, IS_FAVORITE, CDATE)
 SELECT * FROM (
-    SELECT 1, 1001, '2025-05-20', 1, NULL UNION ALL  -- 이미지와 상품이 달라요
+    SELECT 1 as USER_IDX, 1001 as CATEGORYSUB_IDX, '2025-05-20' as SDATE, 1 as IS_FAVORITE, NULL UNION ALL  -- 이미지와 상품이 달라요
     SELECT 2, 1004, '2025-05-20', 0, NULL UNION ALL  -- 물건이 깨끗해요
     SELECT 3, 2003, '2025-05-20', 1, NULL UNION ALL  -- 늦은 시간에 연락해요
     SELECT 4, 2004, '2025-05-20', 1, NULL UNION ALL  -- 불친절해요
@@ -77,7 +77,7 @@ WHERE NOT EXISTS (SELECT 1 FROM USER_FAVORITE_TBL);
 -- 8. USER_PICK_TBL
 INSERT INTO USER_PICK_TBL (USER_IDX, PRODUCT_IDX, SDATE, FLAG, CDATE)
 SELECT * FROM (
-    SELECT 1, 1, '2025-05-20', 1, NULL UNION ALL
+    SELECT 1 as USER_IDX, 1 as PRODUCT_IDX, '2025-05-20' as SDATE , 1 as FLAG, NULL UNION ALL
     SELECT 2, 2, '2025-05-20', 0, NULL UNION ALL
     SELECT 3, 3, '2025-05-20', 1, NULL UNION ALL
     SELECT 4, 4, '2025-05-20', 0, NULL UNION ALL
@@ -88,7 +88,7 @@ WHERE NOT EXISTS (SELECT 1 FROM USER_PICK_TBL);
 -- 9. CONTENTS_TBL
 INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, DIVISION, CONTENT, SDATE, EDATE)
 SELECT * FROM (
-    SELECT 1, 4, 'Itaque quam.', 0, 'Minus nihil eligendi molestiae quidem maiores.', '2025-05-20', NULL UNION ALL
+    SELECT 1 as CONTENTS_TBL, 4 as CATEGORY_IDX, 'Itaque quam.' as TITLE , 0 as DIVISION , 'Minus nihil eligendi molestiae quidem maiores.' as CONTENT, '2025-05-20' as SDATE, NULL UNION ALL
     SELECT 2, 4, 'Iure voluptates deserunt.', 1, 'Optio debitis neque laboriosam quibusdam.', '2025-05-20', NULL UNION ALL
     SELECT 3, 4, 'Sequi veritatis.', 0, 'Quidem quis maxime. Pariatur cum delectus.', '2025-05-20', NULL UNION ALL
     SELECT 4, 4, 'Ad fugiat consequatur.', 1, 'Molestiae vitae soluta dolorum vero velit.', '2025-05-20', NULL UNION ALL
@@ -99,7 +99,7 @@ WHERE NOT EXISTS (SELECT 1 FROM CONTENTS_TBL);
 -- 10. CONTENTS_COMMENT_TBL
 INSERT INTO CONTENTS_COMMENT_TBL (USER_IDX, CONTENTS_IDX, TEXT, SDATE)
 SELECT * FROM (
-    SELECT 1, 1, 'Aliquam earum eos sequi.', '2025-05-20' UNION ALL
+    SELECT 1 as CONTENTS_COMMENT_TBL , 1 as CONTENTS_IDX, 'Aliquam earum eos sequi.' as TEXT, '2025-05-20' as SDATE UNION ALL
     SELECT 2, 2, 'Id voluptatum sequi unde.', '2025-05-20' UNION ALL
     SELECT 3, 3, 'Nostrum reiciendis exercitationem libero.', '2025-05-20' UNION ALL
     SELECT 4, 4, 'Sed dolor at aperiam deleniti neque placeat.', '2025-05-20' UNION ALL
@@ -119,7 +119,7 @@ SELECT * FROM (
 WHERE NOT EXISTS (SELECT 1 FROM TICKET_TBL);
 
 -- 12. PAYMENT_HISTORY_TBL
-INSERT INTO PAYMENT_HISTORY_TBL (TID, AMOUNT, PAY_METHOD, STATUS, CREATE_AT, BUYER_ID, SELLER_ID, PRODUCT_ID, TRADE_TYPE, DELIVERY_ADDRESS)
+INSERT INTO PAYMENT_HISTORY_TBL (TID, AMOUNT, PAY_METHOD, BUYER_ID, SELLER_ID, PRODUCT_ID, TRADE_TYPE, DELIVERY_ADDRESS)
 SELECT * FROM (
     SELECT 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', 78085, 'KAKAOPAY', 'ryugeonu', 'jiu52', '1', 'MEET', '전라남도 논산시 반포대169가 (옥순양윤동)' UNION ALL
     SELECT 'adbd95cc-26c0-4abd-9f0c-c7e00e026d7e', 128653, 'KAKAOPAY', 'sangho11', 'yeji86', '2', 'DELIVERY', '전라북도 수원시 팔달구 선릉거리' UNION ALL
@@ -132,10 +132,10 @@ WHERE NOT EXISTS (SELECT 1 FROM PAYMENT_HISTORY_TBL);
 -- 13.
 INSERT INTO PAYMENT_STATUS_TBL (TID, STATUS, STATUS_AT)
 SELECT * FROM (
-    SELECT * FROM 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
-    SELECT * FROM 'adbd95cc-26c0-4abd-9f0c-c7e00e026d7e', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
-    SELECT * FROM 'dd6bed9d-ba45-4d3b-a844-606e3cfdfe2b', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
-    SELECT * FROM 'f5591955-ce0b-4584-ac08-7488db9c6b31', 'PAID', '2025-05-20 02:26:15' UNION ALL
-    SELECT * FROM '55203d3b-76c7-49bb-b54e-be54a93c7de9', 'PAID', '2025-05-20 02:26:15'
+    SELECT 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
+    SELECT 'adbd95cc-26c0-4abd-9f0c-c7e00e026d7e', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
+    SELECT 'dd6bed9d-ba45-4d3b-a844-606e3cfdfe2b', 'CANCELLED', '2025-05-20 02:26:15' UNION ALL
+    SELECT 'f5591955-ce0b-4584-ac08-7488db9c6b31', 'PAID', '2025-05-20 02:26:15' UNION ALL
+    SELECT '55203d3b-76c7-49bb-b54e-be54a93c7de9', 'PAID', '2025-05-20 02:26:15'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PAYMENT_STATUS_TBL);
