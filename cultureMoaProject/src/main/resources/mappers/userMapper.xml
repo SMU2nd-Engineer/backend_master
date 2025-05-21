@@ -27,7 +27,7 @@
     
 <!--  아이디 찾기  -->
     <select id="findId" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdRequestDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdResponseDTO" >
-        select ID, SOCIAL_LOGIN as socialLogin s from USER_TBL where name=#{name} and email=#{email} and WDATE is null
+        select ID, SOCIAL_LOGIN as socialLogin from USER_TBL where name=#{name} and email=#{email} and WDATE is null
     </select>
 
 <!--  비밀번호 변경  -->
@@ -61,6 +61,6 @@
 
 <!--  유저 아이디로 유저 idx 추출, 마이페이지에서도 사용함-->
     <select id="getUserIdx" parameterType="String" resultType="int" >
-        select IDX from USER_TBL where ID = #{userId}
+        select IDX from USER_TBL where ID = #{userId} and WDATE IS NULL
     </select>
 </mapper>
