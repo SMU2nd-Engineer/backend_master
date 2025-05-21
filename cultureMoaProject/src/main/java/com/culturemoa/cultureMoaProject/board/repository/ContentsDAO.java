@@ -32,5 +32,9 @@ public class ContentsDAO {
         return sqlSessionTemplate.selectList("contentsMapper.getContentSearchs", searchMap);
     }
 
+    // ContentsService.Map을 받아서 조건에 맞는 쿼리 실행 : 게시글 등록하여 불러옴
+    public List<ContentInfoDTO> getContentInsert() {
+        return sqlSessionTemplate.selectList("contentsMapper.getContentInsert");
+    }
 
 }
