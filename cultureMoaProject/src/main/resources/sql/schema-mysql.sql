@@ -159,16 +159,24 @@ CREATE TABLE IF NOT EXISTS TICKET_TBL
 -- 결제기록 테이블
 CREATE TABLE IF NOT EXISTS PAYMENT_HISTORY_TBL
 (
-    IDX       int AUTO_INCREMENT PRIMARY KEY,
+    IDX int AUTO_INCREMENT PRIMARY KEY,
 	TID varchar(50) NOT NULL UNIQUE,
 	AMOUNT int NOT NULL,
 	PAY_METHOD varchar(20) NOT NULL,
-	STATUS VARCHAR(20) NOT NULL,
-	CREATE_AT datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	BUYER_ID varchar(50) NOT NULL,
-	SELLER_ID varchar(50) NOT NULL,
+    SELLER_ID varchar(50) NOT NULL,
 	PRODUCT_ID varchar(50) NOT NULL,
-	TRADE_TYPE varchar(20),
-	DELIVERY_ADDRESS varchar(255)
+	TRADE_TYPE varchar(20),		-- 수령 방법
+	DELIVERY_ADDRESS varchar(255),
+    foreign key(BUYER_ID) references USER_TBL (ID),
+	foreign key(SELLER_ID) references USER_TBL (ID)
+);
+
+-- 결제상태 테이블
+CREATE TABLE IF NOT EXISTS PAYMENT_STATUS_TBL
+(
+	TID varchar(50) NOT NULL,
+	STATUS varchar(50) NOT NULL,	-- 결제준비, 결제승인, 결제취소, 결제실패
+    STATUS_AT date NOT NULL		-- createdAt, approvedAt, canceledAt
 );
 
