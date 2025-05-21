@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  일치하는 작성자(회원 닉네임) 정보를 전달하는 객체
  * user_idx : 회원 고유 번호
  * category_idx : 상품 카테고리 - 구분(팝니다/삽니다)
- * division : 구분(팝니다/삽니다) - 삭제 예정
+ * division : 구분(팝니다/삽니다) - 삭제 함
  * content: 게시글 내용
  * sdate : 시작일자(데이터 포맷됨 '05/14')
  */
@@ -25,7 +25,6 @@ public class ContentInfoDTO {
     private Long user_idx;
     private Long category_idx;
     private String title;
-    private int division;
     private String content;
     @DateTimeFormat(pattern = "MM/dd")
     private String sdate; // 날짜 포맷된 sdate
