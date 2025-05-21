@@ -40,7 +40,10 @@
             <!-- searchType: 제목+내용/작성자(nickname) 의 구분값
             contents 테이블의 제목(title)+내용(contents) 선택 한 후 키워드로 검색 -->
             <if test="searchType==0">
-
+                AND (
+                    CONT.TITLE LIKE '%${keyword}%'
+                    OR CONT.CONTENT LIKE '%${keyword}%'
+                )
 
             </if>
 
