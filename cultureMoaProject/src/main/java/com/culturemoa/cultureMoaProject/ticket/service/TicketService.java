@@ -27,7 +27,7 @@ public class TicketService {
     }
 
     // 검색 기능 메서드
-    public List<TicketDTO> searchTickets(String categoriesStr, String query) {
+    public List<TicketDTO> searchTickets(String categoriesStr, String query, LocalDate startDate,LocalDate endDate) {
         List<Integer> categories = List.of(); // 빈 리스트 초기화
 
         if (categoriesStr != null && !categoriesStr.isEmpty()) {
@@ -36,7 +36,7 @@ public class TicketService {
                     .collect(Collectors.toList());
         }
 
-        return ticketDAO.getSearch(categories, query);
+        return ticketDAO.getSearch(categories, query, startDate, endDate);
     }
 
 //    // 장르별

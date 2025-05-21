@@ -11,18 +11,25 @@
         SELECT sub_idx, title, company, link, sDate, eDate, place, price, grade, cast, runningTime, img, etc
         FROM TICKET_TBL
         <where>
-            <!-- 카테고리 필터: categories가 전달되면 IN 절 생성 -->
+            <!-- 카테고리 필터 -->
             <if test="categories != null and categories.size() > 0">
                 AND sub_idx IN
                 <foreach item="item" collection="categories" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
-
+            <!-- 제목/출연진 검색 -->
             <if test="query != null and query != ''">
                 AND (title LIKE CONCAT('%', #{query}, '%') OR cast LIKE CONCAT('%', #{query}, '%'))
             </if>
+            <!-- 날짜 검색(사용자가 선택한 날짜에 하루라도 겹치면 포함) -->
+            <if test="startDate != null and endDate != null">
+                AND sDate &lt;= #{endDate}
+                AND eDate &gt;= #{startDate}
+            </if>
         </where>
+        <!-- 날짜순으로 정렬하고 싶다면 활성화 시키기-->
+        <!-- ORDER BY sDate ASC -->
     </select>
 
 <!--    &lt;!&ndash; 장르별 &ndash;&gt;-->
