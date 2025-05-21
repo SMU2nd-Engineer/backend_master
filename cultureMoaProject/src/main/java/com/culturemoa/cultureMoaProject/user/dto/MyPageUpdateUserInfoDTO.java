@@ -25,6 +25,6 @@ public class MyPageUpdateUserInfoDTO {
     private String nickName;
     private String email;
     private String address;
-    private LocalDateTime eDate;
+    private LocalDateTime cDate;
 
 }

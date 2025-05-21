@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserCategorySubDTO {
-    private int idx;
+    private int subIdx;
     private String name;
 }

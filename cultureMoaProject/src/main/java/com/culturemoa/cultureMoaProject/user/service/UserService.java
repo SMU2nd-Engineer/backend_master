@@ -164,7 +164,7 @@ public class UserService {
         // 비밀번호 암호화
         pChangeDto.setPassword(passwordEncoder.encode(pChangeDto.getPassword()));
         // 등록 날짜 넣기
-        pChangeDto.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        pChangeDto.setCDate(LocalDateTime.now().withNano(0)); // 나노초 제거
         // DAO로 비밀번호 업데이트하기
         int ChangeCheck = userDAO.updateUserPassword(pChangeDto);
 
@@ -181,10 +181,10 @@ public class UserService {
      */
     public void userWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
         // 회원 탈퇴 날짜 넣기
-        userWithdrawalDTO.setWDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        userWithdrawalDTO.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
 
         // 회원 정보 수정 날짜 넣기
-        userWithdrawalDTO.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        userWithdrawalDTO.setCDate(LocalDateTime.now().withNano(0)); // 나노초 제거
 
         //  id를 기준으로 회원 날짜 넣기
         int userWithdrawalProcess = userDAO.updateWithdrawal(userWithdrawalDTO);

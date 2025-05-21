@@ -88,7 +88,7 @@ public class MyPageService {
             myPageUpdateUserInfoDTO.setPassword(passwordEncoder.encode(password));
         }
         // 수정 날짜 세팅
-        myPageUpdateUserInfoDTO.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거하여 넣기
+        myPageUpdateUserInfoDTO.setCDate(LocalDateTime.now().withNano(0)); // 나노초 제거하여 넣기
 
         // 유저 아이디 세팅
         myPageUpdateUserInfoDTO.setId(userId);
@@ -199,7 +199,7 @@ public class MyPageService {
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         myPageEditFavoriteDTO.setUserIdx(userIdx);
         myPageEditFavoriteDTO.setSDate(localDateTime);
-        myPageEditFavoriteDTO.setEDate(localDateTime);
+        myPageEditFavoriteDTO.setCDate(localDateTime);
         System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
 
         int updateResult = 0;
