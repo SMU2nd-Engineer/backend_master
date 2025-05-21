@@ -71,7 +71,6 @@ public class KakaoPaymentService implements PaymentGatewayService {
             );
             // 카카오페이 API의 응답 데이터를 객체로 받기
             KakaoReadyResponseDTO body = response.getBody();
-            System.out.println("itemID: " + requestDTO.getItemId());
 
             tid = body.getTid();
             // DB 저장
@@ -79,11 +78,11 @@ public class KakaoPaymentService implements PaymentGatewayService {
             history.setTid(body.getTid());
             history.setAmount(requestDTO.getAmount());
             history.setPayMethod(getPayMethod());
-            history.setProductId(requestDTO.getItemId());
+            history.setProductIdx(requestDTO.getProductIdx());
             history.setTradeType(requestDTO.getTradeType());
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
-            history.setBuyerId(requestDTO.getBuyerId());
-            history.setSellerId(requestDTO.getSellerId());
+            history.setBuyerIdx(requestDTO.getBuyerIdx());
+            history.setSellerIdx(requestDTO.getSellerIdx());
 
             paymentDAO.insertPaymentHistory(history);
 

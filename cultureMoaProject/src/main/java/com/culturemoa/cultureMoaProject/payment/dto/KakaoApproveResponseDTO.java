@@ -32,9 +32,6 @@ public class KakaoApproveResponseDTO {
     @JsonProperty("item_name")
     private String itemName;
 
-    @JsonProperty("item_code")
-    private String itemCode;
-
     @JsonProperty("quantity")
     private int quantity;
 

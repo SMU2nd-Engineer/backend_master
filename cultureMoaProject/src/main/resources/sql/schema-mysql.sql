@@ -186,13 +186,14 @@ CREATE TABLE IF NOT EXISTS PAYMENT_HISTORY_TBL
 	TID varchar(50) NOT NULL UNIQUE,
 	AMOUNT int NOT NULL,
 	PAY_METHOD varchar(20) NOT NULL,
-	BUYER_ID varchar(50) NOT NULL,
-    SELLER_ID varchar(50) NOT NULL,
-	PRODUCT_ID varchar(50) NOT NULL,
+	BUYER_IDX int NOT NULL,
+    SELLER_IDX int NOT NULL,
+	PRODUCT_IDX int NOT NULL,
 	TRADE_TYPE varchar(20),		-- 수령 방법
 	DELIVERY_ADDRESS varchar(255),
-    foreign key(BUYER_ID) references USER_TBL (ID),
-	foreign key(SELLER_ID) references USER_TBL (ID)
+	foreign key(PRODUCT_IDX) references PRODUCT_TBL (IDX),
+    foreign key(BUYER_IDX) references USER_TBL (IDX),
+	foreign key(SELLER_IDX) references USER_TBL (IDX)
 );
 
 -- 결제상태 테이블

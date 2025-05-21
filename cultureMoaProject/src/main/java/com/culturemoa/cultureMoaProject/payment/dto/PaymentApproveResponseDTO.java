@@ -23,7 +23,6 @@ public class PaymentApproveResponseDTO {
     private String paymentMethodType;
     private PaymentApproveResponseDTO.Amount amount;  // 내부 클래스로 결제 금액 정보 매핑
     private String itemName;
-    private String itemCode;
     private int quantity; // 상품 수량
     private String approvedAt; // 결제 승인 시각
     private String payload;
