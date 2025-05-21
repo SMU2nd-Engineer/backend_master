@@ -1,9 +1,6 @@
 package com.culturemoa.cultureMoaProject.payment.service.gateway;
 
-import com.culturemoa.cultureMoaProject.payment.dto.KakaoApproveResponseDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentReadyRequestDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentApproveRequestDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentResponseDTO;
+import com.culturemoa.cultureMoaProject.payment.dto.*;
 
 /**
  * PaymentGatewayService
@@ -16,7 +13,7 @@ public interface PaymentGatewayService {
     // 사용자가 결제 완료 후, 결제 승인 처리(최종 결제 확정)
     KakaoApproveResponseDTO approvePayment(PaymentApproveRequestDTO request);
     // 결제 수단 문자열로 반환
-    void cancelPayment(String tid);
-    void handleFailedPayment(String methodResultMessage);
+    KakaoCancelResponseDTO cancelPayment(String tid);
+    void handleFailedPayment(String tid, String methodResultMessage);
     String getPayMethod();
 }

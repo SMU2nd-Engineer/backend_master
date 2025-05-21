@@ -16,4 +16,11 @@
         values
         (#{tid}, #{status}, #{statusAt})
     </insert>
+    <select id="selectAmountByTid" parameterType="string" resultType="int">
+        select AMOUNT from PAYMENT_HISTORY_TBL where TID = #{tid}
+    </select>
+    <select id="selectLatestStatusByTid" parameterType="string" resultType="string">
+        select STATUS from PAYMENT_STATUS_TBL
+        where TID = #{tid} order by STATUS_AT DESC LIMIT 1
+    </select>
 </mapper>
