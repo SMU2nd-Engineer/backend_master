@@ -5,6 +5,6 @@ package com.culturemoa.cultureMoaProject.user.exception;
  */
 public class DBManipulationFailException extends RuntimeException {
     public DBManipulationFailException () {
-      super(" DB 조작을 실패했습니다.");
+      super(" DB조작에 실패했습니다.");
     }
 }

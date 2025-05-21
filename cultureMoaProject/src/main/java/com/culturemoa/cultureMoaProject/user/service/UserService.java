@@ -7,6 +7,7 @@ import com.culturemoa.cultureMoaProject.user.exception.*;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -177,17 +178,15 @@ public class UserService {
 
     /**
      * 회원 탈퇴 서비스
-     * @param userWithdrawalDTO : 탈퇴 회원의 정보가 담긴 DTO
      */
-    public void userWithdrawal(UserWithdrawalDTO userWithdrawalDTO) {
-        // 회원 탈퇴 날짜 넣기
-        userWithdrawalDTO.setEDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+    public void userWithdrawal() {
+        // 유저 아이디 추출하기
+        String userId = myPageGetUserId();
+        // 회원 탈퇴, 정보 수정 날짜 생성하기
+        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
 
-        // 회원 정보 수정 날짜 넣기
-        userWithdrawalDTO.setCDate(LocalDateTime.now().withNano(0)); // 나노초 제거
-
-        //  id를 기준으로 회원 날짜 넣기
-        int userWithdrawalProcess = userDAO.updateWithdrawal(userWithdrawalDTO);
+        // 생성자를 사용하여 바로 값 넘겨 주기
+        int userWithdrawalProcess = userDAO.updateWithdrawal(new UserWithdrawalDTO(userId,localDateTime, localDateTime));
 
         if(userWithdrawalProcess == 0) {
             throw new DBManipulationFailException();
