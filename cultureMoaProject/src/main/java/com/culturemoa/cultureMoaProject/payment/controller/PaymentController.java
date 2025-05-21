@@ -1,10 +1,8 @@
 package com.culturemoa.cultureMoaProject.payment.controller;
 
-import com.culturemoa.cultureMoaProject.payment.dto.KakaoApproveResponseDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentApproveRequestDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentReadyRequestDTO;
-import com.culturemoa.cultureMoaProject.payment.dto.PaymentResponseDTO;
+import com.culturemoa.cultureMoaProject.payment.dto.*;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
+import com.culturemoa.cultureMoaProject.payment.service.kakao.KakaoPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,13 +43,26 @@ public class PaymentController {
     }
 
     @GetMapping("/cancel")
-    public void cancel() {
-
+    public ResponseEntity<KakaoCancelResponseDTO> cancel(
+            @RequestParam String payMethod,
+            @RequestParam String tid
+    ) {
+        PaymentGatewayService service = getPaymentService(payMethod);
+        KakaoCancelResponseDTO cancelInfo =((KakaoPaymentService) service).cancelPayment(tid);
+        return ResponseEntity.ok(cancelInfo);
     }
 
     @GetMapping("/fail")
-    public void fail(){
+    public ResponseEntity<String> fail(
+            @RequestParam String payMethod,
+            @RequestParam(required = false) String reason,
+            @RequestParam String tid
+    ){
+        PaymentGatewayService service = getPaymentService(payMethod);
+        String failMessage = reason != null ? reason : "알 수 없는 오류";
 
+        service.handleFailedPayment(tid, failMessage);
+        return ResponseEntity.badRequest().body("결제가 실패했습니다: " + failMessage);
     }
 
     private PaymentGatewayService getPaymentService(String payMethod) {

@@ -19,4 +19,12 @@ public class PaymentDAO {
     public int insertPaymentStatus(PaymentStatus paymentStatus){
         return sqlSessionTemplate.insert("paymentMapper.insertPaymentStatus", paymentStatus);
     }
+
+    public int selectAmountByTid(String tid) {
+        return sqlSessionTemplate.selectOne("paymentMapper.selectAmountByTid", tid);
+    }
+
+    public String selectLatestStatusByTid(String tid) {
+        return sqlSessionTemplate.selectOne("paymentMapper.selectLatestStatusByTid", tid);
+    }
 }
