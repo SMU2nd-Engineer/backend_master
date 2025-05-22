@@ -216,10 +216,11 @@ CREATE TABLE IF NOT EXISTS PAYMENT_HISTORY_TBL
 	BUYER_IDX int NOT NULL,
     SELLER_IDX int NOT NULL,
 	PRODUCT_IDX int NOT NULL,
-	DELIVERY_ADDRESS varchar(255),
-	foreign key(PRODUCT_IDX) references PRODUCT_TBL (IDX),
-    foreign key(BUYER_IDX) references USER_TBL (IDX),
-	foreign key(SELLER_IDX) references USER_TBL (IDX)
+	DELIVERY_ADDRESS varchar(255)
+--	,
+--	foreign key(PRODUCT_IDX) references PRODUCT_TBL (IDX),
+--    foreign key(BUYER_IDX) references USER_TBL (IDX),
+--	foreign key(SELLER_IDX) references USER_TBL (IDX)
 );
 
 -- 결제상태 테이블
@@ -230,7 +231,6 @@ CREATE TABLE IF NOT EXISTS PAYMENT_STATUS_TBL
 	CREATED_AT timestamp null,	-- 결제준비, 결제승인, 결제취소, 결제실패
     APPROVED_AT timestamp null,
     CANCELED_AT timestamp null,
-    FAILED_AT timestamp null,
-    foreign key(TID) references PAYMENT_HISTORY_TBL (TID)-- createdAt, approvedAt, canceledAt
+    FAILED_AT timestamp null
 );
 

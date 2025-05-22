@@ -14,7 +14,7 @@
         insert into PAYMENT_STATUS_TBL
         (TID, CREATED_AT, APPROVED_AT, CANCELED_AT, FAILED_AT)
         values
-        (#{tid}, #{created_at}, #{approved_at}, #{canceled_at}, #{failed_at})
+        (#{tid}, #{createdAt}, #{approvedAt}, #{canceledAt}, #{failedAt})
     </insert>
     <select id="selectAmountByTid" parameterType="string" resultType="int">
         select AMOUNT from PAYMENT_HISTORY_TBL where TID = #{tid}

@@ -2,7 +2,6 @@ package com.culturemoa.cultureMoaProject.payment.controller;
 
 import com.culturemoa.cultureMoaProject.payment.dto.*;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
-import com.culturemoa.cultureMoaProject.payment.service.kakao.KakaoPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,12 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/payment")
 @RequiredArgsConstructor
 public class PaymentController {
-
     // PG사 구분을 위한 서비스 매핑
-    private final Map<Integer, PaymentGatewayService> paymentGatewayServices;
+    private final Map<String, PaymentGatewayService> paymentGatewayServices;
 
     @PostMapping("/ready")
     public ResponseEntity<PaymentResponseDTO> readyPayment(
@@ -66,7 +64,7 @@ public class PaymentController {
     }
 
     private PaymentGatewayService getPaymentService(int payMethod) {
-        PaymentGatewayService service = paymentGatewayServices.get(payMethod);
+        PaymentGatewayService service = paymentGatewayServices.get(PaymentGatewayService.getPayMethod(payMethod));
         if(service == null){
             throw new IllegalArgumentException("지원하지 않는 결제 수단입니다: " + payMethod);
         }

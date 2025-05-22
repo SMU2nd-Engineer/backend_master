@@ -15,5 +15,12 @@ public interface PaymentGatewayService {
     // 결제 수단 문자열로 반환
     KakaoCancelResponseDTO cancelPayment(String tid);
     void handleFailedPayment(String tid, String methodResultMessage);
-    int getPayMethod();
+    static String getPayMethod(int payMethod){
+        return switch (payMethod) {
+            case 6001 -> "kakao";
+            case 6002 -> "toss";
+            case 6003 -> "naver";
+            default -> "error";
+        };
+    }
 }

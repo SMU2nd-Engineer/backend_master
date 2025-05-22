@@ -77,7 +77,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             PaymentHistory history = new PaymentHistory();
             history.setTid(body.getTid());
             history.setAmount(requestDTO.getAmount());
-            history.setPayMethod(getPayMethod());
+            history.setPayMethod(requestDTO.getPayMethod());
             history.setProductIdx(requestDTO.getProductIdx());
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
             history.setBuyerIdx(requestDTO.getBuyerIdx());
@@ -140,8 +140,6 @@ public class KakaoPaymentService implements PaymentGatewayService {
             PaymentStatus status = new PaymentStatus();
             status.setTid(approveDTO.getTid());
             status.setApprovedAt(response.getApprovedAt());
-            status.setCanceledAt(null);
-            status.setFailedAt(null);
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -183,9 +181,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
         if(response != null) {
             PaymentStatus status = new PaymentStatus();
             status.setTid(tid);
-            status.setApprovedAt(null);
             status.setCanceledAt(response.getCanceledAt());
-            status.setFailedAt(null);
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -200,18 +196,11 @@ public class KakaoPaymentService implements PaymentGatewayService {
     public void handleFailedPayment(String tid, String methodResultMessage) {
         PaymentStatus status = new PaymentStatus();
         status.setTid(tid);
-        status.setApprovedAt(null);
         status.setFailedAt(LocalDateTime.now());
-        status.setCanceledAt(null);
 
         paymentDAO.insertPaymentStatus(status);
 
         System.err.printf("[TID: %s] 카카오페이 결제 실패 - %s%n", tid, methodResultMessage);
-    }
-
-    @Override
-    public int getPayMethod() {
-        return 6001;
     }
 }
 
