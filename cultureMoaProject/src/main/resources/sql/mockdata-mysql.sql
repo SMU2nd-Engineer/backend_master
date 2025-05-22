@@ -11,13 +11,13 @@ SELECT * FROM (
 WHERE NOT EXISTS (SELECT 1 FROM USER_TBL);
 
 -- 2. PRODUCT_TBL
-INSERT INTO PRODUCT_TBL (CATEGORY_IDX, TITLE, SDATE, EDATE, USERID, PRICE, FLAG)
+INSERT INTO PRODUCT_TBL (CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE, USERID, PRICE, FLAG)
 SELECT * FROM (
-    SELECT 1001, 'Occaecati placeat.', '2024-06-29', NULL, 'ryugeonu', 37435, 0 UNION ALL
-    SELECT 1002, 'Assumenda maiores.', '2024-06-24', NULL, 'coegyeongsu', 89247, 1 UNION ALL
-    SELECT 1003, 'Officia recusandae excepturi.', '2024-06-01', NULL, 'areum92', 32262, 1 UNION ALL
-    SELECT 1002, 'Enim quas perferendis.', '2024-09-12', NULL, 'ryugeonu', 48116, 0 UNION ALL
-    SELECT 1006, 'Quas tempora dignissimos.', '2024-06-21', NULL, 'areum92', 14074, 1
+    SELECT 1001, 2001, 'Occaecati placeat.', '2024-06-29', NULL, 'ryugeonu', 37435, 0 UNION ALL
+    SELECT 1002, 2002, 'Assumenda maiores.', '2024-06-24', NULL, 'coegyeongsu', 89247, 1 UNION ALL
+    SELECT 1003, 2003, 'Officia recusandae excepturi.', '2024-06-01', NULL, 'areum92', 32262, 1 UNION ALL
+    SELECT 1002, 2002, 'Enim quas perferendis.', '2024-09-12', NULL, 'ryugeonu', 48116, 0 UNION ALL
+    SELECT 1006, 2004, 'Quas tempora dignissimos.', '2024-06-21', NULL, 'areum92', 14074, 1
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_TBL);
 
@@ -33,73 +33,82 @@ SELECT * FROM (
 WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_DETAIL_TBL);
 
 -- 4. USER_TRANSACTION_TBL
-INSERT INTO USER_TRANSACTION_TBL (USER_IDX, PRODUCT_IDX, CATEGORYSUB_IDX, SDATE)
+INSERT INTO USER_TRANSACTION_TBL (USER_IDX, PRODUCT_IDX, SDATE)
 SELECT * FROM (
-    SELECT 1 as USER_IDX , 1 as PRODUCT_IDX , 4002 as CATEGORYSUB_IDX , '2025-05-19' as SDATE UNION ALL
-    SELECT 2, 2, 4003, '2025-05-19' UNION ALL
-    SELECT 3, 3, 4002, '2025-05-19' UNION ALL
-    SELECT 4, 4, 4003, '2025-05-19' UNION ALL
-    SELECT 5, 5, 4002, '2025-05-19'
+    SELECT 1 as USER_IDX , 1 as PRODUCT_IDX , '2025-05-19' as SDATE UNION ALL
+    SELECT 2, 2, '2025-05-19' UNION ALL
+    SELECT 3, 3, '2025-05-19' UNION ALL
+    SELECT 4, 4, '2025-05-19' UNION ALL
+    SELECT 5, 5, '2025-05-19'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM USER_TRANSACTION_TBL);
 
 -- 5. USER_REVIEW_TBL
-INSERT INTO USER_REVIEW_TBL (USER_IDX, TRANSACTION_IDX, RATING, REVIEW, SDATE, CDATE) VALUES
-(1, 1, 2.9, 'Harum quibusdam sapiente dignissimos ea.', '2025-05-19', NULL),
-(2, 2, 2.5, 'Pariatur itaque tempore illum rem quia facere.', '2025-05-19', NULL),
-(3, 3, 3.7, 'Id quibusdam quibusdam praesentium.', '2025-05-19', NULL),
-(4, 4, 2.8, 'Animi amet delectus dolorem libero aperiam.', '2025-05-19', NULL),
-(5, 5, 2.1, 'Eaque velit iste vitae iusto.', '2025-05-19', NULL);
+INSERT INTO USER_REVIEW_TBL (WRITER_USER_IDX, RECEIVER_USER_IDX, TRANSACTION_IDX, RATING, REVIEW, SDATE)
+SELECT * FROM (
+    SELECT 1 as WRITER_USER_IDX, 2 as RECEIVER_USER_IDX, 1 as TRANSACTION_IDX, 2.9 as RATING, 'Harum quibusdam sapiente dignissimos ea.' as REVIEW, '2025-05-19' as SDATE UNION ALL
+    SELECT 2, 3, 2, 2.5, 'Pariatur itaque tempore illum rem quia facere.', '2025-05-19' UNION ALL
+    SELECT 3, 4, 3, 3.7, 'Id quibusdam quibusdam praesentium.', '2025-05-19' UNION ALL
+    SELECT 4, 5, 4, 2.8, 'Animi amet delectus dolorem libero aperiam.', '2025-05-19' UNION ALL
+    SELECT 5, 1, 5, 2.1, 'Eaque velit iste vitae iusto.', '2025-05-19'
+) AS tmp
+WHERE NOT EXISTS (SELECT 1 FROM USER_REVIEW_TBL);
 
 -- 6. USER_REVIEW_EVALUATION_TBL
-INSERT INTO USER_REVIEW_EVALUATION_TBL (REVIEW_IDX, CATEGORYSUB_IDX, IS_EVALUATION, SDATE, CDATE)
+INSERT INTO USER_REVIEW_EVALUATION_TBL (USER_IDX, EVAL_5001, EVAL_5003, EVAL_5005, EVAL_5008)
 SELECT * FROM (
-    SELECT 1 as REVIEW_IDX, 5008 as CATEGORYSUB_IDX, 1 as IS_EVALUATION, '2025-05-20' as SDATE, NULL UNION ALL  -- 늦은 시간에 연락해요
-    SELECT 2, 5005, 1, '2025-05-20', NULL UNION ALL  -- 약속 시간을 잘 지켜요
-    SELECT 3, 5003, 1, '2025-05-20', NULL UNION ALL  -- 물건이 깨끗해요
-    SELECT 4, 5001, 1, '2025-05-20', NULL UNION ALL  -- 답변이 빨라요
-    SELECT 5, 5001, 1, '2025-05-20', NULL             -- 답변이 빨라요
+    SELECT 1 as USER_IDX, 0 as EVAL_5001, 0 as EVAL_5003, 0 as EVAL_5005, 1 as EVAL_5008 UNION ALL
+    SELECT 2, 0, 0, 1, 0 UNION ALL
+    SELECT 3, 0, 1, 0, 0 UNION ALL
+    SELECT 4, 1, 0, 0, 0 UNION ALL
+    SELECT 5, 1, 0, 0, 0
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM USER_REVIEW_EVALUATION_TBL);
 
 -- 7. USER_FAVORITE_TBL
-INSERT INTO USER_FAVORITE_TBL (USER_IDX, CATEGORYSUB_IDX, SDATE, IS_FAVORITE, CDATE)
-SELECT * FROM (
-    SELECT 1 as USER_IDX, 1001 as CATEGORYSUB_IDX, '2025-05-20' as SDATE, 1 as IS_FAVORITE, NULL UNION ALL  -- 이미지와 상품이 달라요
-    SELECT 2, 1004, '2025-05-20', 0, NULL UNION ALL  -- 물건이 깨끗해요
-    SELECT 3, 2003, '2025-05-20', 1, NULL UNION ALL  -- 늦은 시간에 연락해요
-    SELECT 4, 2004, '2025-05-20', 1, NULL UNION ALL  -- 불친절해요
-    SELECT 5, 3005, '2025-05-20', 1, NULL            -- 사기당했어요!
-) AS tmp
-WHERE NOT EXISTS (SELECT 1 FROM USER_FAVORITE_TBL);
+INSERT INTO USER_FAVORITE_TBL (USER_IDX, FAV_1001)
+VALUES (1, 1) AS new
+ON DUPLICATE KEY UPDATE FAV_1001 = new.FAV_1001;
+
+INSERT INTO USER_FAVORITE_TBL (USER_IDX, FAV_2003)
+VALUES (3, 1) AS new
+ON DUPLICATE KEY UPDATE FAV_2003 = new.FAV_2003;
+
+INSERT INTO USER_FAVORITE_TBL (USER_IDX, FAV_2004)
+VALUES (4, 1) AS new
+ON DUPLICATE KEY UPDATE FAV_2004 = new.FAV_2004;
+
+INSERT INTO USER_FAVORITE_TBL (USER_IDX, FAV_3005)
+VALUES (5, 1) AS new
+ON DUPLICATE KEY UPDATE FAV_3005 = new.FAV_3005;
 
 
 -- 8. USER_PICK_TBL
-INSERT INTO USER_PICK_TBL (USER_IDX, PRODUCT_IDX, SDATE, FLAG, CDATE)
+INSERT INTO USER_PICK_TBL (USER_IDX, PRODUCT_IDX, SDATE)
 SELECT * FROM (
-    SELECT 1 as USER_IDX, 1 as PRODUCT_IDX, '2025-05-20' as SDATE , 1 as FLAG, NULL UNION ALL
-    SELECT 2, 2, '2025-05-20', 0, NULL UNION ALL
-    SELECT 3, 3, '2025-05-20', 1, NULL UNION ALL
-    SELECT 4, 4, '2025-05-20', 0, NULL UNION ALL
-    SELECT 5, 5, '2025-05-20', 1, NULL
+    SELECT 1 as USER_IDX, 1 as PRODUCT_IDX, '2025-05-20' as SDATE UNION ALL
+    SELECT 2, 2, '2025-05-20' UNION ALL
+    SELECT 3, 3, '2025-05-20' UNION ALL
+    SELECT 4, 4, '2025-05-20' UNION ALL
+    SELECT 5, 5, '2025-05-20'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM USER_PICK_TBL);
 
 -- 9. CONTENTS_TBL
-INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, DIVISION, CONTENT, SDATE, EDATE)
+INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, CONTENT, SDATE, EDATE)
 SELECT * FROM (
-    SELECT 1 as CONTENTS_TBL, 4 as CATEGORY_IDX, 'Itaque quam.' as TITLE , 0 as DIVISION , 'Minus nihil eligendi molestiae quidem maiores.' as CONTENT, '2025-05-20' as SDATE, NULL UNION ALL
-    SELECT 2, 4, 'Iure voluptates deserunt.', 1, 'Optio debitis neque laboriosam quibusdam.', '2025-05-20', NULL UNION ALL
-    SELECT 3, 4, 'Sequi veritatis.', 0, 'Quidem quis maxime. Pariatur cum delectus.', '2025-05-20', NULL UNION ALL
-    SELECT 4, 4, 'Ad fugiat consequatur.', 1, 'Molestiae vitae soluta dolorum vero velit.', '2025-05-20', NULL UNION ALL
-    SELECT 5, 4, 'Tempore necessitatibus nisi.', 0, 'Velit fugiat similique dolores temporibus.', '2025-05-20', NULL
+    SELECT 1, 4003, 'Itaque quam.', 'Minus nihil eligendi molestiae quidem maiores.', '2025-05-20', NULL UNION ALL
+    SELECT 2, 4002, 'Iure voluptates deserunt.', 'Optio debitis neque laboriosam quibusdam.', '2025-05-20', NULL UNION ALL
+    SELECT 3, 4003, 'Sequi veritatis.', 'Quidem quis maxime. Pariatur cum delectus.', '2025-05-20', NULL UNION ALL
+    SELECT 4, 4002, 'Ad fugiat consequatur.', 'Molestiae vitae soluta dolorum vero velit.', '2025-05-20', NULL UNION ALL
+    SELECT 5, 4003, 'Tempore necessitatibus nisi.', 'Velit fugiat similique dolores temporibus.', '2025-05-20', NULL
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM CONTENTS_TBL);
 
 -- 10. CONTENTS_COMMENT_TBL
 INSERT INTO CONTENTS_COMMENT_TBL (USER_IDX, CONTENTS_IDX, TEXT, SDATE)
 SELECT * FROM (
-    SELECT 1 as CONTENTS_COMMENT_TBL , 1 as CONTENTS_IDX, 'Aliquam earum eos sequi.' as TEXT, '2025-05-20' as SDATE UNION ALL
+    SELECT 1 AS USER_IDX, 1 AS CONTENTS_IDX, 'Aliquam earum eos sequi.' AS TEXT, '2025-05-20' AS SDATE UNION ALL
     SELECT 2, 2, 'Id voluptatum sequi unde.', '2025-05-20' UNION ALL
     SELECT 3, 3, 'Nostrum reiciendis exercitationem libero.', '2025-05-20' UNION ALL
     SELECT 4, 4, 'Sed dolor at aperiam deleniti neque placeat.', '2025-05-20' UNION ALL
@@ -107,18 +116,29 @@ SELECT * FROM (
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM CONTENTS_COMMENT_TBL);
 
--- 11. TICKET_TBL
+-- 11. CONTENTS_DETAIL_IMAGE_TBL mock data
+INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (CONTENTS_IDX, IMAGE_URL)
+SELECT * FROM (
+    SELECT 1, 'https://placeimg.com/640/480/nature' UNION ALL
+    SELECT 2, 'https://placekitten.com/800/600' UNION ALL
+    SELECT 3, 'https://placeimg.com/720/480/tech' UNION ALL
+    SELECT 4, 'https://placebear.com/640/360' UNION ALL
+    SELECT 5, 'https://picsum.photos/640/480'
+) AS tmp
+WHERE NOT EXISTS (SELECT 1 FROM CONTENTS_DETAIL_IMAGE_TBL);
+
+-- 12. TICKET_TBL
 INSERT INTO TICKET_TBL (SUB_IDX, TITLE, COMPANY, LINK, SDATE, EDATE, PLACE, PRICE, GRADE, CAST, RUNNINGTIME, IMG, ETC)
 SELECT * FROM (
-    SELECT 3, '가상 글로벌 펌웨어', '(주) 김', 'https://janggimseo.kr/', '2025-05-20', '2025-06-04', '안양시 만안구', '108483', 'A', '김은정', '117분', 'https://www.lorempixel.com/492/839', 'Assumenda ut est vitae.' UNION ALL
-    SELECT 3, '확장된 클라이언트 단 생산 능력', '(유) 이', 'http://www.jusighoesa.com/', '2025-05-20', '2025-06-16', '부여군', '57142', 'A', '이순자', '94분', 'https://placeimg.com/603/795/any', 'Hic enim aspernatur ab facere ullam.' UNION ALL
-    SELECT 3, '1:1 수요 중심 LAN', '유한회사 백', 'http://www.songgang.kr/', '2025-05-20', '2025-06-09', '청주시 상당구', '23583', 'S', '문수진', '101분', 'https://placekitten.com/829/344', 'Unde impedit mollitia.' UNION ALL
-    SELECT 3, '강력한 국가적 공구', '최김', 'https://www.yu.kr/', '2025-05-20', '2025-05-27', '군포시', '123860', 'A', '김영길', '130분', 'https://www.lorempixel.com/244/994', 'Officia dolore perferendis quisquam.' UNION ALL
-    SELECT 3, '변경 가능한 하이브리드 유연성', '김이이', 'http://www.ju.kr/', '2025-05-20', '2025-05-27', '계룡시', '75119', 'VIP', '김상호', '98분', 'https://www.lorempixel.com/579/122', 'Quo facere totam aliquid ea ipsa.'
+    SELECT 3001, '가상 글로벌 펌웨어', '(주) 김', 'https://janggimseo.kr/', '2025-05-20', '2025-06-04', '안양시 만안구', '108483', 'A', '김은정', '117분', 'https://www.lorempixel.com/492/839', 'Assumenda ut est vitae.' UNION ALL
+    SELECT 3002, '확장된 클라이언트 단 생산 능력', '(유) 이', 'http://www.jusighoesa.com/', '2025-05-20', '2025-06-16', '부여군', '57142', 'A', '이순자', '94분', 'https://placeimg.com/603/795/any', 'Hic enim aspernatur ab facere ullam.' UNION ALL
+    SELECT 3001, '1:1 수요 중심 LAN', '유한회사 백', 'http://www.songgang.kr/', '2025-05-20', '2025-06-09', '청주시 상당구', '23583', 'S', '문수진', '101분', 'https://placekitten.com/829/344', 'Unde impedit mollitia.' UNION ALL
+    SELECT 3003, '강력한 국가적 공구', '최김', 'https://www.yu.kr/', '2025-05-20', '2025-05-27', '군포시', '123860', 'A', '김영길', '130분', 'https://www.lorempixel.com/244/994', 'Officia dolore perferendis quisquam.' UNION ALL
+    SELECT 3004, '변경 가능한 하이브리드 유연성', '김이이', 'http://www.ju.kr/', '2025-05-20', '2025-05-27', '계룡시', '75119', 'VIP', '김상호', '98분', 'https://www.lorempixel.com/579/122', 'Quo facere totam aliquid ea ipsa.'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM TICKET_TBL);
 
--- 12. PAYMENT_HISTORY_TBL
+-- 13. PAYMENT_HISTORY_TBL
 INSERT INTO PAYMENT_HISTORY_TBL (TID, AMOUNT, PAY_METHOD, BUYER_ID, SELLER_ID, PRODUCT_ID, DELIVERY_ADDRESS)
 SELECT * FROM (
     SELECT 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', 78085, 6001, 'ryugeonu', 'jiu52', '1', '전라남도 논산시 반포대169가 (옥순양윤동)' UNION ALL
@@ -129,7 +149,7 @@ SELECT * FROM (
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PAYMENT_HISTORY_TBL);
 
--- 13.
+-- 14. PAYMENT_STATUS_TBL
 INSERT INTO PAYMENT_STATUS_TBL (TID, CREATED_AT, APPROVED_AT, CANCELED_AT, FAILED_AT)
 SELECT * FROM (
     SELECT 'a57d6b00-1304-48d3-a5c8-e47824fcb26b', '2025-05-20 02:26:15', '', '2025-05-20 02:26:15', '' UNION ALL
@@ -137,5 +157,6 @@ SELECT * FROM (
     SELECT 'dd6bed9d-ba45-4d3b-a844-606e3cfdfe2b', '2025-05-20 02:26:15', '', '2025-05-20 02:26:15', '' UNION ALL
     SELECT 'f5591955-ce0b-4584-ac08-7488db9c6b31', '2025-05-20 02:26:10', '2025-05-20 02:26:15', '', '' UNION ALL
     SELECT '55203d3b-76c7-49bb-b54e-be54a93c7de9', '2025-05-20 02:26:10', '2025-05-20 02:26:15', '', ''
+
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PAYMENT_STATUS_TBL);

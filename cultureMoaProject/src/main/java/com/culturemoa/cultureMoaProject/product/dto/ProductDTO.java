@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -24,6 +25,7 @@ public class ProductDTO {
     private boolean flag;
     private String imageUrl;
     private String content;
+    private List<ProductImageDTO> imageList;
 
 
 //    private ProductDetailDTO detail;

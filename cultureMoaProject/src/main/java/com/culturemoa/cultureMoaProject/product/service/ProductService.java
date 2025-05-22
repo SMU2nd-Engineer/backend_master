@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.product.service;
 
 import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductDetailDTO;
+import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import com.culturemoa.cultureMoaProject.product.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,15 @@ public class ProductService {
         if (productDTO.getIdx() == 0) {
             throw new RuntimeException("Product insert failed.");
         }
-        ProductDetailDTO detail = new ProductDetailDTO();
-            detail.setProduct_idx(productDTO.getIdx());
-            detail.setContent(productDTO.getContent());
-            detail.setImageUrl(productDTO.getImageUrl());
+        if (productDTO.getImageList() != null) {
+            for (ProductImageDTO imageDTO : productDTO.getImageList()) {
+                ProductDetailDTO detail = new ProductDetailDTO();
+                detail.setProduct_idx(productDTO.getIdx());
+                detail.setImageUrl(productDTO.getImageUrl());
 
-        productDAO.insertProductDetail(detail);
+                productDAO.insertProductDetail(detail);
+            }
+        }
     }
 
     public List<ProductDTO> searchProducts(ProductSearchDTO searchDTO) {
