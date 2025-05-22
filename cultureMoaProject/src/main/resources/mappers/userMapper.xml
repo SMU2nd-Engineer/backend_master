@@ -49,14 +49,13 @@
         where ID = #{id} and EDATE is null
     </update>
 
+
 <!--  회원가입에서 선호도 선택할 경우 값 넣기  -->
-    <insert id="insertFavorite" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserRegisterFavoriteDTO" >
+    <insert id="insertFavoriteNoChoose" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserRegisterFavoriteDTO" >
         insert into USER_FAVORITE_TBL
-        ( USER_IDX, CATEGORYSUB_IDX, SDATE, IS_FAVORITE)
+        ( USER_IDX )
         values
-        <foreach collection="favorites" item="favorite" separator="," >
-            (#{userIdx}, #{favorite}, #{sDate}, 1)
-        </foreach>
+        ( #{userIdx})
     </insert>
 
 <!--  유저 아이디로 유저 idx 추출, 마이페이지에서도 사용함-->

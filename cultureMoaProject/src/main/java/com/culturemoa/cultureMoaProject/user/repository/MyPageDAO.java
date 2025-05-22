@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 마이페이지 관련 DAO 클래스
@@ -147,7 +148,7 @@ public class MyPageDAO {
     }
 
     /**
-     * 선호도 조사 페이지를 위한 쿼리
+     * 선호도 조사 페이지에 카테고리를 위한 쿼리
      * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
      */
     public List<UserCategorySubDTO> getCategorySubInfo () {
@@ -155,31 +156,22 @@ public class MyPageDAO {
     }
 
     /**
-     * 유저 선호도의 카테고리 서브 값 가져오기
+     * 유저가 선택한 선호도를 키와 value 형태로 받아오기
      * @param UserIdx : 사용자 idx
-     * @return : 카테고리 서브 idx가 담긴 배열
+     * @return :
      */
-    public List<Integer> getUserFavoritesList (int UserIdx) {
-        return sqlSessionTemplate.selectList("myPageMapper.getUserFavorites", UserIdx);
+    public Map<String, Integer> getUserFavoritesList (int UserIdx) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getUserFavorites", UserIdx);
     }
 
 
     /**
      * 유저 선호도 업데이트1 - update( 500에러 문제로 insert / update 분리)
-     * @param myPageEditFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
+     * @param userRegisterFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
      * @return 업데이트 성공 여부를 담은 int 값
      */
-    public int updateUserFavoritesList (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
-        return sqlSessionTemplate.update("myPageMapper.updateUserFavorites", myPageEditFavoriteDTO);
-    }
-
-    /**
-     * 유저 선호도 업데이트 2 - 새로운 항목이면 삽입 아닐 경우 업데이트
-     * @param myPageEditFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
-     * @return 업데이트 성공 여부를 담은 int 값
-     */
-    public int insertUserFavoritesList (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
-        return sqlSessionTemplate.insert("myPageMapper.insertOrUpdateUserFavorites", myPageEditFavoriteDTO);
+    public int updateUserFavoritesList (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
+        return sqlSessionTemplate.update("myPageMapper.insertOrUpdateFavorite", userRegisterFavoriteDTO);
     }
 
 }

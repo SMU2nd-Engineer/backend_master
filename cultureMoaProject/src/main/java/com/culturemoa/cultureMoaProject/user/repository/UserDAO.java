@@ -99,7 +99,7 @@ public class UserDAO {
      * @return : 성공적으로 들어갔는지 아닌지 확인하기 위한 INT
      */
     public int insertUserFavorites (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
-        return sqlSessionTemplate.insert("userMapper.insertFavorite", userRegisterFavoriteDTO);
+        return sqlSessionTemplate.insert("myPageMapper.insertOrUpdateFavorite", userRegisterFavoriteDTO);
         
     }
 

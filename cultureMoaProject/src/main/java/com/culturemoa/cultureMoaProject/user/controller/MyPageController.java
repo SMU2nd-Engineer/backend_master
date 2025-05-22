@@ -142,18 +142,18 @@ public class MyPageController {
      */
     @GetMapping("/userFavorites")
     public ResponseEntity<?> getUserFavorites () {
-        UserRegisterFavoriteDTO userRegisterFavoriteDTO = myPageService.getUserFavoritesInfo();
-        return ResponseEntity.ok(userRegisterFavoriteDTO);
+        UserFavoriteResponseDTO userFavoriteResponseDTO = myPageService.getUserFavoritesInfo();
+        return ResponseEntity.ok(userFavoriteResponseDTO);
     }
 
     /**
      * 유저 선호도 변경 컨트롤러
-     * @param myPageEditFavoriteDTO : 선호도 정보가 담긴 배열을 받을 dto
+     * @param userRegisterFavoriteDTO : 선호도 정보가 담긴 배열을 받을 dto
      * @return : 응답 메시지 송신
      */
     @PostMapping("/updateFavorites")
-    public ResponseEntity<?> updateUserFavorites(@RequestBody MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
-        myPageService.updateUserFavoriteInfo(myPageEditFavoriteDTO);
+    public ResponseEntity<?> updateUserFavorites(@RequestBody UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
+        myPageService.updateUserFavoriteInfo(userRegisterFavoriteDTO);
         return ResponseEntity.ok("선호도 업데이트가 정상적으로 완료되었습니다.");
     }
 }

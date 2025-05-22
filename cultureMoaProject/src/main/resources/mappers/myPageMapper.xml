@@ -151,37 +151,84 @@
     </select>
 
 <!--  유저 선호도 체크 값 불러오기  -->
-    <select id="getUserFavorites" parameterType="int" resultType="int">
-        select CATEGORYSUB_IDX
-        from USER_FAVORITE_TBL
-        where USER_IDX = #{userIdx} and IS_FAVORITE = 1
+    <select id="getUserFavorites" parameterType="int" resultType="map">
+        SELECT
+        FAV_1001,
+        FAV_1002,
+        FAV_1003,
+        FAV_1004,
+        FAV_1005,
+        FAV_1006,
+        FAV_1007,
+        FAV_2001,
+        FAV_2002,
+        FAV_2003,
+        FAV_2004,
+        FAV_2005,
+        FAV_3001,
+        FAV_3002,
+        FAV_3003,
+        FAV_3004,
+        FAV_3005,
+        FAV_3006,
+        FAV_3007,
+        FAV_3008
+        FROM USER_FAVORITE_TBL
+        WHERE USER_IDX = #{userIdx}
     </select>
 
-<!--  유저 선호도 수정시 더이상 관심사 아닌 것 업데이트 하기  -->
-    <update id="updateUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageEditFavoriteDTO">
-        <if test="notFavorites != null and notFavorites.size() > 0">
-            update USER_FAVORITE_TBL
-                set IS_FAVORITE = 0, CDATE = #{CDate}
-                where USER_IDX = #{userIdx}
-                and CATEGORYSUB_IDX in
-            <foreach collection="notFavorites" item="notFavorite" open="(" separator="," close=")" >
-                 #{notFavorite}
-            </foreach>
-        </if>
-    </update>
-
-<!--  유저 선호도 on duplicate key 사용하여 새로운 관심사인 경우 삽입 및 중복인 경우 update 방식   -->
-    <insert id="insertOrUpdateUserFavorites" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageEditFavoriteDTO">
-            insert into USER_FAVORITE_TBL
-            ( USER_IDX, CATEGORYSUB_IDX, SDATE, IS_FAVORITE)
-            values
-            <foreach collection="insertNewFavorites" item="favorite" separator="," >
-                (#{userIdx}, #{favorite}, #{sDate}, 1)
-            </foreach>
-            on duplicate key
-            update
-            IS_FAVORITE = 1,
-            CDATE = #{cDate}
+    <!--  회원가입 및 마이페이지 수정에서 사용할 선호도 넣기 또는 업데이트  -->
+    <insert id="insertOrUpdateFavorite" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserRegisterFavoriteDTO" >
+        INSERT INTO USER_FAVORITE_TBL (
+        USER_IDX,
+        FAV_1001, FAV_1002, FAV_1003, FAV_1004, FAV_1005, FAV_1006, FAV_1007,
+        FAV_2001, FAV_2002, FAV_2003, FAV_2004, FAV_2005,
+        FAV_3001, FAV_3002, FAV_3003, FAV_3004, FAV_3005, FAV_3006, FAV_3007, FAV_3008
+        )
+        VALUES (
+        #{userIdx},
+        <choose><when test="favorites.contains('FAV_1001')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_1002')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_1003')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_1004')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_1005')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_1006')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_1007')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_2001')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_2002')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_2003')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_2004')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_2005')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3001')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3002')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3003')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3004')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3005')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3006')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3007')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="favorites.contains('FAV_3008')">1</when><otherwise>0</otherwise></choose>
+        )
+        ON DUPLICATE KEY UPDATE
+        FAV_1001 = VALUES(FAV_1001),
+        FAV_1002 = VALUES(FAV_1002),
+        FAV_1003 = VALUES(FAV_1003),
+        FAV_1004 = VALUES(FAV_1004),
+        FAV_1005 = VALUES(FAV_1005),
+        FAV_1006 = VALUES(FAV_1006),
+        FAV_1007 = VALUES(FAV_1007),
+        FAV_2001 = VALUES(FAV_2001),
+        FAV_2002 = VALUES(FAV_2002),
+        FAV_2003 = VALUES(FAV_2003),
+        FAV_2004 = VALUES(FAV_2004),
+        FAV_2005 = VALUES(FAV_2005),
+        FAV_3001 = VALUES(FAV_3001),
+        FAV_3002 = VALUES(FAV_3002),
+        FAV_3003 = VALUES(FAV_3003),
+        FAV_3004 = VALUES(FAV_3004),
+        FAV_3005 = VALUES(FAV_3005),
+        FAV_3006 = VALUES(FAV_3006),
+        FAV_3007 = VALUES(FAV_3007),
+        FAV_3008 = VALUES(FAV_3008)
     </insert>
 
 </mapper>

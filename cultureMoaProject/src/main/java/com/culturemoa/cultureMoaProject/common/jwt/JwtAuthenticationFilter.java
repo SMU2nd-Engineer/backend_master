@@ -75,7 +75,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             pFilterChain.doFilter(pRequest, pResponse);
             return;
         }
-        System.out.println(" return 이 걸리지 않고서 여기가 실행됨");
         String token = jwtProvider.resolveToken(pRequest); // 헤더에서 토큰만 추출
         if (token == null) { // 토큰이 비어있을 경우 401 반환
             sendErrorResponse(pResponse, "토큰이 없습니다.");
