@@ -219,6 +219,7 @@ CREATE TABLE IF NOT EXISTS PAYMENT_HISTORY_TBL
 	BUYER_IDX int NOT NULL,
     SELLER_IDX int NOT NULL,
 	PRODUCT_IDX int NOT NULL,
+
 	DELIVERY_ADDRESS varchar(255),
 	foreign key(PRODUCT_IDX) references PRODUCT_TBL (IDX),
     foreign key(BUYER_IDX) references USER_TBL (IDX),
@@ -230,10 +231,10 @@ CREATE TABLE IF NOT EXISTS PAYMENT_STATUS_TBL
 (
     IDX int AUTO_INCREMENT PRIMARY KEY,
 	TID varchar(50) NOT NULL,
-	CREATED_AT date,	-- 결제준비, 결제승인, 결제취소, 결제실패
-    APPROVED_AT date,
-    CANCELED_AT date,
-    FAILED_AT date,
-    foreign key(TID) references PAYMENT_HISTORY_TBL (TID)-- createdAt, approvedAt, canceledAt
+	CREATED_AT timestamp null,	-- 결제준비, 결제승인, 결제취소, 결제실패
+    APPROVED_AT timestamp null,
+    CANCELED_AT timestamp null,
+    FAILED_AT timestamp null
 )  CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
 

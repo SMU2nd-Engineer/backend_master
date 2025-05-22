@@ -77,7 +77,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             PaymentHistory history = new PaymentHistory();
             history.setTid(body.getTid());
             history.setAmount(requestDTO.getAmount());
-            history.setPayMethod(getPayMethod());
+            history.setPayMethod(requestDTO.getPayMethod());
             history.setProductIdx(requestDTO.getProductIdx());
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
             history.setBuyerIdx(requestDTO.getBuyerIdx());
@@ -139,7 +139,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             // DB저장
             PaymentStatus status = new PaymentStatus();
             status.setTid(approveDTO.getTid());
-            status.setApprovedAt(Objects.requireNonNull(response).getApprovedAt());
+            status.setApprovedAt(response.getApprovedAt());
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -201,11 +201,6 @@ public class KakaoPaymentService implements PaymentGatewayService {
         paymentDAO.insertPaymentStatus(status);
 
         System.err.printf("[TID: %s] 카카오페이 결제 실패 - %s%n", tid, methodResultMessage);
-    }
-
-    @Override
-    public int getPayMethod() {
-        return 6001;
     }
 }
 

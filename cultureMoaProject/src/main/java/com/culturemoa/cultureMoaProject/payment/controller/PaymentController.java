@@ -2,7 +2,6 @@ package com.culturemoa.cultureMoaProject.payment.controller;
 
 import com.culturemoa.cultureMoaProject.payment.dto.*;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
-import com.culturemoa.cultureMoaProject.payment.service.kakao.KakaoPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,16 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/payment")
 @RequiredArgsConstructor
 public class PaymentController {
-
     // PG사 구분을 위한 서비스 매핑
     private final Map<String, PaymentGatewayService> paymentGatewayServices;
 
     @PostMapping("/ready")
     public ResponseEntity<PaymentResponseDTO> readyPayment(
-            @RequestParam String payMethod,
+            @RequestParam int payMethod,
             @RequestBody PaymentReadyRequestDTO request
             ){
         // payMethod를 기반으로 어떤 PG사를 이용할지 선택
@@ -33,7 +31,7 @@ public class PaymentController {
     @PostMapping("/approve")
     public ResponseEntity<KakaoApproveResponseDTO> approvePayment(
             @RequestBody PaymentApproveRequestDTO request,
-            @RequestParam String payMethod
+            @RequestParam int payMethod
     ) {
         PaymentGatewayService service = getPaymentService(payMethod);
         System.out.println("approvePayment called with pgToken: " + request.getPgToken());
@@ -44,17 +42,17 @@ public class PaymentController {
 
     @GetMapping("/cancel")
     public ResponseEntity<KakaoCancelResponseDTO> cancel(
-            @RequestParam String payMethod,
+            @RequestParam int payMethod,
             @RequestParam String tid
     ) {
         PaymentGatewayService service = getPaymentService(payMethod);
-        KakaoCancelResponseDTO cancelInfo =((KakaoPaymentService) service).cancelPayment(tid);
+        KakaoCancelResponseDTO cancelInfo = service.cancelPayment(tid);
         return ResponseEntity.ok(cancelInfo);
     }
 
     @GetMapping("/fail")
     public ResponseEntity<String> fail(
-            @RequestParam String payMethod,
+            @RequestParam int payMethod,
             @RequestParam(required = false) String reason,
             @RequestParam String tid
     ){
@@ -65,8 +63,8 @@ public class PaymentController {
         return ResponseEntity.badRequest().body("결제가 실패했습니다: " + failMessage);
     }
 
-    private PaymentGatewayService getPaymentService(String payMethod) {
-        PaymentGatewayService service = paymentGatewayServices.get(payMethod.toLowerCase());
+    private PaymentGatewayService getPaymentService(int payMethod) {
+        PaymentGatewayService service = paymentGatewayServices.get(PaymentGatewayService.getPayMethod(payMethod));
         if(service == null){
             throw new IllegalArgumentException("지원하지 않는 결제 수단입니다: " + payMethod);
         }

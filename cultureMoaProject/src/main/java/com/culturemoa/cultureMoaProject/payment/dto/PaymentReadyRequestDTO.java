@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Value;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentReadyRequestDTO {
-//    @Value("${kakao.pay.cid}")
     private String cid;
     private String partnerOrderId;
     private String partnerUserId;
@@ -41,8 +40,8 @@ public class PaymentReadyRequestDTO {
     private String approvalUrl;
     private String cancelUrl;
     private String failUrl;
-    private int payMethod;
 
+    private int payMethod;
     private int productIdx;
     private int buyerIdx;
     private int sellerIdx;

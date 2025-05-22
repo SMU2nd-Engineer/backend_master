@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 /**
  * PaymentApproveResponseDTO
  *
@@ -24,7 +26,7 @@ public class PaymentApproveResponseDTO {
     private Amount amount;  // 내부 클래스로 결제 금액 정보 매핑
     private String itemName;
     private int quantity; // 상품 수량
-    private String approvedAt; // 결제 승인 시각
+    private LocalDateTime approvedAt; // 결제 승인 시각
     private String payload;
 
     // --- 내부 클래스 : 금액 정보 ---

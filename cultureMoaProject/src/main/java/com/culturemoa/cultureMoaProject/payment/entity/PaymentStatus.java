@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentStatus {
+    private int idx;
     private String tid;
     private LocalDateTime createdAt;
     private LocalDateTime approvedAt;
