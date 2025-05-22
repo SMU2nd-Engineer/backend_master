@@ -20,7 +20,7 @@ public class ProductDTO {
     private String title;
     private LocalDateTime sDate =LocalDateTime.now();
     private LocalDateTime eDate;
-    private String userId;
+    private Long user_idx;
     private Long price;
     private boolean flag;
     private String imageUrl;
