@@ -97,7 +97,7 @@
 
 <!--  마이페이지 게시판 탭에서 사용자 작성 게시판 정보 가져오기  -->
     <select id="getMyBoardListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageBoardDTO" >
-        select C.IDX, C.TITLE, C.DIVISION
+        select C.IDX, C.TITLE, C.CATEGORY_IDX as categoryIdx
         from CONTENTS_TBL as C
         join USER_TBL as U on U.IDX = C.USER_IDX
         where U.ID = #{userId}

@@ -213,15 +213,6 @@ public class UserService {
         }
     }
 
-
-//    /**
-//     * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
-//     */
-//    // 인증객체에서 가져와서 쓰도록 처리해야함.
-//    protected String myPageGetUserId () {
-//        // 사용자 정보를 인증 객체에서 가져오기
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        return (String) auth.getPrincipal(); // String 자료형으로 다운
-//    }
+    
 
 }
