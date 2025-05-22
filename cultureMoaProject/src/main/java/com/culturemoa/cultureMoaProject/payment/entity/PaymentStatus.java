@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PaymentStatus {
     private String tid;
-    private String status;
-    private LocalDateTime statusAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime approvedAt;
+    private LocalDateTime canceledAt;
+    private LocalDateTime failedAt;
+
 }
