@@ -139,7 +139,9 @@ public class KakaoPaymentService implements PaymentGatewayService {
             // DB저장
             PaymentStatus status = new PaymentStatus();
             status.setTid(approveDTO.getTid());
-            status.setApprovedAt(Objects.requireNonNull(response).getApprovedAt());
+            status.setApprovedAt(response.getApprovedAt());
+            status.setCanceledAt(null);
+            status.setFailedAt(null);
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -181,7 +183,9 @@ public class KakaoPaymentService implements PaymentGatewayService {
         if(response != null) {
             PaymentStatus status = new PaymentStatus();
             status.setTid(tid);
+            status.setApprovedAt(null);
             status.setCanceledAt(response.getCanceledAt());
+            status.setFailedAt(null);
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -196,7 +200,9 @@ public class KakaoPaymentService implements PaymentGatewayService {
     public void handleFailedPayment(String tid, String methodResultMessage) {
         PaymentStatus status = new PaymentStatus();
         status.setTid(tid);
+        status.setApprovedAt(null);
         status.setFailedAt(LocalDateTime.now());
+        status.setCanceledAt(null);
 
         paymentDAO.insertPaymentStatus(status);
 

@@ -227,10 +227,10 @@ CREATE TABLE IF NOT EXISTS PAYMENT_STATUS_TBL
 (
     IDX int AUTO_INCREMENT PRIMARY KEY,
 	TID varchar(50) NOT NULL,
-	CREATED_AT date,	-- 결제준비, 결제승인, 결제취소, 결제실패
-    APPROVED_AT date,
-    CANCELED_AT date,
-    FAILED_AT date,
+	CREATED_AT timestamp null,	-- 결제준비, 결제승인, 결제취소, 결제실패
+    APPROVED_AT timestamp null,
+    CANCELED_AT timestamp null,
+    FAILED_AT timestamp null,
     foreign key(TID) references PAYMENT_HISTORY_TBL (TID)-- createdAt, approvedAt, canceledAt
 );
 
