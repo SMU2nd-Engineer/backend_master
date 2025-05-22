@@ -4,10 +4,10 @@
 
     <!-- 해당 idx에 맞는 정보 가져오기 -->
     <select id="getCategorysByIdx" resultType="com.culturemoa.cultureMoaProject.category.dto.CategoryDTO" parameterType="INTEGER">
-        select main.name as mainName, sub.SUB_IDX, sub.name as categoryName from category_tbl main
-        left join categorysub_tbl sub on main.idx = sub.PARENT_IDX
+        SELECT MAIN.NAME AS MAINNAME, SUB.SUB_IDX, SUB.NAME AS CATEGORYNAME FROM CATEGORY_TBL MAIN
+        LEFT JOIN CATEGORYSUB_TBL SUB ON MAIN.IDX = SUB.PARENT_IDX
         <where>
-            main.idx = #{idx}
+            MAIN.IDX = #{idx}
         </where>
     </select>
 </mapper>

@@ -12,10 +12,13 @@ services:
       MYSQL_DATABASE: culturemoa
       MYSQL_USER: culturemoa
       MYSQL_PASSWORD: culturemoa
+      TZ: Asia/Seoul
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
