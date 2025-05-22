@@ -56,7 +56,7 @@
 <!--                KEYWORD = #{searchDTO.getKeyword()}-->
 <!--            </if>-->
             <if test="keyword != null">
-                AND (TITLE LIKE '%${keyword}%' OR DETAIL.CONTENT LIKE '%${keyword}%')
+                AND (TITLE LIKE '%${keyword}%' OR CONTENT LIKE '%${keyword}%')
             </if>
             <if test="category_idx > 1000">
                 AND CATEGORY_IDX = #{category_idx}
