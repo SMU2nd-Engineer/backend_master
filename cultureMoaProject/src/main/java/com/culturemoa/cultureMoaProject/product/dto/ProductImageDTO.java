@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDetailDTO {
-    private Long idx;
-    private Long product_idx;
+public class ProductImageDTO {
     private String imageUrl;
     private boolean flag;
+
 }
