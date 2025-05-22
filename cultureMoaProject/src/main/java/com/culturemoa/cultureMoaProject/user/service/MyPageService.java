@@ -105,34 +105,37 @@ public class MyPageService {
     }
 
     /**
-     * 헤더에서 userId를 추출하여 찜 목록을 가져오는 서비스
-     * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
-     */
-    public List<MyPageProductListDTO> getWishListByAuth() {
-        String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMyWishListInfoByUserId(userId);
-    }
-
-    /**
      * 헤더에서 userId를 추출하여 메인 페이지에 쓸 찜, 판매, 거래 후기 목록을 가져오는 서비스
      * @return MyPageMainDTO로 별점과 각 항목의 리스트가 담긴 DTO
      */
     public MyPageMainDTO getMainInfoListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
         MyPageAverageRatingDTO myPageAverageRating = myPageDAO.getAverageRatingByUserId(userId);
-        List<MyPageProductListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
-        List<MyPageProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
+        List<MyPageSellListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
+        List<MyPagePeakProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
         List<ReviewListDTO> myMainReview = myPageDAO.getMyMainReviewListInfoByUserId(userId);
         return new MyPageMainDTO(myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
     }
 
     /**
-     * 마이페이지 구매/판매 내역을 위한 서비스
+     * 헤더에서 userId를 추출하여 찜 목록을 가져오는 서비스
+     * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
+     */
+    public List<MyPagePeakProductListDTO> getWishListByAuth() {
+        String userId = handleAuth.getUserIdByAuth();
+        return myPageDAO.getMyWishListInfoByUserId(userId);
+    }
+
+
+    /**
+     * 마이페이지 판매 내역을 위한 서비스
      * @return List<MyPageWishListDTO>로 조죄한 판매 내역 정보가 담김
      */
-    public List<MyPageProductListDTO> getSellAndBuyListByAuth() {
+    public MyPageSellAndBuyListDTO getSellAndBuyListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMySellAndBuyProductByUserId(userId);
+        List<MyPageSellListDTO> sellInfoList = myPageDAO.getMySellProductByUserId(userId);
+        List<MyPageBuyListDTO> buyInfoList = myPageDAO.getMyBuyProductByUserId(userId);
+        return new MyPageSellAndBuyListDTO(sellInfoList, buyInfoList);
     }
 
 
@@ -160,12 +163,11 @@ public class MyPageService {
      */
     public MyPageReviewDTO getMyReviewInfoByAuth() {
         String userId = handleAuth.getUserIdByAuth();
-        int userIdx = userDAO.getUserIdx(userId);
         // 평균 별점 점수 가져오기
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
-        List<MyPageEvaluationDTO> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userIdx);
-        return new MyPageReviewDTO(reviewList, averageRating,myEvaluationList);
+        Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
+        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList);
     }
 
 

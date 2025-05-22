@@ -5,9 +5,6 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -61,17 +58,17 @@ public class MyPageDAO {
      * @param userId : 조회할 userID
      * @return 최대 2개가 담긴 DTO 리스트
      */
-    public List<MyPageProductListDTO> getMyMainPeakListInfoByUserId (String userId) {
+    public List<MyPagePeakProductListDTO> getMyMainPeakListInfoByUserId (String userId) {
         return sqlSessionTemplate.selectList("myPageMapper.getMainPeakListInfo", userId);
     }
 
 
     /**
-     * 마이페이지 메인에 전달할 구매 목록 4개 DAO
+     * 마이페이지 메인에 전달할 판매 목록 4개 DAO
      * @param userId : 조회할 userID
      * @return 최대 4개가 담긴 DTO 리스트
      */
-    public List<MyPageProductListDTO> getMyMainSellListInfoByUserId (String userId) {
+    public List<MyPageSellListDTO> getMyMainSellListInfoByUserId (String userId) {
         return sqlSessionTemplate.selectList("myPageMapper.getMainSellListInfo", userId);
     }
 
@@ -92,18 +89,28 @@ public class MyPageDAO {
      * @param userId : 토큰에서 추출한 id
      * @return List<MyPageWishListDTO> : 찜으로 선택한 상품 정보가 리스트로 담김
      */
-    public List<MyPageProductListDTO> getMyWishListInfoByUserId (String userId) {
+    public List<MyPagePeakProductListDTO> getMyWishListInfoByUserId (String userId) {
         return sqlSessionTemplate.selectList("myPageMapper.getWishListInfo", userId);
     }
 
 
     /**
-     * 마이페이지 구매/판매 내역쪽에 전달할 dao
+     * 마이페이지 판매 내역쪽에 전달할 dao
      * @param userId : 조회할 userID
      * @return 판매 내역이 담긴 DTO 리스트
      */
-    public List<MyPageProductListDTO> getMySellAndBuyProductByUserId(String userId) {
-        return sqlSessionTemplate.selectList("myPageMapper.getMySellAndByListInfo", userId);
+    public List<MyPageSellListDTO> getMySellProductByUserId(String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMySellByListInfo", userId);
+    }
+
+
+    /**
+     * 마이페이지 구매 내역쪽에 전달할 dao
+     * @param userId : 조회할 userID
+     * @return 판매 내역이 담긴 DTO 리스트
+     */
+    public List<MyPageBuyListDTO> getMyBuyProductByUserId(String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getMyBuyListInfo", userId);
     }
 
     /**
@@ -143,8 +150,8 @@ public class MyPageDAO {
         return sqlSessionTemplate.selectList("myPageMapper.getMyReviewListInfo", userId);
     }
 
-    public List<MyPageEvaluationDTO> getMyEvaluationByUserIdx (int UserIdx) {
-        return sqlSessionTemplate.selectList("myPageMapper.getMyEvaluationInfo", UserIdx);
+    public Map<String, Integer> getMyEvaluationByUserIdx (String userId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getMyEvaluationInfo", userId);
     }
 
     /**

@@ -79,9 +79,9 @@ public class MyPageController {
      * @return : MyPageWishListDTO 배열을 반환
      */
     @GetMapping("/peakListInfo")
-    public ResponseEntity<List<MyPageProductListDTO>> getMyPeakListInfo () {
-        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getWishListByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
+    public ResponseEntity<List<MyPagePeakProductListDTO>> getMyPeakListInfo () {
+        List<MyPagePeakProductListDTO> myPagePeakProductListDTO = myPageService.getWishListByAuth();
+        return ResponseEntity.ok(myPagePeakProductListDTO);
     }
 
     /**
@@ -89,9 +89,9 @@ public class MyPageController {
      * @return 판매 내역이 담긴 리스트
      */
     @GetMapping("/getMyTransactionList")
-    public ResponseEntity<?> getSellProductInfo () {
-        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getSellAndBuyListByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
+    public ResponseEntity<?> getSellAndBuyProductInfo () {
+        MyPageSellAndBuyListDTO myPagePeakProductListDTO = myPageService.getSellAndBuyListByAuth();
+        return ResponseEntity.ok(myPagePeakProductListDTO);
     }
 
 
