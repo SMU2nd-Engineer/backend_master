@@ -41,12 +41,11 @@ public class PaymentReadyRequestDTO {
     private String approvalUrl;
     private String cancelUrl;
     private String failUrl;
-    private String payMethod;
+    private int payMethod;
 
     private int productIdx;
     private int buyerIdx;
     private int sellerIdx;
-    private String tradeType;
     private String deliveryAddress;
 }
 

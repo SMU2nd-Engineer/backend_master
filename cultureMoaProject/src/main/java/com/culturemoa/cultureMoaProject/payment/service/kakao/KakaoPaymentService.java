@@ -79,7 +79,6 @@ public class KakaoPaymentService implements PaymentGatewayService {
             history.setAmount(requestDTO.getAmount());
             history.setPayMethod(getPayMethod());
             history.setProductIdx(requestDTO.getProductIdx());
-            history.setTradeType(requestDTO.getTradeType());
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
             history.setBuyerIdx(requestDTO.getBuyerIdx());
             history.setSellerIdx(requestDTO.getSellerIdx());
@@ -88,8 +87,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
 
             PaymentStatus status = new PaymentStatus();
             status.setTid(body.getTid());
-            status.setStatus("결제준비");
-            status.setStatusAt(body.getCreatedAt());
+            status.setCreatedAt(body.getCreatedAt());
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -141,8 +139,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             // DB저장
             PaymentStatus status = new PaymentStatus();
             status.setTid(approveDTO.getTid());
-            status.setStatus("결제승인");
-            status.setStatusAt(response.getApprovedAt());
+            status.setApprovedAt(Objects.requireNonNull(response).getApprovedAt());
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -184,8 +181,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
         if(response != null) {
             PaymentStatus status = new PaymentStatus();
             status.setTid(tid);
-            status.setStatus("결제취소");
-            status.setStatusAt(response.getCanceledAt());
+            status.setCanceledAt(response.getCanceledAt());
 
             paymentDAO.insertPaymentStatus(status);
 
@@ -200,8 +196,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
     public void handleFailedPayment(String tid, String methodResultMessage) {
         PaymentStatus status = new PaymentStatus();
         status.setTid(tid);
-        status.setStatus("결제실패");
-        status.setStatusAt(LocalDateTime.now());
+        status.setFailedAt(LocalDateTime.now());
 
         paymentDAO.insertPaymentStatus(status);
 
@@ -209,8 +204,8 @@ public class KakaoPaymentService implements PaymentGatewayService {
     }
 
     @Override
-    public String getPayMethod() {
-        return "kakao";
+    public int getPayMethod() {
+        return 6001;
     }
 }
 

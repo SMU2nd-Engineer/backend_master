@@ -27,10 +27,9 @@ public class PaymentHistory {
     private int idx;
     private String tid;
     private int amount;
-    private String payMethod;
+    private int payMethod;
     private int buyerIdx;
     private int sellerIdx;
     private int productIdx;
-    private String tradeType;
     private String deliveryAddress;
 }

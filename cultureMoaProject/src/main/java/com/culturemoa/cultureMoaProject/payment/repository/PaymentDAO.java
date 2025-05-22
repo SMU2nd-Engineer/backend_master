@@ -23,8 +23,4 @@ public class PaymentDAO {
     public int selectAmountByTid(String tid) {
         return sqlSessionTemplate.selectOne("paymentMapper.selectAmountByTid", tid);
     }
-
-    public String selectLatestStatusByTid(String tid) {
-        return sqlSessionTemplate.selectOne("paymentMapper.selectLatestStatusByTid", tid);
-    }
 }
