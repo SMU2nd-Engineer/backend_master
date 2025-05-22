@@ -75,9 +75,9 @@
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 insert -->
-    <insert id="getContentInsert" useGeneratedKeys="true"
-            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDTO"
-            keyProperty="idx" >
+<!--    <insert id="getContentInsert" useGeneratedKeys="true"-->
+<!--            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDTO"-->
+<!--            keyProperty="idx" >-->
 <!--        INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, CONTENT, SDATE)-->
 <!--        VALUES( #{user_idx}, #{category_idx}, #{title}, #{content}, #{sdate});-->
 
@@ -85,6 +85,6 @@
 <!--        VALUES( #{nickname});-->
 
 
-    </insert>
+<!--    </insert>-->
 
 </mapper>
