@@ -11,26 +11,26 @@ SELECT * FROM (
 WHERE NOT EXISTS (SELECT 1 FROM USER_TBL);
 
 -- 2. PRODUCT_TBL
-INSERT INTO PRODUCT_TBL (CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE, USERID, PRICE, FLAG)
+INSERT INTO PRODUCT_TBL (CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE, USERID, PRICE, FLAG, CONTENT)
 SELECT * FROM (
-    SELECT 1001, 2001, 'Occaecati placeat.', '2024-06-29', NULL, 'ryugeonu', 37435, 0 UNION ALL
-    SELECT 1002, 2002, 'Assumenda maiores.', '2024-06-24', NULL, 'coegyeongsu', 89247, 1 UNION ALL
-    SELECT 1003, 2003, 'Officia recusandae excepturi.', '2024-06-01', NULL, 'areum92', 32262, 1 UNION ALL
-    SELECT 1002, 2002, 'Enim quas perferendis.', '2024-09-12', NULL, 'ryugeonu', 48116, 0 UNION ALL
-    SELECT 1006, 2004, 'Quas tempora dignissimos.', '2024-06-21', NULL, 'areum92', 14074, 1
+    SELECT 1001, 2001, 'Occaecati placeat.', '2024-06-29', NULL, 'ryugeonu', 37435, 0 UNION ALL, 'ABCDEFG'
+    SELECT 1002, 2002, 'Assumenda maiores.', '2024-06-24', NULL, 'coegyeongsu', 89247, 1 UNION ALL, 'ABCDEFG'
+    SELECT 1003, 2003, 'Officia recusandae excepturi.', '2024-06-01', NULL, 'areum92', 32262, 1 UNION ALL, 'ABCDEFG'
+    SELECT 1002, 2002, 'Enim quas perferendis.', '2024-09-12', NULL, 'ryugeonu', 48116, 0 UNION ALL, 'ABCDEFG'
+    SELECT 1006, 2004, 'Quas tempora dignissimos.', '2024-06-21', NULL, 'areum92', 14074, 1, 'ABCDEFG'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_TBL);
 
--- 3. PRODUCT_DETAIL_TBL
-INSERT INTO PRODUCT_DETAIL_TBL (PRODUCT_IDX, CONTENT, IMAGE_URL)
+-- 3. PRODUCT_IMAGE_TBL
+INSERT INTO PRODUCT_IMAGE_TBL (PRODUCT_IDX, IMAGE_URL, FLAG)
 SELECT * FROM (
-    SELECT 1, 'Veniam reiciendis magni ea fugit iusto amet. Cum sit tenetur.', 'https://placeimg.com/987/384/any' UNION ALL
-    SELECT 2, 'Culpa cupiditate voluptatum praesentium nisi.', 'https://placekitten.com/606/750' UNION ALL
-    SELECT 3, 'Voluptas sequi eum explicabo. At magni illo. Vero qui fugiat unde.', 'https://placeimg.com/850/673/any' UNION ALL
-    SELECT 4, 'Nam deserunt consequuntur laudantium alias animi. Iste dignissimos consequatur natus iure.', 'https://placekitten.com/591/927' UNION ALL
-    SELECT 5, 'Aperiam iusto in quasi. Nemo neque sint recusandae optio error.', 'https://placeimg.com/340/793/any'
+    SELECT 1, 'https://placeimg.com/987/384/any' UNION ALL, 1
+    SELECT 2, 'https://placekitten.com/606/750' UNION ALL, 0
+    SELECT 3, 'https://placeimg.com/850/673/any' UNION ALL, 1
+    SELECT 4, 'https://placekitten.com/591/927' UNION ALL, 1
+    SELECT 5, 'https://placeimg.com/340/793/any', 0
 ) AS tmp
-WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_DETAIL_TBL);
+WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_IMAGE_TBL);
 
 -- 4. USER_TRANSACTION_TBL
 INSERT INTO USER_TRANSACTION_TBL (USER_IDX, PRODUCT_IDX, SDATE)

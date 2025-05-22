@@ -7,7 +7,7 @@
     <!-- 전체 정보 가져오기 -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-                USERID, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
+                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
         FROM PRODUCT_TBL MAIN
         LEFT OUTER JOIN PRODUCT_IMAGE_TBL DETAIL ON
                 MAIN.IDX = DETAIL.PRODUCT_IDX
@@ -16,7 +16,7 @@
     <!-- 해당 idx에 맞는 정보 가져오기 -->
     <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="int">
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-               USERID, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
+               USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
         FROM PRODUCT_TBL MAIN
         LEFT OUTER JOIN PRODUCT_IMAGE_TBL DETAIL ON
                 MAIN.IDX = DETAIL.PRODUCT_IDX
@@ -26,9 +26,9 @@
     <!-- 상품 등록 (카테고리 번호, 상품 장르, 상품 이름, 날짜, 아이디, 가격, 상세설명) -->
     <insert id="insertProduct" useGeneratedKeys="true" keyProperty="idx" >
         INSERT INTO  PRODUCT_TBL (
-                    CATEGORY_IDX, CATEGORYGENRE_IDX,  TITLE, SDATE, EDATE, USERID, PRICE, FLAG, CONTENT)
+                    CATEGORY_IDX, CATEGORYGENRE_IDX,  TITLE, SDATE, EDATE, USER_IDX, PRICE, FLAG, CONTENT)
                VALUES (
-                    #{category_idx}, #{categorygenre_idx}, #{title}, #{sDate}, #{eDate}, #{userId}, #{price}, #{flag}, #{content} )
+                    #{category_idx}, #{categorygenre_idx}, #{title}, #{sDate}, #{eDate}, #{user_Idx}, #{price}, #{flag}, #{content} )
     </insert>
 
     <!-- 상품 이미지 정보 등록 (상품코드번호, 이미지 주소 ) -->
@@ -40,7 +40,7 @@
     <!-- 상품 검색 (상품이름, 상품장르, 카테고리, 상세설명)-->
     <select id="searchProducts" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO">
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-                USERID, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
+                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
         FROM PRODUCT_TBL MAIN
         LEFT OUTER JOIN PRODUCT_IMAGE_TBL DETAIL ON
                  MAIN.IDX = DETAIL.PRODUCT_IDX
