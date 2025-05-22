@@ -6,21 +6,17 @@
     <!-- 결제 기록 DB 저장 -->
     <insert id="insertPaymentHistory" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory" useGeneratedKeys="true" keyProperty="idx">
         insert into PAYMENT_HISTORY_TBL
-        (TID, AMOUNT, PAY_METHOD, BUYER_ID, SELLER_ID, PRODUCT_ID, TRADE_TYPE, DELIVERY_ADDRESS)
+        (TID, AMOUNT, PAY_METHOD, BUYER_IDX, SELLER_IDX, PRODUCT_IDX, DELIVERY_ADDRESS)
         values
-        (#{tid}, #{amount}, #{payMethod}, #{buyerId}, #{sellerId}, #{productId}, #{tradeType}, #{deliveryAddress})
+        (#{tid}, #{amount}, #{payMethod}, #{buyerIdx}, #{sellerIdx}, #{productIdx}, #{deliveryAddress})
     </insert>
     <insert id="insertPaymentStatus" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus" useGeneratedKeys="true" keyProperty="idx">
         insert into PAYMENT_STATUS_TBL
-        (TID, STATUS, STATUS_AT)
+        (TID, CREATED_AT, APPROVED_AT, CANCELED_AT, FAILED_AT)
         values
-        (#{tid}, #{status}, #{statusAt})
+        (#{tid}, #{created_at}, #{approved_at}, #{canceled_at}, #{failed_at})
     </insert>
     <select id="selectAmountByTid" parameterType="string" resultType="int">
         select AMOUNT from PAYMENT_HISTORY_TBL where TID = #{tid}
-    </select>
-    <select id="selectLatestStatusByTid" parameterType="string" resultType="string">
-        select STATUS from PAYMENT_STATUS_TBL
-        where TID = #{tid} order by STATUS_AT DESC LIMIT 1
     </select>
 </mapper>
