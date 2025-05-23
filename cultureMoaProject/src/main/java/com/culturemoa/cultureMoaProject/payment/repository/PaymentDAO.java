@@ -23,4 +23,8 @@ public class PaymentDAO {
     public int selectAmountByTid(String tid) {
         return sqlSessionTemplate.selectOne("paymentMapper.selectAmountByTid", tid);
     }
+
+    public int updatePaymentStatusInfo(PaymentStatus paymentStatus) {
+        return sqlSessionTemplate.update("paymentMapper.updatePaymentStatusInfo", paymentStatus);
+    }
 }

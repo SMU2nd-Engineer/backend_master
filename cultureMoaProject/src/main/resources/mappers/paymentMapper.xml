@@ -10,13 +10,23 @@
         values
         (#{tid}, #{amount}, #{payMethod}, #{buyerIdx}, #{sellerIdx}, #{productIdx}, #{deliveryAddress})
     </insert>
+    <!-- 결제 상태(created_at) DB저장 -->
     <insert id="insertPaymentStatus" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus" useGeneratedKeys="true" keyProperty="idx">
         insert into PAYMENT_STATUS_TBL
         (TID, CREATED_AT, APPROVED_AT, CANCELED_AT, FAILED_AT)
         values
         (#{tid}, #{createdAt}, #{approvedAt}, #{canceledAt}, #{failedAt})
     </insert>
+    <!-- tid로 결제 취소 금액 조회 -->
     <select id="selectAmountByTid" parameterType="string" resultType="int">
         select AMOUNT from PAYMENT_HISTORY_TBL where TID = #{tid}
     </select>
+    <!--  tid를 통해 결제 상태 없데이트  -->
+    <update id="updatePaymentStatusInfo" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus" >
+        update PAYMENT_STATUS_TBL
+        <set>
+            APPROVED_AT=#{approvedAt}, CANCELED_AT=#{canceledAt}, FAILED_AT=#{failedAt}
+        </set>
+        where TID = #{tid}
+    </update>
 </mapper>

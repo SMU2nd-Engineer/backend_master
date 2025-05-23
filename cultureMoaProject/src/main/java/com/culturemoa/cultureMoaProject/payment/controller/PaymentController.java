@@ -40,7 +40,7 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/cancel")
+    @PostMapping("/cancel")
     public ResponseEntity<KakaoCancelResponseDTO> cancel(
             @RequestParam int payMethod,
             @RequestParam String tid

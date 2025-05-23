@@ -141,7 +141,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             status.setTid(approveDTO.getTid());
             status.setApprovedAt(response.getApprovedAt());
 
-            paymentDAO.insertPaymentStatus(status);
+            paymentDAO.updatePaymentStatusInfo(status);
 
             return response;
         } catch (Exception e){
@@ -183,7 +183,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             status.setTid(tid);
             status.setCanceledAt(response.getCanceledAt());
 
-            paymentDAO.insertPaymentStatus(status);
+            paymentDAO.updatePaymentStatusInfo(status);
 
             return response;
         } else {
@@ -198,7 +198,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
         status.setTid(tid);
         status.setFailedAt(LocalDateTime.now());
 
-        paymentDAO.insertPaymentStatus(status);
+        paymentDAO.updatePaymentStatusInfo(status);
 
         System.err.printf("[TID: %s] 카카오페이 결제 실패 - %s%n", tid, methodResultMessage);
     }
