@@ -94,26 +94,16 @@ public class MyPageController {
         return ResponseEntity.ok(myPagePeakProductListDTO);
     }
 
-
     /**
      * 마이페이지 게시판-게시판 내용 가져올 컨트롤러
      * @return 사용자 작성 게시판 정보가 담긴 리스트
      */
-    @GetMapping("/getMyBoardList")
-    public ResponseEntity<?> getMyBoardList () {
-        List<MyPageBoardDTO> myPageProductListDTO = myPageService.getMyBoardByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
+    @GetMapping("/getMyBoardAndCommentList")
+    public ResponseEntity<?> getMyBoardAndCommentList () {
+        MyPageBoardCommentListDTO myPageBoardCommentListDTO = myPageService.getMyBoardAndCommentByAuth();
+        return ResponseEntity.ok(myPageBoardCommentListDTO);
     }
 
-    /**
-     * 마이페이지 게시판-댓글 내용 가져올 컨트롤러
-     * @return 사용자 작성 댓글 정보가 담긴 리스트
-     */
-    @GetMapping("/getMyCommentList")
-    public ResponseEntity<?> getMyCommentList () {
-        List<MyPageCommentDTO> myPageProductListDTO = myPageService.getMyCommentByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
-    }
 
     /**
      * 마이페이지 리뷰에 필요한 정보를 가져올 컨트롤러

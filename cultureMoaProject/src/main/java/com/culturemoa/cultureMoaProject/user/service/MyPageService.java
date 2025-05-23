@@ -94,10 +94,8 @@ public class MyPageService {
 
         // 유저 아이디 세팅
         myPageUpdateUserInfoDTO.setId(userId);
-        
         // 반환 값에 따라 에러 처리 하기
         int updateResult = myPageDAO.updateUserInfo(myPageUpdateUserInfoDTO);
-
         if(updateResult == 0 || updateResult > 1) {
             throw new DontUpdateException();
         }
@@ -138,24 +136,19 @@ public class MyPageService {
         return new MyPageSellAndBuyListDTO(sellInfoList, buyInfoList);
     }
 
-
     /**
      * 마이페이지 게시판 - 게시판 내용을 가져올 서비스
      * @return : List<MyPageBoardDTO>에 사용자가 작성한 게시판 정보가 담김
      */
-    public List<MyPageBoardDTO> getMyBoardByAuth() {
+    public MyPageBoardCommentListDTO getMyBoardAndCommentByAuth() {
         String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMyBoardByUserId(userId);
+        List<MyPageBoardDTO> myPageBoardDTOList = myPageDAO.getMyBoardByUserId(userId);
+        List<MyPageCommentDTO> myPageCommentDTOList = myPageDAO.getMyCommentByUserId(userId);
+        return new MyPageBoardCommentListDTO(myPageBoardDTOList, myPageCommentDTOList);
     }
 
-    /**
-     * 마이페이지 게시판 - 댓글 내용을 가져올 서비스
-     * @return : List<MyPageCommentDTO>에 사용자가 작성한 게시판 정보가 담김
-     */
-    public List<MyPageCommentDTO> getMyCommentByAuth() {
-        String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMyCommentByUserId(userId);
-    }
+
+
 
     /**
      * 마이페이지 리뷰 정보를 전달하기 위한 서비스

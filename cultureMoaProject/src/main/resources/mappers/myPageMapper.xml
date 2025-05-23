@@ -23,12 +23,12 @@
 <!--  유저 아이디를 통해서 마이페이지 갱신된 정보를 업데이트  -->
     <update id="updateUserInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPageUpdateUserInfoDTO">
         update USER_TBL
-        <trim prefix="set" prefixOverrides=",">
-            NAME=#{name}, NICKNAME=#{nickName}, EMAIL=#{email}, ADDRESS=#{address}, CDATE =#{cDate},
+        <set>
+            NAME=#{name}, NICKNAME=#{nickName}, EMAIL=#{email}, ADDRESS=#{address}, CDATE =#{cDate}
             <if test="password !='' and password != null">
-                ,PASSWORD=#{password},
+                , PASSWORD=#{password}
             </if>
-        </trim>
+        </set>
         where ID = #{id} and EDATE is null
     </update>
 
@@ -54,7 +54,7 @@
         FROM PRODUCT_TBL AS P
         JOIN PRODUCT_DETAIL_TBL AS PD ON PD.PRODUCT_IDX = P.IDX
         WHERE P.USERID = #{userId}
-        ORDER BY P.SDATE DESC;
+        ORDER BY P.SDATE DESC
         limit 4;
     </select>
 
@@ -77,7 +77,7 @@
         join USER_TBL as U on U.IDX = UP.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
         join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
-        where U.ID = #{userId}
+        where U.ID = #{userId} and UP.EDATE IS NULL
         order by UP.SDATE DESC;
     </select>
 
@@ -159,11 +159,11 @@
 <!--  유저 선호도 체크 값 불러오기  -->
     <select id="getUserFavorites" parameterType="int" resultType="map">
         SELECT
-        FAV_5001,
-        FAV_5002,
-        FAV_5003,
-        FAV_5004,
-        FAV_5005,
+        FAV_1001,
+        FAV_1002,
+        FAV_1003,
+        FAV_1004,
+        FAV_1005,
         FAV_1006,
         FAV_1007,
         FAV_2001,
