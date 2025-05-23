@@ -17,4 +17,5 @@ public class MyPageReviewDTO {
     private List<ReviewListDTO> reviewLists;
     private MyPageAverageRatingDTO myAverageRating;
     private Map<String, Integer> myEvaluationList;
+    private List<UserCategorySubDTO> evaluationList;
 }

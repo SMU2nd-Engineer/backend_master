@@ -58,7 +58,7 @@ public class MyPageDAO {
      * @param userId : 조회할 userID
      * @return 최대 2개가 담긴 DTO 리스트
      */
-    public List<MyPagePeakProductListDTO> getMyMainPeakListInfoByUserId (String userId) {
+    public List<MyPagePickProductListDTO> getMyMainPeakListInfoByUserId (String userId) {
         return sqlSessionTemplate.selectList("myPageMapper.getMainPeakListInfo", userId);
     }
 
@@ -89,8 +89,17 @@ public class MyPageDAO {
      * @param userId : 토큰에서 추출한 id
      * @return List<MyPageWishListDTO> : 찜으로 선택한 상품 정보가 리스트로 담김
      */
-    public List<MyPagePeakProductListDTO> getMyWishListInfoByUserId (String userId) {
+    public List<MyPagePickProductListDTO> getMyWishListInfoByUserId (String userId) {
         return sqlSessionTemplate.selectList("myPageMapper.getWishListInfo", userId);
+    }
+
+    /**
+     * 찜 목록 edate 추가하기
+     * @param myPickUpdateDTO : 찜 목록을 변경하기 위한 정보가 담긴 dto
+     * @return : int(변환 여부를 파악)
+     */
+    public int updateMyPickByProductIdx (MyPickUpdateDTO myPickUpdateDTO) {
+        return sqlSessionTemplate.update("myPageMapper.updateMyPick",myPickUpdateDTO );
     }
 
 
@@ -152,6 +161,14 @@ public class MyPageDAO {
 
     public Map<String, Integer> getMyEvaluationByUserIdx (String userId) {
         return sqlSessionTemplate.selectOne("myPageMapper.getMyEvaluationInfo", userId);
+    }
+
+    /**
+     * 리뷰 페이지 거래 평가 정보를 위한 쿼리
+     * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
+     */
+    public List<UserCategorySubDTO> getEvaluationCategorySubInfo () {
+        return sqlSessionTemplate.selectList("myPageMapper.getEvaluationCategorySubInfo");
     }
 
     /**

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyPagePeakProductListDTO {
+public class MyPagePickProductListDTO {
     private int idx;
     private String title;
     private String imageUrl;

@@ -79,7 +79,7 @@ public class MyPageService {
     }
 
     /**
-     * 헤더에서 userId를 추출하여 토큰에 담고
+     * userId를 추출하여 토큰에 담고
      * @param myPageUpdateUserInfoDTO : 업데이트 한 개인정보가 담긴 값
      */
     public void updateUserInfoByAuth(MyPageUpdateUserInfoDTO myPageUpdateUserInfoDTO) {
@@ -103,27 +103,34 @@ public class MyPageService {
     }
 
     /**
-     * 헤더에서 userId를 추출하여 메인 페이지에 쓸 찜, 판매, 거래 후기 목록을 가져오는 서비스
+     * userId를 추출하여 메인 페이지에 쓸 찜, 판매, 거래 후기 목록을 가져오는 서비스
      * @return MyPageMainDTO로 별점과 각 항목의 리스트가 담긴 DTO
      */
     public MyPageMainDTO getMainInfoListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
         MyPageAverageRatingDTO myPageAverageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<MyPageSellListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
-        List<MyPagePeakProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
+        List<MyPagePickProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
         List<ReviewListDTO> myMainReview = myPageDAO.getMyMainReviewListInfoByUserId(userId);
         return new MyPageMainDTO(myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
     }
 
     /**
-     * 헤더에서 userId를 추출하여 찜 목록을 가져오는 서비스
+     * userId를 추출하여 찜 목록을 가져오는 서비스
      * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
      */
-    public List<MyPagePeakProductListDTO> getWishListByAuth() {
+    public List<MyPagePickProductListDTO> getWishListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
         return myPageDAO.getMyWishListInfoByUserId(userId);
     }
 
+    public void updateMyPickList (MyPickUpdateDTO myPickUpdateDTO) {
+        myPickUpdateDTO.setEDate(LocalDateTime.now().withNano(0));
+        int updateResult = myPageDAO.updateMyPickByProductIdx(myPickUpdateDTO);
+        if (updateResult == 0 ) {
+            throw new DontUpdateException();
+        }
+    }
 
     /**
      * 마이페이지 판매 내역을 위한 서비스
@@ -152,7 +159,7 @@ public class MyPageService {
 
     /**
      * 마이페이지 리뷰 정보를 전달하기 위한 서비스
-     * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 정보를 전달하는 객체
+     * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 , 거래 평가 항목 정보를 전달하는 객체
      */
     public MyPageReviewDTO getMyReviewInfoByAuth() {
         String userId = handleAuth.getUserIdByAuth();
@@ -160,7 +167,8 @@ public class MyPageService {
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
         Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
-        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList);
+        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo();
+        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList);
     }
 
 

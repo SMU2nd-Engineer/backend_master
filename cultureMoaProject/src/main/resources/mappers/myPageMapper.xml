@@ -34,7 +34,7 @@
 
 
 <!--  마이페이지 메인에서 사용할 찜 목록 최신 2개만 가져오기  -->
-    <select id="getMainPeakListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePeakProductListDTO">
+    <select id="getMainPeakListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePickProductListDTO">
         select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
         from USER_PICK_TBL as UP
         join USER_TBL as U on U.IDX = UP.USER_IDX
@@ -71,7 +71,7 @@
 
 
 <!--  마이페이지 찜 목록 정보 가져오기  -->
-    <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePeakProductListDTO">
+    <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePickProductListDTO">
         select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl, P.EDATE
         from USER_PICK_TBL as UP
         join USER_TBL as U on U.IDX = UP.USER_IDX
@@ -80,6 +80,16 @@
         where U.ID = #{userId} and UP.EDATE IS NULL
         order by UP.SDATE DESC;
     </select>
+
+<!--  마이페이지 찜 목록 정보 삭제하기(EDATE 업데이트 하기)  -->
+    <update id="updateMyPick" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPickUpdateDTO" >
+        update USER_PICK_TBL
+        <set>
+            EDATE = #{eDate}
+        </set>
+        where PRODUCT_IDX = #{productIdx}
+    </update>
+
 
 <!--  마이페이지에 사용자 기준 판매 목록을 가져오기  -->
     <select id="getMySellByListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageSellListDTO" >
@@ -91,6 +101,7 @@
         WHERE P.USERID = #{userId}
         ORDER BY P.SDATE DESC;
     </select>
+
 
 <!--  마이페이지에 사용자 기준 구매 목록 가져오기  -->
     <select id="getMyBuyListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageBuyListDTO" >
@@ -150,6 +161,13 @@
         FROM USER_REVIEW_EVALUATION_TBL
         WHERE USER_IDX = (SELECT IDX FROM USER_TBL WHERE ID = #{userId});
     </select>
+
+
+<!--  마이페이지 리뷰 탭에서 사용자 거래 평가 항목으로 사용할 카테고리 정보 가져오기  -->
+    <select id="getEvaluationCategorySubInfo" resultType="com.culturemoa.cultureMoaProject.user.dto.UserCategorySubDTO">
+        select SUB_IDX as subIdx, NAME from CATEGORYSUB_TBL where SUB_IDX between 5000 and 5005;
+    </select>
+
 
 <!--  선호도 체크에 사용할 category sub 테이블 조회  -->
     <select id="getCategorySubInfo" resultType="com.culturemoa.cultureMoaProject.user.dto.UserCategorySubDTO">

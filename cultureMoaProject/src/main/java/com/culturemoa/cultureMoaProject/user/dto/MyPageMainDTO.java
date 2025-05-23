@@ -17,6 +17,6 @@ import java.util.List;
 public class MyPageMainDTO {
     private MyPageAverageRatingDTO myPageAverageRating;
     private List<MyPageSellListDTO> myMainSellProductList;
-    private List<MyPagePeakProductListDTO> myMainPeakList;
+    private List<MyPagePickProductListDTO> myMainPeakList;
     private List<ReviewListDTO> myMainReview;
 }

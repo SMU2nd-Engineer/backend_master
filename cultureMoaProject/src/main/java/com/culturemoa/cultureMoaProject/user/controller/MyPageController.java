@@ -79,10 +79,22 @@ public class MyPageController {
      * @return : MyPageWishListDTO 배열을 반환
      */
     @GetMapping("/peakListInfo")
-    public ResponseEntity<List<MyPagePeakProductListDTO>> getMyPeakListInfo () {
-        List<MyPagePeakProductListDTO> myPagePeakProductListDTO = myPageService.getWishListByAuth();
-        return ResponseEntity.ok(myPagePeakProductListDTO);
+    public ResponseEntity<List<MyPagePickProductListDTO>> getMyPeakListInfo () {
+        List<MyPagePickProductListDTO> myPagePickProductListDTO = myPageService.getWishListByAuth();
+        return ResponseEntity.ok(myPagePickProductListDTO);
     }
+
+    /**
+     * 찜 목록에서 삭제 버튼을 눌렀을 때 eDate를 삽입하기 위한 컨트롤러
+     * @param myPickUpdateDTO : 프론트에서 전달받은 productIdx가 들어간다.
+     * @return : 응답 메시지 출력
+     */
+    @PostMapping("/updateUserPeak")
+    public ResponseEntity<?> updateMyPickList (@RequestBody MyPickUpdateDTO myPickUpdateDTO) {
+        myPageService.updateMyPickList(myPickUpdateDTO);
+        return ResponseEntity.ok("정상적으로 업데이트 되었습니다.");
+    }
+
 
     /**
      * 구매 / 판매 내역 조회 위한 컨트롤러
