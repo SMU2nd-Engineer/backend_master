@@ -27,23 +27,5 @@ public class ProductDTO {
     private String content;
     private List<ProductImageDTO> imageList;
 
-
-//    private ProductDetailDTO detail;
-
-//    public ProductDTO(Long idx, Long category_idx, String title, LocalDateTime sDate, LocalDateTime eDate, String useId, Long price, Long flag, String imageUrl, String content) {
-//        this.idx = idx;
-//        this.category_idx = category_idx;
-//        this.title = title;
-//        this.sDate = sDate = LocalDateTime.now();
-//        this.eDate = eDate;
-//        this.useId = useId;
-//        this.price = price;
-//        this.flag = flag;
-//        this.imageUrl = imageUrl;
-//        this.content = content;
-//    }
-//    public ProductDTO(){
-//        this.sDate = LocalDateTime.now();
-//    }
 }
 

@@ -39,7 +39,7 @@ public class ProductService {
             for (ProductImageDTO imageDTO : productDTO.getImageList()) {
                 ProductDetailDTO detail = new ProductDetailDTO();
                 detail.setProduct_idx(productDTO.getIdx());
-                detail.setImageUrl(productDTO.getImageUrl());
+                detail.setImageUrl(imageDTO.getImageUrl());
 
                 productDAO.insertProductDetail(detail);
             }
