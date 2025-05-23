@@ -234,7 +234,8 @@ CREATE TABLE IF NOT EXISTS PAYMENT_STATUS_TBL
 	CREATED_AT timestamp null,	-- 결제준비, 결제승인, 결제취소, 결제실패
     APPROVED_AT timestamp null,
     CANCELED_AT timestamp null,
-    FAILED_AT timestamp null
+    FAILED_AT timestamp null,
+    CONSTRAINT PAYMENT_STATUS_TBL FOREIGN KEY(TID) REFERENCES PAYMENT_HISTORY_TBL (TID)
 )  CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 
 
