@@ -28,7 +28,8 @@ public class MyPageSellListDTO {
     private int flag;
     private String content;
     private String imageUrl;
-    private int categorySubIdx;
+    private int categoryIdx;
+    private int categoryGenreIdx;
     private LocalDateTime sDate;
     private LocalDateTime eDate;
     

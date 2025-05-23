@@ -35,12 +35,13 @@
 
 <!--  마이페이지 메인에서 사용할 찜 목록 최신 2개만 가져오기  -->
     <select id="getMainPeakListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePickProductListDTO">
-        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL as imageUrl ,
+        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx
         from USER_PICK_TBL as UP
         join USER_TBL as U on U.IDX = UP.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
-        join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
-        where U.ID = #{userId}
+        join PRODUCT_IMAGE_TBL AS PI on PI.PRODUCT_IDX = P.IDX
+        where U.ID = #{userId} AND U.EDATE IS NULL AND UP.EDATE IS NULL
         order by UP.SDATE DESC
         limit 2;
     </select>
@@ -49,11 +50,12 @@
 <!--  마이페이지 메인에서 사용할 판매 내역 최신 4개만 가져오기  -->
     <select id="getMainSellListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageSellListDTO" >
         SELECT
-        P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL AS imageUrl,
-        P.CATEGORYGENRE_IDX AS categorySubIdx, P.SDATE, P.EDATE
+        P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl,
+        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.SDATE, P.EDATE
         FROM PRODUCT_TBL AS P
-        JOIN PRODUCT_DETAIL_TBL AS PD ON PD.PRODUCT_IDX = P.IDX
-        WHERE P.USERID = #{userId}
+        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
+        JOIN USER_TBL as U on U.IDX = P.USER_IDX
+        WHERE U.ID = #{userId} AND U.EDATE IS NULL
         ORDER BY P.SDATE DESC
         limit 4;
     </select>
@@ -64,7 +66,7 @@
         select UR.REVIEW, UR.IDX, UR.SDATE
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.RECEIVER_USER_IDX
-        where U.ID = #{userId}
+        where U.ID = #{userId} AND U.EDATE IS NULL
         order by UR.SDATE DESC
         limit 5;
     </select>
@@ -72,14 +74,16 @@
 
 <!--  마이페이지 찜 목록 정보 가져오기  -->
     <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePickProductListDTO">
-        select P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL as imageUrl, P.EDATE
+        select P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL as imageUrl, P.EDATE ,
+        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx
         from USER_PICK_TBL as UP
         join USER_TBL as U on U.IDX = UP.USER_IDX
         join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
-        join PRODUCT_DETAIL_TBL AS PD on PD.PRODUCT_IDX = P.IDX
-        where U.ID = #{userId} and UP.EDATE IS NULL
+        join PRODUCT_IMAGE_TBL AS PI on PI.PRODUCT_IDX = P.IDX
+        where U.ID = #{userId} and UP.EDATE IS NULL AND U.EDATE IS NULL
         order by UP.SDATE DESC;
     </select>
+
 
 <!--  마이페이지 찜 목록 정보 삭제하기(EDATE 업데이트 하기)  -->
     <update id="updateMyPick" parameterType="com.culturemoa.cultureMoaProject.user.dto.MyPickUpdateDTO" >
@@ -94,11 +98,12 @@
 <!--  마이페이지에 사용자 기준 판매 목록을 가져오기  -->
     <select id="getMySellByListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageSellListDTO" >
         SELECT
-        P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL AS imageUrl,
-        P.CATEGORYGENRE_IDX AS categorySubIdx, P.SDATE, P.EDATE
+        P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl,
+        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.SDATE, P.EDATE
         FROM PRODUCT_TBL AS P
-        JOIN PRODUCT_DETAIL_TBL AS PD ON PD.PRODUCT_IDX = P.IDX
-        WHERE P.USER_IDX = (SELECT IDX FROM USER_TBL WHERE ID = #{userId})
+        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
+        JOIN USER_TBL as U on U.IDX = P.USER_IDX
+        WHERE U.ID = #{userId} AND U.EDATE IS NULL
         ORDER BY P.SDATE DESC;
     </select>
 
@@ -106,12 +111,13 @@
 <!--  마이페이지에 사용자 기준 구매 목록 가져오기  -->
     <select id="getMyBuyListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageBuyListDTO" >
         SELECT
-        P.IDX, P.TITLE, P.PRICE, P.FLAG, PD.CONTENT, PD.IMAGE_URL AS imageUrl,
-        P.CATEGORYGENRE_IDX AS categorySubIdx, P.EDATE, UT.SDATE AS purchaseDate
+        P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl,
+        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.EDATE, UT.SDATE AS purchaseDate
         FROM USER_TRANSACTION_TBL AS UT
         JOIN PRODUCT_TBL AS P ON P.IDX = UT.PRODUCT_IDX
-        JOIN PRODUCT_DETAIL_TBL AS PD ON PD.PRODUCT_IDX = P.IDX
-        WHERE UT.USER_IDX = (SELECT IDX FROM USER_TBL WHERE ID = #{userId})
+        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
+        JOIN USER_TBL as U on U.IDX = P.USER_IDX
+        WHERE U.ID = #{userId} AND U.EDATE IS NULL
         ORDER BY UT.SDATE DESC;
     </select>
 
@@ -121,7 +127,7 @@
         select C.IDX, C.TITLE, C.CATEGORY_IDX as categoryIdx
         from CONTENTS_TBL as C
         join USER_TBL as U on U.IDX = C.USER_IDX
-        where U.ID = #{userId}
+        where U.ID = #{userId} AND U.EDATE IS NULL
         order by C.SDATE DESC;
     </select>
 
@@ -131,7 +137,7 @@
         select CC.TEXT, CC.IDX, CC.SDATE
         from CONTENTS_COMMENT_TBL as CC
         join USER_TBL as U on U.IDX = CC.USER_IDX
-        where U.ID = #{userId}
+        where U.ID = #{userId} AND U.EDATE IS NULL
         order by CC.SDATE DESC;
     </select>
 
@@ -141,7 +147,7 @@
         select avg(RATING) as myPageTotalRating
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.RECEIVER_USER_IDX
-        where U.ID = #{userId}
+        where U.ID = #{userId} AND U.EDATE IS NULL
     </select>
 
 
@@ -150,7 +156,7 @@
         select UR.REVIEW, UR.IDX, UR.SDATE
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.RECEIVER_USER_IDX
-        where U.ID = #{userId}
+        where U.ID = #{userId} AND U.EDATE IS NULL
         order by UR.SDATE DESC;
     </select>
 
@@ -158,8 +164,9 @@
     <select id="getMyEvaluationInfo" parameterType="String" resultType="map">
         SELECT
         EVAL_5001, EVAL_5002, EVAL_5003, EVAL_5004, EVAL_5005
-        FROM USER_REVIEW_EVALUATION_TBL
-        WHERE USER_IDX = (SELECT IDX FROM USER_TBL WHERE ID = #{userId});
+        FROM USER_REVIEW_EVALUATION_TBL AS URE
+        JOIN USER_TBL as U on U.IDX = URE.USER_IDX
+        WHERE U.ID = #{userId} AND U.EDATE IS NULL;
     </select>
 
 
