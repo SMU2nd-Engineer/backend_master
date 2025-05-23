@@ -167,7 +167,16 @@ public class MyPageController {
         return ResponseEntity.ok(myPageService.sellerAndEvaluationCategoriesInfo());
     }
 
-    @PostMapping("")
+    /**
+     * 사용자가 작성한 리뷰 정보 등록하기
+     * @param reviewRegisterDTO : body 에 들어있는 정보를 받을 dto
+     * @return : 정상적으로 진행 될 경우 메시지를 반환
+     */
+    @PostMapping("registReview")
+    public ResponseEntity<?> insertOrUpdateReviewInfo(@RequestBody ReviewRegisterDTO reviewRegisterDTO) {
+        myPageService.insertReviewInfoService(reviewRegisterDTO);
+        return ResponseEntity.ok("정상적으로 리뷰 정보가 입력되었습니다.");
+    }
 
 
 }

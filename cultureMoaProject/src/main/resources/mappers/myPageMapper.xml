@@ -266,7 +266,7 @@
 <!--  판매자 정보를 가져오기  -->
     <select id="getSellerInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.SellerInfoDTO" >
         SELECT
-        S.NAME AS sellerName, S.IDX AS sellerIdx
+        S.NAME AS sellerName, S.IDX AS sellerIdx, T.IDX AS transactionIdx
         FROM USER_TRANSACTION_TBL T
         JOIN PRODUCT_TBL P ON T.PRODUCT_IDX = P.IDX
         JOIN USER_TBL B ON T.USER_IDX = B.IDX
@@ -274,5 +274,47 @@
         WHERE B.ID = #{userId};
     </select>
 
+
+<!--  사용자가 입력한 리뷰 내용 넣기  -->
+    <insert id="insertReviewTbl" parameterType="com.culturemoa.cultureMoaProject.user.dto.ReviewRegisterDTO" >
+        INSERT INTO USER_REVIEW_TBL
+        ( WRITER_USER_IDX, RECEIVER_USER_IDX, TRANSACTION_IDX, RATING, REVIEW, SDATE)
+        VALUES
+        (#{buyerIdx}, #{sellerIdx}, #{transactionIdx}, #{rating}, #{reviewText}, #{sDate})
+    </insert>
+
+
+<!--  사용자가 리뷰 평가 항목을 남겼을 때 업테이트 및 개수 증가 시키기 위한 동적 쿼리  -->
+    <insert id="insertOrUpdateEvaluation" >
+        INSERT INTO USER_REVIEW_EVALUATION_TBL (
+        USER_IDX,
+        EVAL_5001, EVAL_5002, EVAL_5003, EVAL_5004, EVAL_5005,
+        EVAL_5006, EVAL_5007, EVAL_5008, EVAL_5009, EVAL_5010
+        )
+        VALUES (
+        #{sellerIdx},
+        <choose><when test="evaluation.contains('EVAL_5001')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5002')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5003')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5004')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5005')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5006')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5007')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5008')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5009')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5010')">1</when><otherwise>0</otherwise></choose>
+        )
+        ON DUPLICATE KEY UPDATE
+        EVAL_5001 = EVAL_5001 + VALUES(EVAL_5001),
+        EVAL_5002 = EVAL_5002 + VALUES(EVAL_5002),
+        EVAL_5003 = EVAL_5003 + VALUES(EVAL_5003),
+        EVAL_5004 = EVAL_5004 + VALUES(EVAL_5004),
+        EVAL_5005 = EVAL_5005 + VALUES(EVAL_5005),
+        EVAL_5006 = EVAL_5006 + VALUES(EVAL_5006),
+        EVAL_5007 = EVAL_5007 + VALUES(EVAL_5007),
+        EVAL_5008 = EVAL_5008 + VALUES(EVAL_5008),
+        EVAL_5009 = EVAL_5009 + VALUES(EVAL_5009),
+        EVAL_5010 = EVAL_5010 + VALUES(EVAL_5010)
+    </insert>
 
 </mapper>

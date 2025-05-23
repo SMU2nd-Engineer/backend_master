@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SellerAndEvaluationCategoriesInfoDTO {
+public class ReviewWritingPageInfoDTO {
     private SellerInfoDTO sellerInfo;
     private List<UserCategorySubDTO> evaluationCategories;
 }

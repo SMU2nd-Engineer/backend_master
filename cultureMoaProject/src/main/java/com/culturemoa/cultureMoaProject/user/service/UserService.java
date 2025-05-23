@@ -198,8 +198,6 @@ public class UserService {
     }
 
 
-
-
     /**
      * 사용자 선호도 삽입 진행
      * @param userRegisterFavoriteDTO : 프론트에서 받은 사용자 선호도 배열이 들어있는 dto
