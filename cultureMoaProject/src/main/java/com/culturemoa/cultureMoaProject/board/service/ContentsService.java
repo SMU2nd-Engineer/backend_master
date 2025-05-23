@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.board.service;
 
 import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
+import com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO;
 import com.culturemoa.cultureMoaProject.board.repository.ContentsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Objects;
 
 @Service
 public class ContentsService {
@@ -54,8 +54,10 @@ public class ContentsService {
     }
 
     // 게시판 등록 페이지 - 게시글 등록
-    public List<ContentInfoDTO> getContentInsert() {
-        return contentsDAO.getContentInsert();
+    public int getContentInsert(
+            ContentInfoDTO contentInfoDTO
+    ) {
+        return contentsDAO.getContentInsert(contentInfoDTO);
     }
 
 }
