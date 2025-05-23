@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.board.repository;
 
 import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
+import com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,8 +34,11 @@ public class ContentsDAO {
     }
 
     // ContentsService.Map을 받아서 조건에 맞는 쿼리 실행 : 게시글 등록하여 불러옴
-    public List<ContentInfoDTO> getContentInsert() {
-        return sqlSessionTemplate.selectList("contentsMapper.getContentInsert");
+    public int getContentInsert(
+            ContentInfoDTO contentInfoDTO
+    ) {
+        return sqlSessionTemplate.insert("contentsMapper.getContentInsert", contentInfoDTO);
     }
+
 
 }

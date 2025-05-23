@@ -75,16 +75,28 @@
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 insert -->
-<!--    <insert id="getContentInsert" useGeneratedKeys="true"-->
-<!--            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDTO"-->
-<!--            keyProperty="idx" >-->
-<!--        INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, CONTENT, SDATE)-->
-<!--        VALUES( #{user_idx}, #{category_idx}, #{title}, #{content}, #{sdate});-->
+    <insert id="getContentInsert" useGeneratedKeys="true"
+            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO"
+            keyProperty="idx" >
+        INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, CONTENT, SDATE)
+        VALUES( #{user_idx}, #{category_idx}, #{title}, #{content}, #{sdate});
 
 <!--        INSERT INTO USER_TBL (NICKNAME)-->
 <!--        VALUES( #{nickname});-->
 
+<!--        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (IMAGE_URL)-->
+<!--        VALUES( #{image_url});-->
 
-<!--    </insert>-->
+    </insert>
+
+    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 이미지 등록 insert -->
+    <insert id="getImageInsert" useGeneratedKeys="true"
+            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO"
+            keyProperty="idx" >
+
+        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (IMAGE_URL)
+        VALUES( #{image_url});
+
+    </insert>
 
 </mapper>
