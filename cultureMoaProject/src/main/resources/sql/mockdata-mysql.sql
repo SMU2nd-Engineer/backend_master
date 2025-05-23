@@ -24,7 +24,9 @@ WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_TBL);
 -- 3. PRODUCT_IMAGE_TBL
 INSERT INTO PRODUCT_IMAGE_TBL (PRODUCT_IDX, IMAGE_URL, FLAG)
 SELECT * FROM (
-    SELECT 1, 'https://placeimg.com/987/384/any' , 1 UNION ALL
+    SELECT 1 AS PRODUCT_IDX,
+    'https://placeimg.com/987/384/any' AS IMAGE_URL,
+    1 AS FLAG UNION ALL
     SELECT 2, 'https://placekitten.com/606/750' , 0 UNION ALL
     SELECT 3, 'https://placeimg.com/850/673/any', 1  UNION ALL
     SELECT 4, 'https://placekitten.com/591/927', 1  UNION ALL
