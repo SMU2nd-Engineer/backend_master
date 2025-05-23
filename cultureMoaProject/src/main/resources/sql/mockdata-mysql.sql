@@ -13,10 +13,10 @@ WHERE NOT EXISTS (SELECT 1 FROM USER_TBL);
 -- 2. PRODUCT_TBL
 INSERT INTO PRODUCT_TBL (CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE, USER_IDX, PRICE, FLAG, CONTENT)
 SELECT * FROM (
-    SELECT 1001, 2001, 'Occaecati placeat.', '2024-06-29', NULL, 1, 37435, 0 UNION ALL, 'ABCDEFG'
-    SELECT 1002, 2002, 'Assumenda maiores.', '2024-06-24', NULL, 2, 89247, 1 UNION ALL, 'ABCDEFG'
-    SELECT 1003, 2003, 'Officia recusandae excepturi.', '2024-06-01', NULL, 3, 32262, 1 UNION ALL, 'ABCDEFG'
-    SELECT 1002, 2002, 'Enim quas perferendis.', '2024-09-12', NULL, 4, 48116, 0 UNION ALL, 'ABCDEFG'
+    SELECT 1001, 2001, 'Occaecati placeat.', '2024-06-29', NULL, 1, 37435, 0 , 'ABCDEFG' UNION ALL
+    SELECT 1002, 2002, 'Assumenda maiores.', '2024-06-24', NULL, 2, 89247, 1 , 'ABCDEFG' UNION ALL
+    SELECT 1003, 2003, 'Officia recusandae excepturi.', '2024-06-01', NULL, 3, 32262, 1 , 'ABCDEFG' UNION ALL
+    SELECT 1002, 2002, 'Enim quas perferendis.', '2024-09-12', NULL, 4, 48116, 0 , 'ABCDEFG' UNION ALL
     SELECT 1006, 2004, 'Quas tempora dignissimos.', '2024-06-21', NULL, 5, 14074, 1, 'ABCDEFG'
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_TBL);
@@ -24,10 +24,10 @@ WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_TBL);
 -- 3. PRODUCT_IMAGE_TBL
 INSERT INTO PRODUCT_IMAGE_TBL (PRODUCT_IDX, IMAGE_URL, FLAG)
 SELECT * FROM (
-    SELECT 1, 'https://placeimg.com/987/384/any' UNION ALL, 1
-    SELECT 2, 'https://placekitten.com/606/750' UNION ALL, 0
-    SELECT 3, 'https://placeimg.com/850/673/any' UNION ALL, 1
-    SELECT 4, 'https://placekitten.com/591/927' UNION ALL, 1
+    SELECT 1, 'https://placeimg.com/987/384/any' , 1 UNION ALL
+    SELECT 2, 'https://placekitten.com/606/750' , 0 UNION ALL
+    SELECT 3, 'https://placeimg.com/850/673/any', 1  UNION ALL
+    SELECT 4, 'https://placekitten.com/591/927', 1  UNION ALL
     SELECT 5, 'https://placeimg.com/340/793/any', 0
 ) AS tmp
 WHERE NOT EXISTS (SELECT 1 FROM PRODUCT_IMAGE_TBL);
