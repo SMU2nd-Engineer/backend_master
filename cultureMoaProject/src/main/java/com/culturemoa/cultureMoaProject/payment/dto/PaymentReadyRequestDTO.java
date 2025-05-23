@@ -45,6 +45,7 @@ public class PaymentReadyRequestDTO {
     private int productIdx;
     private int buyerIdx;
     private int sellerIdx;
+    private int tradeType;
     private String deliveryAddress;
 }
 
