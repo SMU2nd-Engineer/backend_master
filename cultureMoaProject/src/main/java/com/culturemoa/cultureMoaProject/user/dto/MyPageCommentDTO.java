@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ import java.time.LocalDateTime;
 public class MyPageCommentDTO {
     private int idx;
     private String text;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy/MM/dd") // 날짜 보내는 형식 지정
     private LocalDateTime sDate;
 }

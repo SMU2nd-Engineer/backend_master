@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MyPageMainDTO {
     private MyPageAverageRatingDTO myPageAverageRating;
-    private List<MyPageProductListDTO> myMainSellProductList;
-    private List<MyPageProductListDTO> myMainPeakList;
+    private List<MyPageSellListDTO> myMainSellProductList;
+    private List<MyPagePickProductListDTO> myMainPeakList;
     private List<ReviewListDTO> myMainReview;
 }

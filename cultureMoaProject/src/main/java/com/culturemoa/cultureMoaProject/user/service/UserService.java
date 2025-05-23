@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.user.service;
 
 import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
+import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.*;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
@@ -33,6 +34,9 @@ public class UserService {
     
     @Autowired
     private AuthJwtService authJwtService;
+
+    @Autowired
+    private HandleAuthentication handleAuth;
 
 
     /**
@@ -181,7 +185,7 @@ public class UserService {
      */
     public void userWithdrawal() {
         // 유저 아이디 추출하기
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         // 회원 탈퇴, 정보 수정 날짜 생성하기
         LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
 
@@ -201,24 +205,14 @@ public class UserService {
      * @param userRegisterFavoriteDTO : 프론트에서 받은 사용자 선호도 배열이 들어있는 dto
      */
     public void insertUserFavoriteWithIdxAndDate (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
-        String userId = myPageGetUserId();
+        String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
-        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
         userRegisterFavoriteDTO.setUserIdx(userIdx);
-        userRegisterFavoriteDTO.setSDate(localDateTime);
         if(userDAO.insertUserFavorites(userRegisterFavoriteDTO) == 0) {
             throw new DontInsertException();
         }
     }
 
-
-    /**
-     * 인증 객체는 스프링 빈으로 등록할 때 null이므로 생성자에서는 사용하지 못하고 꼭 메서드 안에서 써야 해서 userId를 공통 적용하기 위한 메서드 생성
-     */
-    protected String myPageGetUserId () {
-        // 사용자 정보를 인증 객체에서 가져오기
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (String) auth.getPrincipal(); // String 자료형으로 다운
-    }
+    
 
 }

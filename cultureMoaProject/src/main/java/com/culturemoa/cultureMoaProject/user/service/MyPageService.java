@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.user.service;
 
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
+import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
 import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.repository.MyPageDAO;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 마이페이지 관련 서비스 클래스
@@ -77,7 +79,7 @@ public class MyPageService {
     }
 
     /**
-     * 헤더에서 userId를 추출하여 토큰에 담고
+     * userId를 추출하여 토큰에 담고
      * @param myPageUpdateUserInfoDTO : 업데이트 한 개인정보가 담긴 값
      */
     public void updateUserInfoByAuth(MyPageUpdateUserInfoDTO myPageUpdateUserInfoDTO) {
@@ -92,10 +94,8 @@ public class MyPageService {
 
         // 유저 아이디 세팅
         myPageUpdateUserInfoDTO.setId(userId);
-        
         // 반환 값에 따라 에러 처리 하기
         int updateResult = myPageDAO.updateUserInfo(myPageUpdateUserInfoDTO);
-
         if(updateResult == 0 || updateResult > 1) {
             throw new DontUpdateException();
         }
@@ -103,67 +103,72 @@ public class MyPageService {
     }
 
     /**
-     * 헤더에서 userId를 추출하여 찜 목록을 가져오는 서비스
-     * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
-     */
-    public List<MyPageProductListDTO> getWishListByAuth() {
-        String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMyWishListInfoByUserId(userId);
-    }
-
-    /**
-     * 헤더에서 userId를 추출하여 메인 페이지에 쓸 찜, 판매, 거래 후기 목록을 가져오는 서비스
+     * userId를 추출하여 메인 페이지에 쓸 찜, 판매, 거래 후기 목록을 가져오는 서비스
      * @return MyPageMainDTO로 별점과 각 항목의 리스트가 담긴 DTO
      */
     public MyPageMainDTO getMainInfoListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
         MyPageAverageRatingDTO myPageAverageRating = myPageDAO.getAverageRatingByUserId(userId);
-        List<MyPageProductListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
-        List<MyPageProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
+        List<MyPageSellListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
+        List<MyPagePickProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
         List<ReviewListDTO> myMainReview = myPageDAO.getMyMainReviewListInfoByUserId(userId);
         return new MyPageMainDTO(myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
     }
 
     /**
-     * 마이페이지 구매/판매 내역을 위한 서비스
-     * @return List<MyPageWishListDTO>로 조죄한 판매 내역 정보가 담김
+     * userId를 추출하여 찜 목록을 가져오는 서비스
+     * @return List<MyPageWishListDTO>로 찜 목록에 배분할 값이 담긴 DTO가 0개이상 담긴 List
      */
-    public List<MyPageProductListDTO> getSellAndBuyListByAuth() {
+    public List<MyPagePickProductListDTO> getWishListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMySellAndBuyProductByUserId(userId);
+        return myPageDAO.getMyWishListInfoByUserId(userId);
     }
 
+    public void updateMyPickList (MyPickUpdateDTO myPickUpdateDTO) {
+        myPickUpdateDTO.setEDate(LocalDateTime.now().withNano(0));
+        int updateResult = myPageDAO.updateMyPickByProductIdx(myPickUpdateDTO);
+        if (updateResult == 0 ) {
+            throw new DontUpdateException();
+        }
+    }
+
+    /**
+     * 마이페이지 판매 내역을 위한 서비스
+     * @return List<MyPageWishListDTO>로 조죄한 판매 내역 정보가 담김
+     */
+    public MyPageSellAndBuyListDTO getSellAndBuyListByAuth() {
+        String userId = handleAuth.getUserIdByAuth();
+        List<MyPageSellListDTO> sellInfoList = myPageDAO.getMySellProductByUserId(userId);
+        List<MyPageBuyListDTO> buyInfoList = myPageDAO.getMyBuyProductByUserId(userId);
+        return new MyPageSellAndBuyListDTO(sellInfoList, buyInfoList);
+    }
 
     /**
      * 마이페이지 게시판 - 게시판 내용을 가져올 서비스
      * @return : List<MyPageBoardDTO>에 사용자가 작성한 게시판 정보가 담김
      */
-    public List<MyPageBoardDTO> getMyBoardByAuth() {
+    public MyPageBoardCommentListDTO getMyBoardAndCommentByAuth() {
         String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMyBoardByUserId(userId);
+        List<MyPageBoardDTO> myPageBoardDTOList = myPageDAO.getMyBoardByUserId(userId);
+        List<MyPageCommentDTO> myPageCommentDTOList = myPageDAO.getMyCommentByUserId(userId);
+        return new MyPageBoardCommentListDTO(myPageBoardDTOList, myPageCommentDTOList);
     }
 
-    /**
-     * 마이페이지 게시판 - 댓글 내용을 가져올 서비스
-     * @return : List<MyPageCommentDTO>에 사용자가 작성한 게시판 정보가 담김
-     */
-    public List<MyPageCommentDTO> getMyCommentByAuth() {
-        String userId = handleAuth.getUserIdByAuth();
-        return myPageDAO.getMyCommentByUserId(userId);
-    }
+
+
 
     /**
      * 마이페이지 리뷰 정보를 전달하기 위한 서비스
-     * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 정보를 전달하는 객체
+     * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 , 거래 평가 항목 정보를 전달하는 객체
      */
     public MyPageReviewDTO getMyReviewInfoByAuth() {
         String userId = handleAuth.getUserIdByAuth();
-        int userIdx = userDAO.getUserIdx(userId);
         // 평균 별점 점수 가져오기
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
-        List<MyPageEvaluationDTO> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userIdx);
-        return new MyPageReviewDTO(reviewList, averageRating,myEvaluationList);
+        Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
+        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo();
+        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList);
     }
 
 
@@ -179,48 +184,28 @@ public class MyPageService {
      * db에서 유저 선호도를 조사해서 dto로 반환
      * @return : 선호도 idx 값이 담긴 dto
      */
-    public UserRegisterFavoriteDTO getUserFavoritesInfo() {
+    public UserFavoriteResponseDTO getUserFavoritesInfo() {
         // 유저 정보에서 idx 추출하기
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
-        List<Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
-        UserRegisterFavoriteDTO userRegisterFavoriteDTO = new UserRegisterFavoriteDTO();
-        userRegisterFavoriteDTO.setFavorites(favorites);
-        return userRegisterFavoriteDTO;
+        Map<String, Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
+        System.out.println("--------------favorites--------------" + favorites);
+        UserFavoriteResponseDTO userFavoriteResponseDTO = new UserFavoriteResponseDTO();
+        userFavoriteResponseDTO.setUserFavoriteMap(favorites);
+        return userFavoriteResponseDTO;
     }
 
     /**
      * 유저 선호도 수정했을 때 정보를 받아와서 처리할 서비스
-     * @param myPageEditFavoriteDTO : 유저 선호도를 담아서 사용함.
+     * @param userRegisterFavoriteDTO : 유저 선호도를 담아서 사용함.
      */
-    public void updateUserFavoriteInfo (MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
+    public void updateUserFavoriteInfo (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
-        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
-        myPageEditFavoriteDTO.setUserIdx(userIdx);
-        myPageEditFavoriteDTO.setSDate(localDateTime);
-        myPageEditFavoriteDTO.setCDate(localDateTime);
-        System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
-
-        int updateResult = 0;
-        int insertResult = 0;
-
-        // 기존 값에서 변경된 부분 업데이트
-        if (myPageEditFavoriteDTO.getNotFavorites() != null && !myPageEditFavoriteDTO.getNotFavorites().isEmpty()) {
-            updateResult = myPageDAO.updateUserFavoritesList(myPageEditFavoriteDTO);
+        userRegisterFavoriteDTO.setUserIdx(userIdx);
+        if (myPageDAO.updateUserFavoritesList(userRegisterFavoriteDTO) == 0) {
+            throw new DontInsertException();
         }
 
-        // 갑은 등록되어 있으나 0인 것은 1로 새로운 것은 insert
-        if (myPageEditFavoriteDTO.getInsertNewFavorites() != null && !myPageEditFavoriteDTO.getInsertNewFavorites().isEmpty()) {
-            insertResult = myPageDAO.insertUserFavoritesList(myPageEditFavoriteDTO);
-        }
-        
-        // 업데이트가 이루어지지 않았을 경우 예외 처리
-        if(updateResult == 0 && insertResult == 0) {
-            System.out.println("myPageEditFavoriteDTO: " + myPageEditFavoriteDTO);
-            throw new DontUpdateException();
-        }
     }
-
-
 }

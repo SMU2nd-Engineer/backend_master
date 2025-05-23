@@ -166,7 +166,6 @@ public class UserController {
      */
     @PostMapping("/registrationFavorites")
     public ResponseEntity<?> insertFavorites (@RequestBody UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
-        System.out.println("여기실행함.");
         userService.insertUserFavoriteWithIdxAndDate(userRegisterFavoriteDTO);
         return ResponseEntity.ok("선호도가 정상적으로 등록되었습니다.");
     }

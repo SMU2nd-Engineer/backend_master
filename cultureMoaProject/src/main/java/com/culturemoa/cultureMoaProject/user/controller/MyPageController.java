@@ -79,41 +79,43 @@ public class MyPageController {
      * @return : MyPageWishListDTO 배열을 반환
      */
     @GetMapping("/peakListInfo")
-    public ResponseEntity<List<MyPageProductListDTO>> getMyPeakListInfo () {
-        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getWishListByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
+    public ResponseEntity<List<MyPagePickProductListDTO>> getMyPeakListInfo () {
+        List<MyPagePickProductListDTO> myPagePickProductListDTO = myPageService.getWishListByAuth();
+        return ResponseEntity.ok(myPagePickProductListDTO);
     }
+
+    /**
+     * 찜 목록에서 삭제 버튼을 눌렀을 때 eDate를 삽입하기 위한 컨트롤러
+     * @param myPickUpdateDTO : 프론트에서 전달받은 productIdx가 들어간다.
+     * @return : 응답 메시지 출력
+     */
+    @PostMapping("/updateUserPeak")
+    public ResponseEntity<?> updateMyPickList (@RequestBody MyPickUpdateDTO myPickUpdateDTO) {
+        myPageService.updateMyPickList(myPickUpdateDTO);
+        return ResponseEntity.ok("정상적으로 업데이트 되었습니다.");
+    }
+
 
     /**
      * 구매 / 판매 내역 조회 위한 컨트롤러
      * @return 판매 내역이 담긴 리스트
      */
     @GetMapping("/getMyTransactionList")
-    public ResponseEntity<?> getSellProductInfo () {
-        List<MyPageProductListDTO> myPageProductListDTO = myPageService.getSellAndBuyListByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
+    public ResponseEntity<?> getSellAndBuyProductInfo () {
+        MyPageSellAndBuyListDTO myPagePeakProductListDTO = myPageService.getSellAndBuyListByAuth();
+        return ResponseEntity.ok(myPagePeakProductListDTO);
     }
-
 
     /**
      * 마이페이지 게시판-게시판 내용 가져올 컨트롤러
      * @return 사용자 작성 게시판 정보가 담긴 리스트
      */
-    @GetMapping("/getMyBoardList")
-    public ResponseEntity<?> getMyBoardList () {
-        List<MyPageBoardDTO> myPageProductListDTO = myPageService.getMyBoardByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
+    @GetMapping("/getMyBoardAndCommentList")
+    public ResponseEntity<?> getMyBoardAndCommentList () {
+        MyPageBoardCommentListDTO myPageBoardCommentListDTO = myPageService.getMyBoardAndCommentByAuth();
+        return ResponseEntity.ok(myPageBoardCommentListDTO);
     }
 
-    /**
-     * 마이페이지 게시판-댓글 내용 가져올 컨트롤러
-     * @return 사용자 작성 댓글 정보가 담긴 리스트
-     */
-    @GetMapping("/getMyCommentList")
-    public ResponseEntity<?> getMyCommentList () {
-        List<MyPageCommentDTO> myPageProductListDTO = myPageService.getMyCommentByAuth();
-        return ResponseEntity.ok(myPageProductListDTO);
-    }
 
     /**
      * 마이페이지 리뷰에 필요한 정보를 가져올 컨트롤러
@@ -142,18 +144,18 @@ public class MyPageController {
      */
     @GetMapping("/userFavorites")
     public ResponseEntity<?> getUserFavorites () {
-        UserRegisterFavoriteDTO userRegisterFavoriteDTO = myPageService.getUserFavoritesInfo();
-        return ResponseEntity.ok(userRegisterFavoriteDTO);
+        UserFavoriteResponseDTO userFavoriteResponseDTO = myPageService.getUserFavoritesInfo();
+        return ResponseEntity.ok(userFavoriteResponseDTO);
     }
 
     /**
      * 유저 선호도 변경 컨트롤러
-     * @param myPageEditFavoriteDTO : 선호도 정보가 담긴 배열을 받을 dto
+     * @param userRegisterFavoriteDTO : 선호도 정보가 담긴 배열을 받을 dto
      * @return : 응답 메시지 송신
      */
     @PostMapping("/updateFavorites")
-    public ResponseEntity<?> updateUserFavorites(@RequestBody MyPageEditFavoriteDTO myPageEditFavoriteDTO) {
-        myPageService.updateUserFavoriteInfo(myPageEditFavoriteDTO);
+    public ResponseEntity<?> updateUserFavorites(@RequestBody UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
+        myPageService.updateUserFavoriteInfo(userRegisterFavoriteDTO);
         return ResponseEntity.ok("선호도 업데이트가 정상적으로 완료되었습니다.");
     }
 }

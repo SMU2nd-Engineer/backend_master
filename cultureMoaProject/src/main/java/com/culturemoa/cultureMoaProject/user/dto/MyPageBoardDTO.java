@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class MyPageBoardDTO {
     public int idx;
     public String title;
-    public int division;
+    public int categoryIdx;
 }
