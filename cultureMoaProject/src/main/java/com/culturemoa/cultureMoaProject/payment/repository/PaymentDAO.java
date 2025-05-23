@@ -27,4 +27,8 @@ public class PaymentDAO {
     public int updatePaymentStatusInfo(PaymentStatus paymentStatus) {
         return sqlSessionTemplate.update("paymentMapper.updatePaymentStatusInfo", paymentStatus);
     }
+
+    public int updateProductFlag(boolean flag) {
+        return sqlSessionTemplate.update("productMapper.updateProductFlag", flag);
+    }
 }

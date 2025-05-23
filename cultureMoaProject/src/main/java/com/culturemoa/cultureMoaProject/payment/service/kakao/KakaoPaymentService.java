@@ -82,6 +82,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
             history.setBuyerIdx(requestDTO.getBuyerIdx());
             history.setSellerIdx(requestDTO.getSellerIdx());
+            history.setTradeType(requestDTO.getTradeType());
 
             paymentDAO.insertPaymentHistory(history);
 
@@ -142,6 +143,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             status.setApprovedAt(response.getApprovedAt());
 
             paymentDAO.updatePaymentStatusInfo(status);
+            paymentDAO.updateProductFlag(true);
 
             return response;
         } catch (Exception e){

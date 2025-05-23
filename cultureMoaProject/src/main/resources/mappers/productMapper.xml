@@ -66,4 +66,9 @@
             </if>
         </where>
     </select>
+    <update id="updateProductFlag" parameterType="boolean" >
+        update PRODUCT_TBL
+        set FLAG=#{flag}
+        where IDX = #{idx}
+    </update>
 </mapper>

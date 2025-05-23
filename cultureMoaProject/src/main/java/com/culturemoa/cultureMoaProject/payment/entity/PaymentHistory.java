@@ -31,5 +31,6 @@ public class PaymentHistory {
     private int buyerIdx;
     private int sellerIdx;
     private int productIdx;
+    private int tradeType; // 0 - 배달, 1 - 직거래
     private String deliveryAddress;
 }
