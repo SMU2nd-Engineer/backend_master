@@ -155,8 +155,6 @@ public class MyPageService {
     }
 
 
-
-
     /**
      * 마이페이지 리뷰 정보를 전달하기 위한 서비스
      * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 , 거래 평가 항목 정보를 전달하는 객체
@@ -167,7 +165,7 @@ public class MyPageService {
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
         Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
-        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo();
+        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo(5000);
         return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList);
     }
 
@@ -189,7 +187,6 @@ public class MyPageService {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         Map<String, Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
-        System.out.println("--------------favorites--------------" + favorites);
         UserFavoriteResponseDTO userFavoriteResponseDTO = new UserFavoriteResponseDTO();
         userFavoriteResponseDTO.setUserFavoriteMap(favorites);
         return userFavoriteResponseDTO;
@@ -206,6 +203,20 @@ public class MyPageService {
         if (myPageDAO.updateUserFavoritesList(userRegisterFavoriteDTO) == 0) {
             throw new DontInsertException();
         }
+    }
 
+    /**
+     * 리뷰 남기기 페이지를 구성하는 자료 가져오기 service
+     * @return : SellerAndEvaluationCategoriesInfoDTO
+     */
+    public SellerAndEvaluationCategoriesInfoDTO sellerAndEvaluationCategoriesInfo () {
+        try {
+            String userId = handleAuth.getUserIdByAuth();
+            SellerInfoDTO seller = myPageDAO.getSellerInfoByUserId(userId);
+            List<UserCategorySubDTO> userCategorySubDTO = myPageDAO.getEvaluationCategorySubInfo(5010);
+            return new SellerAndEvaluationCategoriesInfoDTO(seller, userCategorySubDTO);
+        } catch (Exception e) {
+            throw new RuntimeException("리뷰 페이지 판매자 및 거래 평가 항목 가져 오기 중에 오류 발생");
+        }
     }
 }

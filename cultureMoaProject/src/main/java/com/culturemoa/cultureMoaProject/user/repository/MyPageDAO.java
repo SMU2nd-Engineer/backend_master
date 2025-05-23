@@ -165,10 +165,11 @@ public class MyPageDAO {
 
     /**
      * 리뷰 페이지 거래 평가 정보를 위한 쿼리
+     *
      * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
      */
-    public List<UserCategorySubDTO> getEvaluationCategorySubInfo () {
-        return sqlSessionTemplate.selectList("myPageMapper.getEvaluationCategorySubInfo");
+    public List<UserCategorySubDTO> getEvaluationCategorySubInfo (int maxRange) {
+        return sqlSessionTemplate.selectList("myPageMapper.getEvaluationCategorySubInfo", maxRange);
     }
 
     /**
@@ -196,6 +197,15 @@ public class MyPageDAO {
      */
     public int updateUserFavoritesList (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
         return sqlSessionTemplate.update("myPageMapper.insertOrUpdateFavorite", userRegisterFavoriteDTO);
+    }
+
+    /**
+     * 리뷰 페이지에서 사용할 거래 상대 이름을 가져올 dao
+     * @param userId : 유저 아이디
+     * @return : 이름이 반환
+     */
+    public SellerInfoDTO getSellerInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getSellerInfo", userId);
     }
 
 }

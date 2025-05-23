@@ -171,8 +171,8 @@
 
 
 <!--  마이페이지 리뷰 탭에서 사용자 거래 평가 항목으로 사용할 카테고리 정보 가져오기  -->
-    <select id="getEvaluationCategorySubInfo" resultType="com.culturemoa.cultureMoaProject.user.dto.UserCategorySubDTO">
-        select SUB_IDX as subIdx, NAME from CATEGORYSUB_TBL where SUB_IDX between 5000 and 5005;
+    <select id="getEvaluationCategorySubInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.user.dto.UserCategorySubDTO">
+        select SUB_IDX as subIdx, NAME from CATEGORYSUB_TBL where SUB_IDX between 5000 and #{maxRange};
     </select>
 
 
@@ -261,5 +261,18 @@
         FAV_3007 = VALUES(FAV_3007),
         FAV_3008 = VALUES(FAV_3008)
     </insert>
+
+
+<!--  판매자 정보를 가져오기  -->
+    <select id="getSellerInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.SellerInfoDTO" >
+        SELECT
+        S.NAME AS sellerName, S.IDX AS sellerIdx
+        FROM USER_TRANSACTION_TBL T
+        JOIN PRODUCT_TBL P ON T.PRODUCT_IDX = P.IDX
+        JOIN USER_TBL B ON T.USER_IDX = B.IDX
+        JOIN USER_TBL S ON P.USER_IDX = S.IDX
+        WHERE B.ID = #{userId};
+    </select>
+
 
 </mapper>
