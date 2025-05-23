@@ -98,7 +98,7 @@
         P.CATEGORYGENRE_IDX AS categorySubIdx, P.SDATE, P.EDATE
         FROM PRODUCT_TBL AS P
         JOIN PRODUCT_DETAIL_TBL AS PD ON PD.PRODUCT_IDX = P.IDX
-        WHERE P.USERID = #{userId}
+        WHERE P.USER_IDX = (SELECT IDX FROM USER_TBL WHERE ID = #{userId})
         ORDER BY P.SDATE DESC;
     </select>
 
