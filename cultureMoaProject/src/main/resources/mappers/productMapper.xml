@@ -66,9 +66,10 @@
             </if>
         </where>
     </select>
+    <!-- 상품 팔렸을 때 flag값 True -->
     <update id="updateProductFlag" parameterType="boolean" >
         update PRODUCT_TBL
-        set FLAG=#{flag}
-        where IDX = #{idx}
+        set FLAG = #{flag}
+        where IDX = #{productIdx}
     </update>
 </mapper>

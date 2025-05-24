@@ -143,7 +143,14 @@ public class KakaoPaymentService implements PaymentGatewayService {
             status.setApprovedAt(response.getApprovedAt());
 
             paymentDAO.updatePaymentStatusInfo(status);
-            paymentDAO.updateProductFlag(true);
+
+            // 상품 FLAG 업데이트
+            Integer productIdx = paymentDAO.getProductIdxByTid(approveDTO.getTid());
+            if (productIdx != null){
+                paymentDAO.updateProductFlag(true, productIdx);
+            } else {
+                System.out.println("상품 IDX를 찾을 수 없습니다.");
+            }
 
             return response;
         } catch (Exception e){
