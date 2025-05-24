@@ -10,6 +10,7 @@ import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -124,12 +125,14 @@ public class MyPageService {
         return myPageDAO.getMyWishListInfoByUserId(userId);
     }
 
+    /**
+     * 찜 목록 갱신(edate를 이용하여 삭제 구현)
+     * @param myPickUpdateDTO : edate를 넣을 정보가 담긴 dto
+     */
     public void updateMyPickList (MyPickUpdateDTO myPickUpdateDTO) {
         myPickUpdateDTO.setEDate(LocalDateTime.now().withNano(0));
-        int updateResult = myPageDAO.updateMyPickByProductIdx(myPickUpdateDTO);
-        if (updateResult == 0 ) {
-            throw new DontUpdateException();
-        }
+        myPageDAO.updateMyPickByProductIdx(myPickUpdateDTO);
+
     }
 
     /**
@@ -155,8 +158,6 @@ public class MyPageService {
     }
 
 
-
-
     /**
      * 마이페이지 리뷰 정보를 전달하기 위한 서비스
      * @return : 별점 평균과 함께 리뷰 정보, 거래 평가 , 거래 평가 항목 정보를 전달하는 객체
@@ -167,7 +168,7 @@ public class MyPageService {
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
         Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
-        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo();
+        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo(5005);
         return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList);
     }
 
@@ -189,7 +190,6 @@ public class MyPageService {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         Map<String, Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
-        System.out.println("--------------favorites--------------" + favorites);
         UserFavoriteResponseDTO userFavoriteResponseDTO = new UserFavoriteResponseDTO();
         userFavoriteResponseDTO.setUserFavoriteMap(favorites);
         return userFavoriteResponseDTO;
@@ -203,9 +203,43 @@ public class MyPageService {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         userRegisterFavoriteDTO.setUserIdx(userIdx);
-        if (myPageDAO.updateUserFavoritesList(userRegisterFavoriteDTO) == 0) {
-            throw new DontInsertException();
-        }
+        myPageDAO.updateUserFavoritesList(userRegisterFavoriteDTO);
 
     }
+
+    /**
+     * 리뷰 남기기 페이지를 구성하는 자료 가져오기 service
+     * @return : SellerAndEvaluationCategoriesInfoDTO
+     */
+    public ReviewWritingPageInfoDTO sellerAndEvaluationCategoriesInfo () {
+        try {
+            String userId = handleAuth.getUserIdByAuth();
+            SellerInfoDTO seller = myPageDAO.getSellerInfoByUserId(userId);
+            List<UserCategorySubDTO> userCategorySubDTO = myPageDAO.getEvaluationCategorySubInfo(5010);
+            return new ReviewWritingPageInfoDTO(seller, userCategorySubDTO);
+        } catch (Exception e) {
+            throw new RuntimeException("리뷰 페이지 판매자 및 거래 평가 항목 가져 오기 중에 오류 발생");
+        }
+    }
+
+    /**
+     * 사용자 작성한 리뷰 정보 db에 저장 처리 서비스
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰 정보를 담은 dto
+     */
+    public void insertReviewInfoService (ReviewRegisterDTO reviewRegisterDTO) {
+        String userId = handleAuth.getUserIdByAuth();
+        int userIdx = userDAO.getUserIdx(userId);
+        reviewRegisterDTO.setBuyerIdx(userIdx);
+        // 등록날짜 넣기
+        reviewRegisterDTO.setSDate(LocalDateTime.now().withNano(0));
+        // user_review_tbl에 데이터 넣는 dao 호출
+        int insertResult = myPageDAO.insertReviewInfo(reviewRegisterDTO);
+        // user_review_evaluation 데이터 삽입 또는 업데이트 (판매자에 대한 평가를 남기기)
+        int updateResult = myPageDAO.updateReviewEvaluation(reviewRegisterDTO);
+        // 정상적으로 진행할 경우 1을 반환하므로 0일 경우 예외 처리
+        if(insertResult == 0) {
+            throw new DontInsertException();
+        }
+    }
+
 }

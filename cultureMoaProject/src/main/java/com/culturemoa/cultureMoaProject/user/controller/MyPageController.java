@@ -69,7 +69,6 @@ public class MyPageController {
     @GetMapping("/getMyMainInfo")
     public ResponseEntity<?> getLastestPeakInfo () {
         MyPageMainDTO myPageMainDTO = myPageService.getMainInfoListByAuth();
-        System.out.println(myPageMainDTO);
         return ResponseEntity.ok(myPageMainDTO);
     }
 
@@ -158,4 +157,26 @@ public class MyPageController {
         myPageService.updateUserFavoriteInfo(userRegisterFavoriteDTO);
         return ResponseEntity.ok("선호도 업데이트가 정상적으로 완료되었습니다.");
     }
+
+    /**
+     * 리뷰 남기기에서 판매자 정보와 거래 평가 항목을 요청시 처리하는 컨트롤러
+     * @return 판매자 이름과 거래평가를 전달
+     */
+    @GetMapping("/getSellerAndCategoryInfo")
+    public ResponseEntity<?> getSellerAndCategoryInfo (){
+        return ResponseEntity.ok(myPageService.sellerAndEvaluationCategoriesInfo());
+    }
+
+    /**
+     * 사용자가 작성한 리뷰 정보 등록하기
+     * @param reviewRegisterDTO : body 에 들어있는 정보를 받을 dto
+     * @return : 정상적으로 진행 될 경우 메시지를 반환
+     */
+    @PostMapping("registReview")
+    public ResponseEntity<?> insertOrUpdateReviewInfo(@RequestBody ReviewRegisterDTO reviewRegisterDTO) {
+        myPageService.insertReviewInfoService(reviewRegisterDTO);
+        return ResponseEntity.ok("정상적으로 리뷰 정보가 입력되었습니다.");
+    }
+
+
 }

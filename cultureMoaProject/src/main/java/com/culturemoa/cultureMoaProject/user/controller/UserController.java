@@ -33,7 +33,6 @@ public class UserController {
             @RequestBody UserRegisterRequestDTO pRequest) {
         //회원 가입 진행 토큰 발급하기
         JwtDTO jwtDto = userService.registerUser(pResponse, pRequest);
-        System.out.println(jwtDto);
         return ResponseEntity.ok(jwtDto);
     }
 

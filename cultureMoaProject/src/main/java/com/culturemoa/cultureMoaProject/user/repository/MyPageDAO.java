@@ -165,10 +165,11 @@ public class MyPageDAO {
 
     /**
      * 리뷰 페이지 거래 평가 정보를 위한 쿼리
+     *
      * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
      */
-    public List<UserCategorySubDTO> getEvaluationCategorySubInfo () {
-        return sqlSessionTemplate.selectList("myPageMapper.getEvaluationCategorySubInfo");
+    public List<UserCategorySubDTO> getEvaluationCategorySubInfo (int maxRange) {
+        return sqlSessionTemplate.selectList("myPageMapper.getEvaluationCategorySubInfo", maxRange);
     }
 
     /**
@@ -190,12 +191,42 @@ public class MyPageDAO {
 
 
     /**
-     * 유저 선호도 업데이트1 - update( 500에러 문제로 insert / update 분리)
+     * 유저 선호도 업데이트 - update( 500에러 문제로 insert / update 분리)
      * @param userRegisterFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
      * @return 업데이트 성공 여부를 담은 int 값
      */
     public int updateUserFavoritesList (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
         return sqlSessionTemplate.update("myPageMapper.insertOrUpdateFavorite", userRegisterFavoriteDTO);
     }
+
+    /**
+     * 리뷰 페이지에서 사용할 거래 상대 이름을 가져올 dao
+     * @param userId : 유저 아이디
+     * @return : 이름이 반환
+     */
+    public SellerInfoDTO getSellerInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getSellerInfo", userId);
+    }
+
+
+    /**
+     * 구매자가 작성한 리뷰 정보를 넣기
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰 데이터가 담긴 DTO
+     * @return : 성공시 1 실패시 0
+     */
+    public int insertReviewInfo(ReviewRegisterDTO reviewRegisterDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertReviewTbl", reviewRegisterDTO);
+    }
+
+    /**
+     * 구매자가 남긴 거래 평가에 따라 거래 평가 데이터 관리하기
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰 데이터가 담긴 DTO
+     * @return : 성공시 1 실패시 0
+     */
+    public int updateReviewEvaluation (ReviewRegisterDTO reviewRegisterDTO) {
+        return sqlSessionTemplate.update("myPageMapper.insertOrUpdateEvaluation", reviewRegisterDTO);
+    }
+
+
 
 }
