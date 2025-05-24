@@ -6,9 +6,9 @@
     <!-- 결제 기록 DB 저장 -->
     <insert id="insertPaymentHistory" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory" useGeneratedKeys="true" keyProperty="idx">
         insert into PAYMENT_HISTORY_TBL
-        (TID, AMOUNT, PAY_METHOD, BUYER_IDX, SELLER_IDX, PRODUCT_IDX, DELIVERY_ADDRESS)
+        (TID, AMOUNT, PAY_METHOD, BUYER_IDX, SELLER_IDX, PRODUCT_IDX, TRADE_TYPE, DELIVERY_ADDRESS)
         values
-        (#{tid}, #{amount}, #{payMethod}, #{buyerIdx}, #{sellerIdx}, #{productIdx}, #{deliveryAddress})
+        (#{tid}, #{amount}, #{payMethod}, #{buyerIdx}, #{sellerIdx}, #{productIdx}, #{tradeType}, #{deliveryAddress})
     </insert>
     <!-- 결제 상태(created_at) DB저장 -->
     <insert id="insertPaymentStatus" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus" useGeneratedKeys="true" keyProperty="idx">

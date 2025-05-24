@@ -28,7 +28,7 @@
         INSERT INTO  PRODUCT_TBL (
                     CATEGORY_IDX, CATEGORYGENRE_IDX,  TITLE, SDATE, EDATE, USER_IDX, PRICE, FLAG, CONTENT)
                VALUES (
-                    #{category_idx}, #{categorygenre_idx}, #{title}, #{sDate}, #{eDate}, #{user_Idx}, #{price}, #{flag}, #{content} )
+                    #{category_idx}, #{categorygenre_idx}, #{title}, #{sDate}, #{eDate}, #{user_idx}, #{price}, #{flag}, #{content} )
     </insert>
 
     <!-- 상품 이미지 정보 등록 (상품코드번호, 이미지 주소 ) -->
@@ -66,4 +66,9 @@
             </if>
         </where>
     </select>
+    <update id="updateProductFlag" parameterType="boolean" >
+        update PRODUCT_TBL
+        set FLAG=#{flag}
+        where IDX = #{idx}
+    </update>
 </mapper>
