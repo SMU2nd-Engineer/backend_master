@@ -1,15 +1,13 @@
 package com.culturemoa.cultureMoaProject.ticket.service;
 
-import com.culturemoa.cultureMoaProject.ticket.dto.DateGenreCountDTO;
+import com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO;
 import com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO;
 import com.culturemoa.cultureMoaProject.ticket.repository.TicketDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +36,30 @@ public class TicketService {
 
         return ticketDAO.getSearch(categories, query, startDate, endDate);
     }
+    // 공연/스포츠 집계
+    public List<DateCountDTO> getCalendarTicketCount(String month) {
+        // 1. month 파라미터에서 시작일과 종료일 추출
+        String[] parts = month.split("-");
+        int year = Integer.parseInt(parts[0]);
+        int mon = Integer.parseInt(parts[1]);
+
+        // 2. 해당 월의 시작일과 종료일 계산
+        LocalDate startDate = LocalDate.of(year, mon, 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        // 3. 파라미터 맵 구성
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("startDate", java.sql.Date.valueOf(startDate));
+        paramMap.put("endDate", java.sql.Date.valueOf(endDate));
+
+        // 4. DAO 호출
+        return ticketDAO.getCalendarTicketCount(paramMap);
+    }
+
+//    // 공연/스포츠 집계
+//    public  List<DateCountDTO> getCalendarTicketCount(String month) {
+//        return ticketDAO.getCalendarTicketCount(month);
+//    }
 
 //    // 장르별
 //    // 전체 장르 목록

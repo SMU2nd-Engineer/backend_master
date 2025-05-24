@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS TICKET_TBL
 	SDATE date NOT NULL,
 	EDATE date NOT NULL,
 	PLACE varchar(255) NOT NULL,
-	PRICE varchar(255) NOT NULL,
+	PRICE varchar(255),
 	GRADE varchar(50),
 	CAST varchar(255),
 	RUNNINGTIME varchar(50),

@@ -1,10 +1,9 @@
 package com.culturemoa.cultureMoaProject.ticket.controller;
 
-import com.culturemoa.cultureMoaProject.ticket.dto.DateGenreCountDTO;
+import com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO;
 import com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO;
 import com.culturemoa.cultureMoaProject.ticket.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -35,6 +34,19 @@ public class TicketController {
         // categories나 query가 없으면 빈 문자열 또는 null일 수 있음
         return ticketService.searchTickets(categories, query, startDate, endDate);
     }
+
+    @GetMapping("/calendar")
+    public List<DateCountDTO> getCalendarTicketCount(@RequestParam("month") String month) {
+        System.out.println("month: " + month);
+        return ticketService.getCalendarTicketCount(month);
+    }
+
+//    // 공연/스포츠 집계
+//    @GetMapping("/calendar")
+//    public List<DateCountDTO> getCalendarTicketCount(@RequestParam("month") String month) {
+//        System.out.println(month);
+//        return ticketService.getCalendarTicketCount(month);
+//    }
 
 //    // 장르별
 //    // 전체 장르 목록 반환

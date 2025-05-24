@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TicketDTO {
     private Long idx;
+    private Long subIdx;
     private String title;
     private String company;
     private String link;
