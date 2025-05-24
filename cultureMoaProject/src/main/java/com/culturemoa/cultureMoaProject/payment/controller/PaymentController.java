@@ -43,23 +43,22 @@ public class PaymentController {
     @PostMapping("/cancel")
     public ResponseEntity<KakaoCancelResponseDTO> cancel(
             @RequestParam int payMethod,
-            @RequestParam String tid
+            @RequestBody String tid
     ) {
         PaymentGatewayService service = getPaymentService(payMethod);
         KakaoCancelResponseDTO cancelInfo = service.cancelPayment(tid);
         return ResponseEntity.ok(cancelInfo);
     }
 
-    @GetMapping("/fail")
+    @PostMapping("/fail")
     public ResponseEntity<String> fail(
             @RequestParam int payMethod,
-            @RequestParam(required = false) String reason,
-            @RequestParam String tid
+            @RequestBody KakaoFailRequestDTO request
     ){
         PaymentGatewayService service = getPaymentService(payMethod);
-        String failMessage = reason != null ? reason : "알 수 없는 오류";
+        String failMessage = request.getReason() != null ? request.getReason() : "알 수 없는 오류";
 
-        service.handleFailedPayment(tid, failMessage);
+        service.handleFailedPayment(request.getTid(), failMessage);
         return ResponseEntity.badRequest().body("결제가 실패했습니다: " + failMessage);
     }
 

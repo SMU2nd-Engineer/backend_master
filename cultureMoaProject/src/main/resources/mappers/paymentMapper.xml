@@ -29,4 +29,8 @@
         </set>
         where TID = #{tid}
     </update>
+    <!-- tid로 product_idx 조회 -->
+    <select id="getProductIdxByTid" parameterType="string" resultType="int">
+        SELECT PRODUCT_IDX FROM PAYMENT_HISTORY_TBL WHERE TID = #{tid}
+    </select>
 </mapper>

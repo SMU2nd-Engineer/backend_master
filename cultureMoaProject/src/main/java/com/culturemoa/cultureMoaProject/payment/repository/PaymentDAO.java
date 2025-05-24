@@ -28,7 +28,11 @@ public class PaymentDAO {
         return sqlSessionTemplate.update("paymentMapper.updatePaymentStatusInfo", paymentStatus);
     }
 
-    public int updateProductFlag(boolean flag) {
+    public int updateProductFlag(boolean flag, int productIdx) {
         return sqlSessionTemplate.update("productMapper.updateProductFlag", flag);
+    }
+
+    public int getProductIdxByTid(String tid) {
+        return sqlSessionTemplate.selectOne("paymentMapper.getProductIdxByTid", tid);
     }
 }
