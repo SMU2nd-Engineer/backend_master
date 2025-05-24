@@ -36,9 +36,9 @@ public class TicketController {
     }
 
     @GetMapping("/calendar")
-    public List<DateCountDTO> getCalendarTicketCount(@RequestParam("month") String month) {
+    public List<DateCountDTO> getCalendarTicketCount(@RequestParam("month") String month, @RequestParam(value = "categories", required = false) String categories) {
         System.out.println("month: " + month);
-        return ticketService.getCalendarTicketCount(month);
+        return ticketService.getCalendarTicketCount(month, categories);
     }
 
 //    // 공연/스포츠 집계

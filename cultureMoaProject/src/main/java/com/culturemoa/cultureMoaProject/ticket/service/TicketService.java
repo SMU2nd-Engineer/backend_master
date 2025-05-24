@@ -37,11 +37,12 @@ public class TicketService {
         return ticketDAO.getSearch(categories, query, startDate, endDate);
     }
     // 공연/스포츠 집계
-    public List<DateCountDTO> getCalendarTicketCount(String month) {
+    public List<DateCountDTO> getCalendarTicketCount(String month, String categoriesStr) {
         // 1. month 파라미터에서 시작일과 종료일 추출
         String[] parts = month.split("-");
         int year = Integer.parseInt(parts[0]);
         int mon = Integer.parseInt(parts[1]);
+        List<Integer> categories = List.of();
 
         // 2. 해당 월의 시작일과 종료일 계산
         LocalDate startDate = LocalDate.of(year, mon, 1);
@@ -51,6 +52,13 @@ public class TicketService {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("startDate", java.sql.Date.valueOf(startDate));
         paramMap.put("endDate", java.sql.Date.valueOf(endDate));
+
+        if (categoriesStr != null && !categoriesStr.isEmpty()) {
+            categories = Arrays.stream(categoriesStr.split(","))
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+        }
+        paramMap.put("categories", categories);
 
         // 4. DAO 호출
         return ticketDAO.getCalendarTicketCount(paramMap);
