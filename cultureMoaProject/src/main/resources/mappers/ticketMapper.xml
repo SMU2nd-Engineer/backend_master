@@ -32,7 +32,7 @@
         <!-- ORDER BY sDate ASC -->
     </select>
 
-    <select id="getCalendarTicketCount" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
+    <select id="getCalendarTicketCount" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
         WITH RECURSIVE calendar AS (
             SELECT DATE(#{startDate}) AS date
             UNION ALL
@@ -48,6 +48,13 @@
         calendar c
         LEFT JOIN TICKET_TBL t
         ON c.date BETWEEN t.sDate AND t.eDate
+        <!-- 카테고리 필터 -->
+        <if test="categories != null and categories.size() > 0">
+            AND t.sub_idx IN
+            <foreach item="item" collection="categories" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         GROUP BY c.date
         ORDER BY c.date
     </select>

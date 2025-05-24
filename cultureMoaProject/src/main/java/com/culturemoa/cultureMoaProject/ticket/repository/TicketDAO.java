@@ -35,6 +35,7 @@ public class TicketDAO {
     }
 
     public List<DateCountDTO> getCalendarTicketCount(Map<String, Object> paramMap) {
+        // 리스트 형태로 넘기기
         return sqlSessionTemplate.selectList("ticketMapper.getCalendarTicketCount", paramMap);
     }
 
