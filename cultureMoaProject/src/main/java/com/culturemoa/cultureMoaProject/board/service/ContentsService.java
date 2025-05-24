@@ -4,9 +4,12 @@ import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO;
 import com.culturemoa.cultureMoaProject.board.repository.ContentsDAO;
+import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
+import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -16,9 +19,16 @@ public class ContentsService {
     private final ContentsDAO contentsDAO;
 
     @Autowired
-    public ContentsService(ContentsDAO contentsDAO) {
+    public ContentsService(ContentsDAO contentsDAO, UserDAO userDAO) {
         this.contentsDAO = contentsDAO;
+        this.userDAO = userDAO;
     }
+    @Autowired
+    private final UserDAO userDAO;
+
+    // 사용자 인증 정보 가져오기
+    @Autowired
+    private HandleAuthentication handleAuth;
 
     public List<ContentsDTO> getAllContents() {
         return contentsDAO.getAllContents();
@@ -57,6 +67,17 @@ public class ContentsService {
     public int getContentInsert(
             ContentInfoDTO contentInfoDTO
     ) {
+        // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
+//        String userId = handleAuth.getUserIdByAuth();
+//        // 입력 화면에 없는 user_idx, sdate DB 저장되게 설정
+//        // user 정보 담겨 있음
+//        int userIdx = userDAO.getUserIdx(userId);
+//        contentInfoDTO.setUser_idx((long) userIdx);
+        contentInfoDTO.setUser_idx((long) 1.00);
+        contentInfoDTO.setSdate(LocalDateTime.now().withNano(0));
+
+        System.out.println("여기까지 실행 됨" + contentInfoDTO);
+
         return contentsDAO.getContentInsert(contentInfoDTO);
     }
 

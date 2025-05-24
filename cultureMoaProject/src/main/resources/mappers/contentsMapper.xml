@@ -90,13 +90,13 @@
     </insert>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 이미지 등록 insert -->
-    <insert id="getImageInsert" useGeneratedKeys="true"
-            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO"
-            keyProperty="idx" >
+<!--    <insert id="getImageInsert" useGeneratedKeys="true"-->
+<!--            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO"-->
+<!--            keyProperty="idx" >-->
 
-        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (IMAGE_URL)
-        VALUES( #{image_url});
+<!--        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (IMAGE_URL)-->
+<!--        VALUES( #{image_url});-->
 
-    </insert>
+<!--    </insert>-->
 
 </mapper>
