@@ -64,7 +64,7 @@ public class ContentsService {
     }
 
     // 게시판 등록 페이지 - 게시글 등록
-    public int getContentInsert(
+    public Long getContentInsert(
             ContentInfoDTO contentInfoDTO
     ) {
         // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
@@ -77,8 +77,17 @@ public class ContentsService {
         contentInfoDTO.setSdate(LocalDateTime.now().withNano(0));
 
         System.out.println("여기까지 실행 됨" + contentInfoDTO);
+        if(contentsDAO.getContentInsert(contentInfoDTO) == 1){
+            return contentInfoDTO.getIdx();
+        };
 
-        return contentsDAO.getContentInsert(contentInfoDTO);
+        return 0L;
     }
 
+    // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자) 데이터 출력
+    // 게시글 상세페이지
+    public ContentInfoDTO getParticular(Long idx) {
+        return contentsDAO.getParticular(idx);
+
+        }
 }
