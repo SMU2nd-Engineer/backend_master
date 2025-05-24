@@ -42,7 +42,7 @@
         join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
         join PRODUCT_IMAGE_TBL AS PI on PI.PRODUCT_IDX = P.IDX
         where U.ID = #{userId} AND U.EDATE IS NULL AND UP.EDATE IS NULL
-        order by UP.SDATE DESC
+        order by UP.IDX DESC
         limit 2;
     </select>
 
@@ -56,7 +56,7 @@
         JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
         JOIN USER_TBL as U on U.IDX = P.USER_IDX
         WHERE U.ID = #{userId} AND U.EDATE IS NULL
-        ORDER BY P.SDATE DESC
+        ORDER BY P.IDX DESC
         limit 4;
     </select>
 
@@ -67,7 +67,7 @@
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.RECEIVER_USER_IDX
         where U.ID = #{userId} AND U.EDATE IS NULL
-        order by UR.SDATE DESC
+        order by UR.IDX DESC
         limit 5;
     </select>
 
@@ -81,7 +81,7 @@
         join PRODUCT_TBL as P on P.IDX = UP.PRODUCT_IDX
         join PRODUCT_IMAGE_TBL AS PI on PI.PRODUCT_IDX = P.IDX
         where U.ID = #{userId} and UP.EDATE IS NULL AND U.EDATE IS NULL
-        order by UP.SDATE DESC;
+        order by UP.IDX DESC;
     </select>
 
 
@@ -104,7 +104,7 @@
         JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
         JOIN USER_TBL as U on U.IDX = P.USER_IDX
         WHERE U.ID = #{userId} AND U.EDATE IS NULL
-        ORDER BY P.SDATE DESC;
+        ORDER BY P.IDX DESC;
     </select>
 
 
@@ -118,7 +118,7 @@
         JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
         JOIN USER_TBL as U on U.IDX = P.USER_IDX
         WHERE U.ID = #{userId} AND U.EDATE IS NULL
-        ORDER BY UT.SDATE DESC;
+        ORDER BY UT.IDX DESC;
     </select>
 
 
@@ -128,7 +128,7 @@
         from CONTENTS_TBL as C
         join USER_TBL as U on U.IDX = C.USER_IDX
         where U.ID = #{userId} AND U.EDATE IS NULL
-        order by C.SDATE DESC;
+        order by C.IDX DESC;
     </select>
 
 
@@ -138,7 +138,7 @@
         from CONTENTS_COMMENT_TBL as CC
         join USER_TBL as U on U.IDX = CC.USER_IDX
         where U.ID = #{userId} AND U.EDATE IS NULL
-        order by CC.SDATE DESC;
+        order by CC.IDX DESC;
     </select>
 
 
@@ -157,7 +157,7 @@
         from USER_REVIEW_TBL as UR
         join USER_TBL as U on U.IDX = UR.RECEIVER_USER_IDX
         where U.ID = #{userId} AND U.EDATE IS NULL
-        order by UR.SDATE DESC;
+        order by UR.IDX DESC;
     </select>
 
 <!--  마이페이지 리뷰 탭 사용할 사용자 거래 평가 정보 가져오기  -->

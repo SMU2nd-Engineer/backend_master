@@ -168,7 +168,7 @@ public class MyPageService {
         MyPageAverageRatingDTO averageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
         Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
-        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo(5000);
+        List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo(5005);
         return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList);
     }
 
