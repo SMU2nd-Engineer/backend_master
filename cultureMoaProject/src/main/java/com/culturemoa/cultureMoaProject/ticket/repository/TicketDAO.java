@@ -1,13 +1,12 @@
 package com.culturemoa.cultureMoaProject.ticket.repository;
 
-import com.culturemoa.cultureMoaProject.ticket.dto.DateGenreCountDTO;
+import com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO;
 import com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +33,14 @@ public class TicketDAO {
 
         return sqlSessionTemplate.selectList("ticketMapper.getSearch", params);
     }
+
+    public List<DateCountDTO> getCalendarTicketCount(Map<String, Object> paramMap) {
+        return sqlSessionTemplate.selectList("ticketMapper.getCalendarTicketCount", paramMap);
+    }
+
+//    public List<DateCountDTO> getCalendarTicketCount(String month) {
+//        return sqlSessionTemplate.selectList("ticketMapper.getCalendarTicketCount", month);
+//    }
 
 
 //    // 장르별

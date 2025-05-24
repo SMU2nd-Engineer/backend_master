@@ -32,6 +32,37 @@
         <!-- ORDER BY sDate ASC -->
     </select>
 
+    <select id="getCalendarTicketCount" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
+        WITH RECURSIVE calendar AS (
+            SELECT DATE(#{startDate}) AS date
+            UNION ALL
+            SELECT DATE_ADD(date, INTERVAL 1 DAY)
+            FROM calendar
+            WHERE date &lt; #{endDate}
+        )
+        SELECT
+            DATE_FORMAT(c.date, '%Y-%m-%d') AS date,
+            SUM(CASE WHEN t.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS performance_count,
+            SUM(CASE WHEN t.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS sports_count
+        FROM
+        calendar c
+        LEFT JOIN TICKET_TBL t
+        ON c.date BETWEEN t.sDate AND t.eDate
+        GROUP BY c.date
+        ORDER BY c.date
+    </select>
+
+<!--    &lt;!&ndash; 공연/스포츠 집계 &ndash;&gt;-->
+<!--    <select id="getCalendarTicketCount" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">-->
+<!--        SELECT DATE_FORMAT(sDate, '%Y-%m-%d') AS date,-->
+<!--        &lt;!&ndash; 공연: 3001~3007 모두 합산 &ndash;&gt;-->
+<!--        SUM(CASE WHEN SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS performance_count,-->
+<!--        &lt;!&ndash; 스포츠: 3008 &ndash;&gt;-->
+<!--        SUM(CASE WHEN SUB_IDX = 3008 THEN 1 ELSE 0 END) AS sports_count-->
+<!--        FROM TICKET_TBL-->
+<!--        GROUP BY date-->
+<!--    </select>-->
+
 <!--    &lt;!&ndash; 장르별 &ndash;&gt;-->
 <!--    &lt;!&ndash; 전체 장르 목록만 조회 (중복 제거) &ndash;&gt;-->
 <!--    <select id="getAllGenres" resultType="String" >-->
