@@ -317,4 +317,84 @@
         EVAL_5010 = EVAL_5010 + VALUES(EVAL_5010)
     </insert>
 
+
+<!--  리뷰 상세페이지에서 값 불러오기  -->
+    <select id="getReviewInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.user.dto.FetchReviewRegisterInfoDTO">
+        SELECT
+        UR.IDX AS reviewIdx,
+        UR.RATING,
+        UR.REVIEW AS reviewText,
+        UR.SDATE,
+        UR.RECEIVER_USER_IDX AS sellerIdx,
+        SU.NAME AS sellerName,
+        P.TITLE AS productTitle
+        FROM USER_REVIEW_TBL UR
+        JOIN USER_TRANSACTION_TBL UT ON UR.TRANSACTION_IDX = UT.IDX
+        JOIN PRODUCT_TBL P ON UT.PRODUCT_IDX = P.IDX
+        JOIN USER_TBL SU ON P.USER_IDX = SU.IDX
+        WHERE UR.IDX = #{reviewIdx}
+    </select>
+
+
+<!--  사용자가 남긴 평가 항목 조회  -->
+    <select id="getReviewEvaluationRecord" parameterType="int" resultType="map">
+        SELECT
+        EVAL_5001,
+        EVAL_5002,
+        EVAL_5003,
+        EVAL_5004,
+        EVAL_5005,
+        EVAL_5006,
+        EVAL_5007,
+        EVAL_5008,
+        EVAL_5009,
+        EVAL_5010
+        FROM USER_REVIEW_EVALUATION_RECORD_TBL
+        WHERE REVIEW_IDX = #{reviewIdx}
+    </select>
+
+<!--  리뷰 항목을 수정  -->
+    <update id="updateReview" parameterType="com.culturemoa.cultureMoaProject.user.dto.UpdateReviewInfoDTO" >
+        UPDATE USER_REVIEW_TBL
+        SET
+        RATING = #{rating},
+        REVIEW = #{reviewText},
+        CDATE = #{cDate}
+        WHERE IDX = #{reviewIdx}
+    </update>
+
+<!--  리뷰 평가 기록 테이블 업데이트하기  -->
+    <update id="updateReviewEvaluationRecord" parameterType="com.culturemoa.cultureMoaProject.user.dto.UpdateReviewInfoDTO">
+        UPDATE USER_REVIEW_EVALUATION_RECORD_TBL
+        SET
+        EVAL_5001 = <choose><when test="evaluation.contains('EVAL_5001')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5002 = <choose><when test="evaluation.contains('EVAL_5002')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5003 = <choose><when test="evaluation.contains('EVAL_5003')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5004 = <choose><when test="evaluation.contains('EVAL_5004')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5005 = <choose><when test="evaluation.contains('EVAL_5005')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5006 = <choose><when test="evaluation.contains('EVAL_5006')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5007 = <choose><when test="evaluation.contains('EVAL_5007')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5008 = <choose><when test="evaluation.contains('EVAL_5008')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5009 = <choose><when test="evaluation.contains('EVAL_5009')">1</when><otherwise>0</otherwise></choose>,
+        EVAL_5010 = <choose><when test="evaluation.contains('EVAL_5010')">1</when><otherwise>0</otherwise></choose>
+        WHERE REVIEW_IDX = #{reviewIdx}
+    </update>
+
+<!--  리뷰 평가 항목의 값을 바꾸기  -->
+    <update id="changeCountUserEvaluation" parameterType="map">
+        UPDATE USER_REVIEW_EVALUATION_TBL
+        <set>
+            <if test="EVAL_5001 != null">EVAL_5001 = EVAL_5001 + #{EVAL_5001},</if>
+            <if test="EVAL_5002 != null">EVAL_5002 = EVAL_5002 + #{EVAL_5002},</if>
+            <if test="EVAL_5003 != null">EVAL_5003 = EVAL_5003 + #{EVAL_5003},</if>
+            <if test="EVAL_5004 != null">EVAL_5004 = EVAL_5004 + #{EVAL_5004},</if>
+            <if test="EVAL_5005 != null">EVAL_5005 = EVAL_5005 + #{EVAL_5005},</if>
+            <if test="EVAL_5006 != null">EVAL_5006 = EVAL_5006 + #{EVAL_5006},</if>
+            <if test="EVAL_5007 != null">EVAL_5007 = EVAL_5007 + #{EVAL_5007},</if>
+            <if test="EVAL_5008 != null">EVAL_5008 = EVAL_5008 + #{EVAL_5008},</if>
+            <if test="EVAL_5009 != null">EVAL_5009 = EVAL_5009 + #{EVAL_5009},</if>
+            <if test="EVAL_5010 != null">EVAL_5010 = EVAL_5010 + #{EVAL_5010}</if>
+        </set>
+        WHERE USER_IDX = #{sellerIdx}
+    </update>
 </mapper>

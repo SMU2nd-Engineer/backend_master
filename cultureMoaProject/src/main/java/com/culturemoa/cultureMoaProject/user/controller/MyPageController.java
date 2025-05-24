@@ -179,4 +179,25 @@ public class MyPageController {
     }
 
 
+    /**
+     * 사용자가 작성한 리뷰 정보 가져오기
+     * @param reviewIdx : 경로에 있는 reviewIdx 값
+     * @return : ReviewDetailInfoDTO(리뷰 정보 및 평가 항목 정보가 담김)
+     */
+    @GetMapping("getReviewInfo/{reviewIdx}")
+    public ResponseEntity<?> getReviewInfo (@PathVariable("reviewIdx") int reviewIdx) {
+        return ResponseEntity.ok(myPageService.getReviewDetailInfo(reviewIdx));
+    }
+
+    /**
+     * 사용자가 수정한 리뷰 저장하기 위한 컨트롤러
+     * @param updateReviewInfoDTO : 보낸 데이터를 담을 DTO
+     * @return : 응답을 반환
+     */
+    @PostMapping("updateReview")
+    public ResponseEntity<?> updateReviewAndEvaluation (@RequestBody UpdateReviewInfoDTO updateReviewInfoDTO) {
+        myPageService.updateReviewAndEvaluation(updateReviewInfoDTO);
+        return ResponseEntity.ok("정상적으로 업데이트가 진행되었습니다.");
+    }
+
 }

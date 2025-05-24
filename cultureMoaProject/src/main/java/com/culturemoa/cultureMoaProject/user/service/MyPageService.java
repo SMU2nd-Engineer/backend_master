@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -240,6 +241,37 @@ public class MyPageService {
         if(insertResult == 0) {
             throw new DontInsertException();
         }
+    }
+
+    /**
+     * 찾은 정보를 전달할 ReviewDetailInfoDTO 에 담아서 전달할 서비스
+     * @param reviewIdx : 경로 파라미터 값
+     * @return : ReviewDetailInfoDTO
+     */
+    public ReviewDetailInfoDTO getReviewDetailInfo(int reviewIdx) {
+        return new ReviewDetailInfoDTO(
+                myPageDAO.searchReviewInfoByReviewIdx(reviewIdx),
+                myPageDAO.searchEvaluationRecord(reviewIdx),
+                myPageDAO.getEvaluationCategorySubInfo(5010)
+        );
+    }
+
+    public void updateReviewAndEvaluation (UpdateReviewInfoDTO updateReviewInfoDTO) {
+        System.out.println("=======updateReviewInfoDTO====== : " + updateReviewInfoDTO);
+        // cDate 넣기
+        updateReviewInfoDTO.setCDate(LocalDateTime.now().withNano(0));
+        // 평가 항목 +/-를 위한 map 객체 생성
+        Map<String, Object> userIdxAndEvaluationMap = new HashMap<>();
+        userIdxAndEvaluationMap.put("sellerIdx", updateReviewInfoDTO.getSellerIdx());
+        userIdxAndEvaluationMap.putAll(updateReviewInfoDTO.getChangeValueEvaluation());
+        System.out.println("=======userIdxAndEvaluationMap====== : " + userIdxAndEvaluationMap);
+        myPageDAO.updateReview(updateReviewInfoDTO);
+        System.out.println("=======myPageDAO.updateReview(updateReviewInfoDTO);====== : " + myPageDAO.updateReview(updateReviewInfoDTO));
+        myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);
+        System.out.println("=======myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);====== : " + myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap));
+        myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);
+        System.out.println("=======myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);====== : " + myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO));
+
     }
 
 }
