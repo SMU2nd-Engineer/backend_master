@@ -16,4 +16,5 @@ import lombok.NoArgsConstructor;
 public class UserLoginDTO {
     private String id;
     private String password;
+    private Boolean autoLogin;
 }
