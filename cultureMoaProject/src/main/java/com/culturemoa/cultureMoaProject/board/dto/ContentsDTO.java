@@ -14,7 +14,7 @@ public class ContentsDTO {
     private Long user_idx;
     private Long category_idx;
     private String title;
-    private int division;
+//    private int division;
     private String content;
     private LocalDateTime sdate;
     private LocalDateTime edate;

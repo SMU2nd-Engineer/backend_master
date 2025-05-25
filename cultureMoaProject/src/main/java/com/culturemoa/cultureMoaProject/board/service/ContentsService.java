@@ -90,4 +90,5 @@ public class ContentsService {
         return contentsDAO.getParticular(idx);
 
         }
+
 }

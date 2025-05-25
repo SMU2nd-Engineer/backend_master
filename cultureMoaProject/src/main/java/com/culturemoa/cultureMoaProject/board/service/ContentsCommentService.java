@@ -1,23 +1,60 @@
 package com.culturemoa.cultureMoaProject.board.service;
 
 import com.culturemoa.cultureMoaProject.board.dto.ContentsCommentDTO;
+import com.culturemoa.cultureMoaProject.board.dto.ContentsCommentInfoDTO;
 import com.culturemoa.cultureMoaProject.board.repository.ContentsCommentDAO;
+import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
+import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ContentsCommentService {
-//    private final ContentsCommentDAO contentsCommentDAO;
-//
-//    @Autowired
-//    public ContentsCommentService(ContentsCommentDAO contentsCommentDAO) {
-//
-//    }
-//
-//    // 게시판 댓글
-//    public List<ContentsCommentDTO> getParticular() {
-//        return ContentsCommentDAO.getParticular();
-//    }
+    private final ContentsCommentDAO contentsCommentDAO;
+    private final UserDAO userDAO;
+    // 사용자 인증 정보 가져오기
+    private final HandleAuthentication handleAuth;
+
+    @Autowired
+    public ContentsCommentService(ContentsCommentDAO contentsCommentDAO, UserDAO userDAO, HandleAuthentication handleAuth) {
+        this.contentsCommentDAO = contentsCommentDAO;
+        this.userDAO = userDAO;
+        this.handleAuth = handleAuth;
+    }
+
+    // 게시글 댓글 목록 가져오기
+    public List<ContentsCommentInfoDTO> getComment() {
+        return contentsCommentDAO.getComment ();
+    }
+
+    // 게시판 상세 페이지 댓글 등록
+    public Long getCommentInsert(
+            ContentsCommentInfoDTO contentsCommentInfoDTO
+    ) {
+        // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
+//      String userId = handleAuth.getUserIdByAuth();
+//      입력 화면에 없는 user_idx, sdate DB 저장되게 설정
+//      user 정보 담겨 있음
+//        contentsCommentInfoDTO.setUser_idx((long) 1.00);
+//        contentsCommentInfoDTO.setSdate(LocalDateTime.now().withNano(0));
+        ContentsCommentDTO commentDTO = new ContentsCommentDTO();
+//        int useridx = userDAO.getUserIdx(handleAuth.getUserIdByAuth());
+        int useridx = 1;
+
+        commentDTO.setUser_idx(Long.valueOf(useridx));
+        commentDTO.setContents_idx(contentsCommentInfoDTO.getContents_idx());
+        commentDTO.setText(contentsCommentInfoDTO.getText());
+        commentDTO.setSdate(LocalDateTime.now());
+
+        System.out.println("여기까지 실행 됨" + commentDTO);
+        if (contentsCommentDAO.getCommentInsert(commentDTO) == 1) {
+            return commentDTO.getContents_idx();
+
+        };
+        return 0L;
+    }
 
 }
