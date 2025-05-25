@@ -63,7 +63,10 @@ public class UserController {
             HttpServletResponse pResponse,
             @RequestBody SocialAuthorizationCodeDTO pSocialAuthorizationCodeDTO) {
 
-        JwtDTO jwtDTO = userService.socialLoginAndIssuanceToken(socialLoginService.googleGetUserId(pSocialAuthorizationCodeDTO), pResponse, "google");
+        JwtDTO jwtDTO = userService.socialLoginAndIssuanceToken(
+                socialLoginService.googleGetUserId(pSocialAuthorizationCodeDTO),
+                                                    pResponse, "google",
+                                                    pSocialAuthorizationCodeDTO.getAutoLogin());
 
         return ResponseEntity.ok(jwtDTO);
     }
@@ -79,7 +82,10 @@ public class UserController {
             HttpServletResponse pResponse,
             @RequestBody SocialAuthorizationCodeDTO pSocialAuthorizationCodeDTO) {
 
-        JwtDTO jwtDTO = userService.socialLoginAndIssuanceToken(socialLoginService.kakaoGetUserId(pSocialAuthorizationCodeDTO), pResponse, "kakao");
+        JwtDTO jwtDTO = userService.socialLoginAndIssuanceToken(
+                socialLoginService.kakaoGetUserId(pSocialAuthorizationCodeDTO),
+                                                    pResponse, "kakao",
+                                                    pSocialAuthorizationCodeDTO.getAutoLogin());
         return ResponseEntity.ok(jwtDTO);
     }
 
@@ -93,8 +99,11 @@ public class UserController {
     public ResponseEntity<?> naverAuth(
             HttpServletResponse pResponse,
             @RequestBody SocialAuthorizationCodeDTO pSocialAuthorizationCodeDTO) {
-        JwtDTO jwtDTO = userService.socialLoginAndIssuanceToken(socialLoginService.naverGetUserId(pSocialAuthorizationCodeDTO), pResponse, "naver");
-        return ResponseEntity.ok("");
+        JwtDTO jwtDTO = userService.socialLoginAndIssuanceToken(
+                socialLoginService.naverGetUserId(pSocialAuthorizationCodeDTO),
+                                                    pResponse, "naver",
+                                                    pSocialAuthorizationCodeDTO.getAutoLogin());
+        return ResponseEntity.ok(jwtDTO);
     }
 
     /**
