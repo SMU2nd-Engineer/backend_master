@@ -124,9 +124,10 @@
 
 <!--  마이페이지 게시판 탭에서 사용자 작성 게시판 정보 가져오기  -->
     <select id="getMyBoardListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageBoardDTO" >
-        select C.IDX, C.TITLE, C.CATEGORY_IDX as categoryIdx
+        select C.IDX, C.TITLE, C.CATEGORY_IDX as categoryIdx, C.SDATE, CS.NAME as categoryName
         from CONTENTS_TBL as C
-        join USER_TBL as U on U.IDX = C.USER_IDX
+        JOIN USER_TBL as U on U.IDX = C.USER_IDX
+        JOIN CATEGORYSUB_TBL AS CS ON C.CATEGORY_IDX = CS.SUB_IDX
         where U.ID = #{userId} AND U.EDATE IS NULL
         order by C.IDX DESC;
     </select>
@@ -134,9 +135,10 @@
 
 <!--  마이페이지 게시판 탭에서 사용자 작성 댓글 정보 가져오기  -->
     <select id="getMyCommentListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageCommentDTO" >
-        select CC.TEXT, CC.IDX, CC.SDATE
+        select CC.TEXT, CC.IDX, CC.SDATE, C.IDX AS contentIdx, C.TITLE as contentTitle
         from CONTENTS_COMMENT_TBL as CC
         join USER_TBL as U on U.IDX = CC.USER_IDX
+        join CONTENTS_TBL C on C.IDX = CC.CONTENTS_IDX
         where U.ID = #{userId} AND U.EDATE IS NULL
         order by CC.IDX DESC;
     </select>
