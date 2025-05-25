@@ -8,8 +8,14 @@ import com.culturemoa.cultureMoaProject.product.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -50,5 +56,22 @@ public class ProductService {
         return productDAO.searchProducts(searchDTO);
     }
 
+    public String saveImage(MultipartFile image, String uploadDir) throws IOException {
+        // 파일 이름 생성
+        String imageUrl = UUID.randomUUID() + "_" + image.getOriginalFilename();    // UUID 동일 파일명 방지
+        // 파일 경로
+        String imagePath = uploadDir + imageUrl;
+        // DB 저장할
+        String dbImagePath = "/upload/" + imageUrl;
+
+        Path path = Paths.get(imagePath); // Path 객체 생성
+        Files.createDirectories(path.getParent());
+        Files.write(path,image.getBytes());
+
+        return dbImagePath;
+    }
+
+    public List<ProductImageDTO> imageRead(int product_idx){
+        return productDAO.imageRead(product_idx);};
 
 }
