@@ -8,7 +8,7 @@
 
     <!--  상품 검색  -->
     <select id="getSearch" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">
-        SELECT sub_idx, title, company, link, sDate, eDate, place, price, grade, cast, runningTime, img, etc
+        SELECT idx, sub_idx, title, company, link, sDate, eDate, place, price, grade, cast, runningTime, img, etc
         FROM TICKET_TBL
         <where>
             <!-- 카테고리 필터 -->
@@ -57,6 +57,11 @@
         </if>
         GROUP BY c.date
         ORDER BY c.date
+    </select>
+    <select id="getTicketInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO" >
+        SELECT idx, title, company, link, sDate, eDate, place, price, grade, cast, runningTime, img, etc
+        FROM TICKET_TBL
+        WHERE idx = #{idx}
     </select>
 
 <!--    &lt;!&ndash; 공연/스포츠 집계 &ndash;&gt;-->

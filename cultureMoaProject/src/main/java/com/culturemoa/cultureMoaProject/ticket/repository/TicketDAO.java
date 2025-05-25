@@ -23,6 +23,9 @@ public class TicketDAO {
     public List<TicketDTO> getAllTicket() {
         return sqlSessionTemplate.selectList("ticketMapper.getAllTicket");
     }
+    public TicketDTO getTicketInfo(int idx) {
+        return sqlSessionTemplate.selectOne("ticketMapper.getTicketInfo", idx);
+    }
 
     public List<TicketDTO> getSearch(List<Integer> categories, String query, LocalDate startDate, LocalDate endDate) {
         Map<String, Object> params = new HashMap<>();

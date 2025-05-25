@@ -23,6 +23,8 @@ public class TicketController {
     public List<TicketDTO> getAllTicket(){
         return ticketService.getAllTicket();
     }
+    @GetMapping("/{idx}")
+    public TicketDTO getTicketInfo(@PathVariable int idx){ return ticketService.getTicketInfo(idx); }
 
     // 검색
     @GetMapping("/search")
