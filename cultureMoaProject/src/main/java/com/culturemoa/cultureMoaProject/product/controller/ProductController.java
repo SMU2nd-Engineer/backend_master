@@ -5,9 +5,19 @@ import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import com.culturemoa.cultureMoaProject.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,16 +38,42 @@ public class ProductController {
     @GetMapping("/detail/{idx}")
     public ProductDTO getProductByIdx(@PathVariable int idx) {
         System.out.println("################## idx: " + idx);
-
         return productService.getProductByIdx(idx);
     }
 
+    @GetMapping("/upload_img/{filename:.+}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename)  {
+        try {
+            Path filePath = Paths.get("C:/upload_img").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // 파일 확장자에 따라 Content-Type 지정
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // 기본값
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+            } catch (
+            MalformedURLException e) {
+                return ResponseEntity.badRequest().build();
+            } catch (IOException e) {
+                return ResponseEntity.internalServerError().build();
+        }
+    }
 
     @PostMapping("/upload")
     public ProductDTO ProductUpload (@RequestPart("product") ProductDTO productDTO, @RequestPart("files") List<MultipartFile> files) {
         System.out.println("업로드 실행");
         try {
-            String uploadDir = "C:/market_image/";
+            String uploadDir = "C:/upload_img/";
             List<ProductImageDTO> imageList = new ArrayList<>();
 
             for (int i = 0; i< files.size(); i++) {
@@ -52,20 +88,16 @@ public class ProductController {
             productDTO.setImageList(imageList);
 
             if(!imageList.isEmpty()){
-                productDTO.setImageUrl(imageList.get(0).getImageUrl()); // 첫번째 이미지가 썸네일이 되도록
+                productDTO.setImage_Url(imageList.get(0).getImage_Url()); // 첫번째 이미지가 썸네일이 되도록
             }
             productDTO.setFlag(false);
             productService.insertProduct(productDTO);
 
             return productDTO;
           } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
-
-    @GetMapping("/image/{idx}")
-    public List<ProductImageDTO> imageRead(@PathVariable int product_idx){
-        return productService.imageRead(product_idx);
     }
 
 

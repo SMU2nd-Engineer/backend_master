@@ -1,5 +1,7 @@
 package com.culturemoa.cultureMoaProject.product.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDTO {
     private Long idx;
     private Long category_idx;
@@ -23,8 +26,13 @@ public class ProductDTO {
     private Long user_idx;
     private Long price;
     private boolean flag;
-    private String imageUrl;
+
+    @JsonProperty("image_Url")
+    private String image_Url;
+
     private String content;
+
+    @JsonProperty("imageList")
     private List<ProductImageDTO> imageList;
 
 }
