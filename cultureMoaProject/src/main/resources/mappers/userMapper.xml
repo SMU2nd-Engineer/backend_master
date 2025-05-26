@@ -2,64 +2,64 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="userMapper">
 
-<!--  회원 가입 DB 저장  -->
+    <!--  회원 가입 DB 저장  -->
     <insert id="insertUser" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserDTO">
-        insert into USER_TBL
+        INSERT INTO USER_TBL
         ( ID, NAME, EMAIL, PASSWORD, ADDRESS, NICKNAME, SOCIAL_LOGIN, SDATE)
-        values
+        VALUES
         (#{id}, #{name}, #{email}, #{password}, #{address}, #{nickName}, #{socialLogin}, #{sDate})
     </insert>
 
-<!--    유저 id를 이용하여 아이디 패스워드 가져오기    -->
+    <!--    유저 id를 이용하여 아이디 패스워드 가져오기    -->
     <select id="findPasswordByLoginId" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserLoginDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserLoginDTO">
-        select ID, PASSWORD from USER_TBL where ID = #{id} and EDATE is null
+        SELECT ID, PASSWORD FROM USER_TBL WHERE ID = #{id} AND EDATE IS NULL
     </select>
 
-<!--  소셜 로그인 아이디 찾기 조회에 사용할 쿼리  -->
+    <!--  소셜 로그인 아이디 찾기 조회에 사용할 쿼리  -->
     <select id="socialFindByLoginId" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.SocialLoginResponseDTO" >
-        select ID from USER_TBL where ID = #{id} and EDATE is null
+        SELECT ID FROM USER_TBL WHERE ID = #{id} AND EDATE IS NULL
     </select>
 
-<!--  아이디/ 닉네임 중복 체크  -->
+    <!--  아이디/ 닉네임 중복 체크  -->
     <select id="duplicateIdCheck" parameterType="String" resultType="int">
-        select count(*) from USER_TBL where ${columnName} = #{pCheckList} and EDATE is null
+        SELECT COUNT(*) FROM USER_TBL WHERE ${columnName} = #{pCheckList} AND EDATE IS NULL
     </select>
-    
-<!--  아이디 찾기  -->
+
+    <!--  아이디 찾기  -->
     <select id="findId" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdRequestDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserFindIdResponseDTO" >
-        select ID, SOCIAL_LOGIN as socialLogin from USER_TBL where name=#{name} and email=#{email} and EDATE is null
+        SELECT ID, SOCIAL_LOGIN AS socialLogin FROM USER_TBL WHERE NAME=#{name} AND EMAIL=#{email} AND EDATE IS NULL
     </select>
 
-<!--  비밀번호 변경  -->
+    <!--  비밀번호 변경  -->
     <update id="changePassword" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserChangePasswordRequestDTO" >
-        update USER_TBL
-        set PASSWORD=#{password}, CDATE=#{cDate}
-        where id=#{id} and EDATE is null
+        UPDATE USER_TBL
+        SET PASSWORD=#{password}, CDATE=#{cDate}
+        WHERE id=#{id} AND EDATE IS NULL
     </update>
 
-<!--    유저 이름과, 이메일, id를 이용해서 정보를 조회    -->
+    <!--    유저 이름과, 이메일, id를 이용해서 정보를 조회    -->
     <select id="passwordFindMatch" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.UserFindPasswordResponseDTO">
-        select PASSWORD from USER_TBL where ID = #{id} and NAME=#{name} and EMAIL=#{email} and EDATE is null
+        SELECT PASSWORD FROM USER_TBL WHERE ID = #{id} AND NAME=#{name} AND EMAIL=#{email} AND EDATE IS NULL
     </select>
 
-<!--  회원 탈퇴 클릭시 id로 조회하여 EDATE 업데이트  -->
+    <!--  회원 탈퇴 클릭시 id로 조회하여 EDATE 업데이트  -->
     <update id="updateWithdrawal" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserWithdrawalDTO" >
-        update USER_TBL
-        set CDATE = #{cDate}, EDATE = #{eDate}
-        where ID = #{id} and EDATE is null
+        UPDATE USER_TBL
+        SET CDATE = #{cDate}, EDATE = #{eDate}
+        WHERE ID = #{id} AND EDATE IS NULL
     </update>
 
 
-<!--  회원가입에서 선호도 선택할 경우 값 넣기  -->
+    <!--  회원가입에서 선호도 선택할 경우 값 넣기  -->
     <insert id="insertFavoriteNoChoose" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserRegisterFavoriteDTO" >
-        insert into USER_FAVORITE_TBL
+        INSERT INTO USER_FAVORITE_TBL
         ( USER_IDX )
-        values
+        VALUES
         ( #{userIdx})
     </insert>
 
-<!--  유저 아이디로 유저 idx 추출, 마이페이지에서도 사용함-->
+    <!--  유저 아이디로 유저 idx 추출, 마이페이지에서도 사용함-->
     <select id="getUserIdx" parameterType="String" resultType="int" >
-        select IDX from USER_TBL where ID = #{userId} and EDATE IS NULL
+        SELECT IDX FROM USER_TBL WHERE ID = #{userId} AND EDATE IS NULL
     </select>
 </mapper>
