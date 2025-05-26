@@ -20,6 +20,7 @@ public class TicketDTO {
     private String link;
     private LocalDateTime sDate;
     private LocalDateTime eDate;
+    private String place;
     private String price;
     private String grade;
     private String cast;
