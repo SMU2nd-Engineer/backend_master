@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+
 /**
  * ContentsJoinUserDTO: 게시판 전체 정보와 user 테이블의 idx가
  일치하는 작성자(회원 닉네임) 정보를 전달하는 객체
@@ -27,7 +29,7 @@ public class ContentInfoDTO {
     private String title;
     private String content;
     @DateTimeFormat(pattern = "MM/dd")
-    private String sdate; // 날짜 포맷된 sdate
+    private LocalDateTime sdate; // 날짜 포맷된 sdate
 
     // 불러올 User 정보(작성자-회원 닉네임)
     private String nickname;

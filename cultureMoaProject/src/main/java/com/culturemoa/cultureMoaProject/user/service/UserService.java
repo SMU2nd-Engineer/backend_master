@@ -58,7 +58,7 @@ public class UserService {
         userDAO.insertUser(pUserDTO);
 
         // 회원 가입 후 로그인과 같은 효과를 주기 위하여 토큰을 발급하기
-        return authJwtService.tokenCreateSave(pResponse, pUserDTO.getId());
+        return authJwtService.tokenCreateSave(pResponse, pUserDTO.getId(), false);
 
     }
 
@@ -79,7 +79,7 @@ public class UserService {
         if(pRequest.getId().equals(userLogin.getId())) {
             String userId = userLogin.getId();
             // 문제 없으면 토큰 발급하기
-            return authJwtService.tokenCreateSave(pResponse, userId);
+            return authJwtService.tokenCreateSave(pResponse, userId, pRequest.getAutoLogin());
         } else {
             throw new DontMatchUserInfoException();
         }
@@ -91,7 +91,7 @@ public class UserService {
      * @param pResponse : refresh 토큰을 담을 헤더를 위해서 가져옴
      * @return : refresh 토큰은 쿠키에 담고 accessToken을 넘기기
      */
-    public JwtDTO socialLoginAndIssuanceToken (String pUserId, HttpServletResponse pResponse, String socialProvider ) {
+    public JwtDTO socialLoginAndIssuanceToken (String pUserId, HttpServletResponse pResponse, String socialProvider, Boolean autoLogin ) {
         // dao를 통하여 db의 id 가져오기 (id로 토큰 발급)
         SocialLoginResponseDTO userLogin = userDAO.socialFindByLoginInfo(pUserId);
 
@@ -102,7 +102,7 @@ public class UserService {
         String userId = userLogin.getId();
 
         // 문제 없으면 토큰 발급하기
-        return authJwtService.tokenCreateSave(pResponse, userId);
+        return authJwtService.tokenCreateSave(pResponse, userId, autoLogin);
     }
 
     /**
@@ -196,8 +196,6 @@ public class UserService {
             throw new DBManipulationFailException();
         }
     }
-
-
 
 
     /**

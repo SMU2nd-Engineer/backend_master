@@ -24,6 +24,7 @@ public class MyPagePickProductListDTO {
     private String price;
     private String content;
     private int flag;
-    private int categorySubIdx;
+    private int categoryIdx;
+    private int categoryGenreIdx;
     private LocalDateTime eDate;
 }

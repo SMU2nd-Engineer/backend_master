@@ -96,10 +96,9 @@ public class MyPageDAO {
     /**
      * 찜 목록 edate 추가하기
      * @param myPickUpdateDTO : 찜 목록을 변경하기 위한 정보가 담긴 dto
-     * @return : int(변환 여부를 파악)
      */
-    public int updateMyPickByProductIdx (MyPickUpdateDTO myPickUpdateDTO) {
-        return sqlSessionTemplate.update("myPageMapper.updateMyPick",myPickUpdateDTO );
+    public void updateMyPickByProductIdx (MyPickUpdateDTO myPickUpdateDTO) {
+        sqlSessionTemplate.update("myPageMapper.updateMyPick", myPickUpdateDTO);
     }
 
 
@@ -167,8 +166,8 @@ public class MyPageDAO {
      * 리뷰 페이지 거래 평가 정보를 위한 쿼리
      * @return : List<UserCategorySubDTO> 카테고리 서브 정보가 담김
      */
-    public List<UserCategorySubDTO> getEvaluationCategorySubInfo () {
-        return sqlSessionTemplate.selectList("myPageMapper.getEvaluationCategorySubInfo");
+    public List<UserCategorySubDTO> getEvaluationCategorySubInfo (int maxRange) {
+        return sqlSessionTemplate.selectList("myPageMapper.getEvaluationCategorySubInfo", maxRange);
     }
 
     /**
@@ -182,7 +181,7 @@ public class MyPageDAO {
     /**
      * 유저가 선택한 선호도를 키와 value 형태로 받아오기
      * @param UserIdx : 사용자 idx
-     * @return :
+     * @return : 선호도 정보 map
      */
     public Map<String, Integer> getUserFavoritesList (int UserIdx) {
         return sqlSessionTemplate.selectOne("myPageMapper.getUserFavorites", UserIdx);
@@ -190,12 +189,82 @@ public class MyPageDAO {
 
 
     /**
-     * 유저 선호도 업데이트1 - update( 500에러 문제로 insert / update 분리)
+     * 유저 선호도 업데이트 - update( 500에러 문제로 insert / update 분리)
      * @param userRegisterFavoriteDTO : 유저 선호도 데이터를 가지고 있는 dto
-     * @return 업데이트 성공 여부를 담은 int 값
      */
-    public int updateUserFavoritesList (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
-        return sqlSessionTemplate.update("myPageMapper.insertOrUpdateFavorite", userRegisterFavoriteDTO);
+    public void updateUserFavoritesList (UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
+        sqlSessionTemplate.update("myPageMapper.insertOrUpdateFavorite", userRegisterFavoriteDTO);
+    }
+
+    /**
+     * 리뷰 페이지에서 사용할 거래 상대 이름을 가져올 dao
+     * @param userId : 유저 아이디
+     * @return : 이름이 반환
+     */
+    public SellerInfoDTO getSellerInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getSellerInfo", userId);
+    }
+
+
+    /**
+     * 구매자가 작성한 리뷰 정보를 넣기
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰 데이터가 담긴 DTO
+     * @return : 성공시 1 실패시 0
+     */
+    public int insertReviewInfo(ReviewRegisterDTO reviewRegisterDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertReviewTbl", reviewRegisterDTO);
+    }
+
+    /**
+     * 구매자가 남긴 거래 평가에 따라 거래 평가 데이터 관리하기
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰 데이터가 담긴 DTO
+     * @return : 성공시 1 실패시 0
+     */
+    public int updateReviewEvaluation (ReviewRegisterDTO reviewRegisterDTO) {
+        return sqlSessionTemplate.update("myPageMapper.insertOrUpdateEvaluation", reviewRegisterDTO);
+    }
+
+    /**
+     * 리뷰 idx를 이용하여 리뷰 내용을 찾아서 가져오기
+     * @param reviewIdx : 경로 파라미터 값
+     * @return : 찾은 정보가 담긴 dto
+     */
+    public FetchReviewRegisterInfoDTO searchReviewInfoByReviewIdx ( int reviewIdx) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getReviewInfo", reviewIdx);
+    }
+
+
+    /**
+     * 리뷰 idx를 이용하여 거래 평가 내용을 찾아서 가져오기
+     * @param reviewIdx : 경로 파라미터 값
+     * @return : map 항목별 1 또는 0이 담김
+     */
+    public Map<String, Integer> searchEvaluationRecord(int reviewIdx){
+        return sqlSessionTemplate.selectOne("myPageMapper.getReviewEvaluationRecord", reviewIdx);
+    }
+
+    /**
+     * 리뷰 정보를 업데이트할 dao
+     * @param updateReviewInfoDTO : 업데이트 리뷰 정보를 담고 있는 dto
+     */
+    public int updateReview (UpdateReviewInfoDTO updateReviewInfoDTO) {
+        return sqlSessionTemplate.update("myPageMapper.updateReview", updateReviewInfoDTO);
+    }
+
+    /**
+     * 사용자 평가 항목 누적 값을 조절하는 위한 dao
+     * @param updateReviewEvaluationInfo : 쿼리 문에 맞춰 서비스에 생성한 map 객체
+     */
+    public int updateReviewEvaluation (Map<String, Object> updateReviewEvaluationInfo) {
+        return sqlSessionTemplate.update("myPageMapper.changeCountUserEvaluation", updateReviewEvaluationInfo);
+    }
+
+    /**
+     * 사용자의 리뷰 기록 테이블의 정보를 수정하기 위한 dao
+     * @param updateReviewInfoDTO : 업데이트 리뷰 정보를 담고 있는 dto
+     */
+    public int updateReviewEvaluationRecode (UpdateReviewInfoDTO updateReviewInfoDTO) {
+        return sqlSessionTemplate.update("myPageMapper.updateReviewEvaluationRecord", updateReviewInfoDTO);
     }
 
 }

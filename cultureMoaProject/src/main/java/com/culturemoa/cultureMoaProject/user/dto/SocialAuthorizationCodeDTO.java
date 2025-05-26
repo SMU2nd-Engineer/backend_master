@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SocialAuthorizationCodeDTO {
     private String code;
+    private Boolean autoLogin;
 }

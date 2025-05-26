@@ -39,7 +39,7 @@
 
             <!-- searchType: 제목+내용/작성자(nickname) 의 구분값
             contents 테이블의 제목(title)+내용(contents) 선택 한 후 키워드로 검색 -->
-            <if test="searchType == 0 and != CONT.CONTENT">
+            <if test="searchType == 0">
                 AND (
                     CONT.TITLE LIKE '%${keyword}%'
                     OR CONT.CONTENT LIKE '%${keyword}%'
@@ -80,23 +80,46 @@
             keyProperty="idx" >
         INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, CONTENT, SDATE)
         VALUES( #{user_idx}, #{category_idx}, #{title}, #{content}, #{sdate});
+    </insert>
 
-<!--        INSERT INTO USER_TBL (NICKNAME)-->
-<!--        VALUES( #{nickname});-->
+    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 이미지 등록 insert -->
+<!--    <insert id="getImageInsert" useGeneratedKeys="true"-->
+<!--            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO"-->
+<!--            keyProperty="idx" >-->
 
 <!--        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (IMAGE_URL)-->
 <!--        VALUES( #{image_url});-->
 
-    </insert>
+<!--    </insert>-->
 
-    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 이미지 등록 insert -->
-    <insert id="getImageInsert" useGeneratedKeys="true"
-            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO"
+    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 게시글 상세페이지 -->
+    <select id="getParticular" parameterType="Long" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
+        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE,
+        CONT.CONTENT, CONT.SDATE,
+        USERT.NICKNAME
+        FROM CONTENTS_TBL CONT
+        LEFT OUTER JOIN USER_TBL USERT ON
+        CONT.USER_IDX = USERT.IDX
+        WHERE CONT.EDATE is NULL
+        AND   CONT.IDX = #{idx}
+    </select>
+
+    <!-- CONTENTS_TBL, USER_TBL의 댓글 불러오기 - 게시글 상세페이지 -->
+    <select id="getComment" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentInfoDTO" >
+        SELECT COMNT.CONTENTS_IDX, COMNT.TEXT
+        FROM CONTENTS_COMMENT_TBL COMNT
+        WHERE COMNT.CDATE is NOT ULL
+        AND   COMNT.EDATE is NULL
+    </select>
+
+    <!-- CONTENTS_TBL, USER_TBL의 댓글 등록 - 게시글 상세페이지 -->
+    <insert id="getCommentInsert" useGeneratedKeys="true"
+            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentDTO"
             keyProperty="idx" >
-
-        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (IMAGE_URL)
-        VALUES( #{image_url});
-
+        INSERT INTO CONTENTS_COMMENT_TBL
+        (USER_IDX, CONTENTS_IDX, TEXT, SDATE)
+        VALUES(#{user_idx}, #{contents_idx}, #{text}, #{sdate});
     </insert>
+
 
 </mapper>

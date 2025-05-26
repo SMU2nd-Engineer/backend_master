@@ -72,7 +72,6 @@ public class SocialLoginService {
 
         MultiValueMap<String, String > googleFormData = googleTokenRequestDTO.requestToken();
 
-        System.out.println(googleFormData);
         RestClient restClient = RestClient.create(); // 서버에서 네이버로 REST 요청을 위한 RestClient 인스턴스를 생성
         GoogleTokenResponseDTO googleTokenResponseDTO = restClient.post()
                 .uri("https://oauth2.googleapis.com/token") // 전송할 대상 URL을 설정
@@ -114,8 +113,6 @@ public class SocialLoginService {
         kakaoTokenRequestDTO.setCode(kakaoCode);
 
         MultiValueMap<String, String > kakaoFormData = kakaoTokenRequestDTO.requestToken();
-
-        System.out.println(kakaoFormData);
 
         RestClient restClient = RestClient.create(); // 서버에서 카카오로 REST 요청을 위한 RestClient 인스턴스를 생성
         KakaoTokenResponseDTO kakaoTokenResponseDTO = restClient.post()

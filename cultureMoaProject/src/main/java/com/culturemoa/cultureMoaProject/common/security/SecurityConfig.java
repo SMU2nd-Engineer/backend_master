@@ -3,6 +3,7 @@ package com.culturemoa.cultureMoaProject.common.security;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtAuthenticationFilter;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,6 +28,11 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${cors.auth.path}")
+    private String frontPath;
+
+
+
     private final JwtValidator jwtValidator;
     private final JwtProvider jwtProvider;
 
@@ -47,19 +53,20 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (API 서버에서는 보통 꺼둠)
             .cors(cors -> {})             // CORS 설정 적용 (아래 Bean에서 지정)
             .authorizeHttpRequests(auth -> auth
-//                    .requestMatchers("/user/login",
-//                                     "/refresh",
-//                                     "/user/logout",
-//                                     "/user/kakaoAuth",
-//                                     "/user/naverAuth",
-//                                     "/user/googleAuth",
-//                                     "/user/duplicatecheck",
-//                                     "/user/idFind",
-//                                     "/user/passwordFind",
-//                                     "/user/passwordChange",
-//                                     ).permitAll() // 인증을 자동 허용하는 경로들
+                    .requestMatchers("/user/login",
+                                     "/refresh",
+                                     "/user/logout",
+                                     "/user/kakaoAuth",
+                                     "/user/naverAuth",
+                                     "/user/googleAuth",
+                                     "/user/duplicatecheck",
+                                     "/user/idFind",
+                                     "/user/passwordFind",
+                                     "/user/passwordChange",
+                                     "/logout"
+                                     ).permitAll() // 인증을 자동 허용하는 경로들
                     .requestMatchers("/ws/**").permitAll() // 웹소켓 연결 허용하는 코드
-                    .requestMatchers("/**").permitAll() // 모든 경로를 허용하는 test 코드
+//                    .requestMatchers("/**").permitAll() // 모든 경로를 허용하는 test 코드
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
             .logout(logout -> logout.disable()) // 시큐리티 기본 로그아웃으로 get 요청을 방지
@@ -74,7 +81,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 리액트 포트 허용
+        configuration.setAllowedOrigins(Arrays.asList(frontPath)); // 리액트 포트 허용
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 메서드 허용
         configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키 허용 여부

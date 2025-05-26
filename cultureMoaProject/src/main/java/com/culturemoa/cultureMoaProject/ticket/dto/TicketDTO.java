@@ -14,11 +14,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TicketDTO {
     private Long idx;
+    private Long sub_idx;
     private String title;
     private String company;
     private String link;
     private LocalDateTime sDate;
     private LocalDateTime eDate;
+    private String place;
     private String price;
     private String grade;
     private String cast;

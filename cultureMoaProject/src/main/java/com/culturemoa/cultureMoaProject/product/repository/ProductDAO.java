@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.product.repository;
 
 import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductDetailDTO;
+import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,8 @@ public class ProductDAO {
         return sqlSessionTemplate.selectList("productMapper.searchProducts", searchDTO);
     }
 
+    public List<ProductImageDTO> imageRead(int product_idx) {
+        return sqlSessionTemplate.selectList("productMapper.imageRead", product_idx );
+    }
 
 }
