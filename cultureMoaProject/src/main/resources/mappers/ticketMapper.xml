@@ -8,24 +8,24 @@
 
     <!--  상품 검색  -->
     <select id="getSearch" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">
-        SELECT idx, sub_idx, title, company, link, sDate, eDate, place, price, grade, cast, runningTime, img, etc
+        SELECT IDX, SUB_IDX, TITLE, COMPANY, LINK, SDATE, EDATE, PLACE, PRICE, GRADE, CAST, RUNNINGTIME, IMG, ETC
         FROM TICKET_TBL
         <where>
             <!-- 카테고리 필터 -->
             <if test="categories != null and categories.size() > 0">
-                AND sub_idx IN
+                AND SUB_IDX IN
                 <foreach item="item" collection="categories" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
             <!-- 제목/출연진 검색 -->
             <if test="query != null and query != ''">
-                AND (title LIKE CONCAT('%', #{query}, '%') OR cast LIKE CONCAT('%', #{query}, '%'))
+                AND (TITLE LIKE CONCAT('%', #{query}, '%') OR CAST LIKE CONCAT('%', #{query}, '%'))
             </if>
             <!-- 날짜 검색(사용자가 선택한 날짜에 하루라도 겹치면 포함) -->
             <if test="startDate != null and endDate != null">
-                AND sDate &lt;= #{endDate}
-                AND eDate &gt;= #{startDate}
+                AND SDATE &lt;= #{endDate}
+                AND EDATE &gt;= #{startDate}
             </if>
         </where>
         <!-- 날짜순으로 정렬하고 싶다면 활성화 시키기-->
@@ -33,105 +33,34 @@
     </select>
 
     <select id="getCalendarTicketCount" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
-        WITH RECURSIVE calendar AS (
-            SELECT DATE(#{startDate}) AS date
+        WITH RECURSIVE CALENDAR AS (
+            SELECT DATE(#{startDate}) AS DATE
             UNION ALL
-            SELECT DATE_ADD(date, INTERVAL 1 DAY)
-            FROM calendar
-            WHERE date &lt; #{endDate}
+            SELECT CALENDAR(DATE, INTERVAL 1 DAY)
+            FROM CALENDAR
+            WHERE DATE &lt; #{endDate}
         )
         SELECT
-            DATE_FORMAT(c.date, '%Y-%m-%d') AS date,
-            SUM(CASE WHEN t.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS performance_count,
-            SUM(CASE WHEN t.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS sports_count
+            DATE_FORMAT(C.DATE, '%Y-%M-%D') AS DATE,
+            SUM(CASE WHEN T.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS PERFORMANCE_COUNT,
+            SUM(CASE WHEN T.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS SPORTS_COUNT
         FROM
-        calendar c
-        LEFT JOIN TICKET_TBL t
-        ON c.date BETWEEN t.sDate AND t.eDate
+        CALENDAR C
+        LEFT JOIN TICKET_TBL T
+        ON C.DATE BETWEEN T.SDATE AND T.EDATE
         <!-- 카테고리 필터 -->
         <if test="categories != null and categories.size() > 0">
-            AND t.sub_idx IN
+            AND T.SUB_IDX IN
             <foreach item="item" collection="categories" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
-        GROUP BY c.date
-        ORDER BY c.date
+        GROUP BY C.DATE
+        ORDER BY C.DATE
     </select>
     <select id="getTicketInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO" >
-        SELECT idx, title, company, link, sDate, eDate, place, price, grade, cast, runningTime, img, etc
+        SELECT IDX, TITLE, COMPANY, LINK, SDATE, EDATE, PLACE, PRICE, GRADE, CAST, RUNNINGTIME, IMG, ETC
         FROM TICKET_TBL
-        WHERE idx = #{idx}
+        WHERE IDX = #{idx}
     </select>
-
-<!--    &lt;!&ndash; 공연/스포츠 집계 &ndash;&gt;-->
-<!--    <select id="getCalendarTicketCount" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">-->
-<!--        SELECT DATE_FORMAT(sDate, '%Y-%m-%d') AS date,-->
-<!--        &lt;!&ndash; 공연: 3001~3007 모두 합산 &ndash;&gt;-->
-<!--        SUM(CASE WHEN SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS performance_count,-->
-<!--        &lt;!&ndash; 스포츠: 3008 &ndash;&gt;-->
-<!--        SUM(CASE WHEN SUB_IDX = 3008 THEN 1 ELSE 0 END) AS sports_count-->
-<!--        FROM TICKET_TBL-->
-<!--        GROUP BY date-->
-<!--    </select>-->
-
-<!--    &lt;!&ndash; 장르별 &ndash;&gt;-->
-<!--    &lt;!&ndash; 전체 장르 목록만 조회 (중복 제거) &ndash;&gt;-->
-<!--    <select id="getAllGenres" resultType="String" >-->
-<!--        SELECT DISTINCT sub_idx-->
-<!--        FROM TICKET_TBL-->
-<!--        WHERE sub_idx IS NOT NULL-->
-<!--    </select>-->
-<!--    &lt;!&ndash; 장르별 티켓 목록 조회 &ndash;&gt;-->
-<!--    <select id="getTicketsByGenre" parameterType="String" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">-->
-<!--        SELECT title, company, sDate, eDate, place, price, grade, cast, runningTime, img, sub_idx, etc-->
-<!--        FROM TICKET_TBL-->
-<!--        WHERE sub_idx = #{genreId}-->
-<!--    </select>-->
-
-
-<!--    &lt;!&ndash; 날짜별 &ndash;&gt;-->
-<!--    &lt;!&ndash; 전체 날짜별 + 장르별 개수 조회  &ndash;&gt;-->
-<!--    <select id="getDateGenre" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateGenreCountDTO" >-->
-<!--        SELECT sDate, sub_idx, COUNT(*) AS count-->
-<!--        FROM TICKET_TBL-->
-<!--        GROUP BY sDate, sub_idx-->
-<!--    </select>-->
-<!--    &lt;!&ndash; 해당 날짜별 전체 데이터 조회 &ndash;&gt;-->
-<!--    <select id="getSelectedDateData" parameterType="java.time.LocalDate" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">-->
-<!--        SELECT title, company, sDate, eDate, place, price, grade, cast, runningTime, img, sub_idx, etc-->
-<!--        FROM TICKET_TBL-->
-<!--        WHERE sDate = #{selectDate}-->
-<!--    </select>-->
-
-<!--    &lt;!&ndash; 다중 조회 &ndash;&gt;-->
-<!--    &lt;!&ndash; 장르 조회 후 날짜 별 티켓 개수 카운트 &ndash;&gt;-->
-<!--    <select id="getSelectedGenreDateCount" parameterType="String" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">-->
-<!--        SELECT sub_idx, sDate, COUNT(*) AS count-->
-<!--        FROM TICKET_TBL-->
-<!--        WHERE sub_idx = #{genreId}-->
-<!--        GROUP BY sDate-->
-<!--        ORDER BY sDate-->
-<!--    </select>-->
-<!--    &lt;!&ndash; 장르 조회 후 해당 날짜 선택 후 해당 날짜의 데이터 추출 &ndash;&gt;-->
-<!--    <select id="getSelectedGenreAndDateData" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">-->
-<!--        SELECT title, company, sDate, eDate, place, price, grade, cast, runningTime, img, sub_idx, etc-->
-<!--        FROM TICKET_TBL-->
-<!--        WHERE sub_idx = #{genreId} and sDate = #{selectDate}-->
-<!--    </select>-->
-<!--    &lt;!&ndash; 기간 조회를 통해 해당 기간 내의 공연을 모두 조회(장르 선택X) &ndash;&gt;-->
-<!--    <select id="getSearchDate" parameterType="java.time.LocalDate" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">-->
-<!--        SELECT title, company, sDate, eDate, place, price, grade, cast, runningTime, img, sub_idx, etc-->
-<!--        FROM TICKET_TBL-->
-<!--        WHERE sDate BETWEEN #{startDate} AND #{endDate}-->
-<!--    </select>-->
-<!--    &lt;!&ndash; 장르 선택 후 기간 조회를 통해 해당 기간 내의 공연을 모두 조회 &ndash;&gt;-->
-<!--    <select id="getSelectedGenreSearchDate" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">-->
-<!--        SELECT title, company, sDate, eDate, place, price, grade, cast, runningTime, img, sub_idx, etc-->
-<!--        FROM TICKET_TBL-->
-<!--        WHERE sub_idx = #{genreId} AND sDate BETWEEN #{startDate} AND #{endDate}-->
-<!--        ORDER BY sDate ASC-->
-<!--    </select>-->
-
-
 </mapper>
