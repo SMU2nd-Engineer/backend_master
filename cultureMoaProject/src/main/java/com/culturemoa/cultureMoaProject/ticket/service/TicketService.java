@@ -65,37 +65,4 @@ public class TicketService {
         return ticketDAO.getCalendarTicketCount(paramMap);
     }
 
-//    // 공연/스포츠 집계
-//    public  List<DateCountDTO> getCalendarTicketCount(String month) {
-//        return ticketDAO.getCalendarTicketCount(month);
-//    }
-
-//    // 장르별
-//    // 전체 장르 목록
-//    public List<String> getAllGenres() {
-//        return ticketDAO.getAllGenres();
-//    }
-//    // 선택된 장르의 티켓 리스트
-//    public List<TicketDTO> getTicketsByGenre(String genreName) {
-//        return ticketDAO.getTicketsByGenre(genreName);
-//    }
-//
-//    // 날짜별
-//    // 전체 날짜별 + 장르별 개수 목록
-//    public List<DateGenreCountDTO> getDateGenreCount() {
-//        return ticketDAO.getDateGenreCount();
-//    }
-//    // 해당 날짜별 전체 데이터
-//    public List<TicketDTO> getSelectedDateData(LocalDate selectedDate) {
-//        return ticketDAO.getSelectedDateData(selectedDate);
-//    }
-//
-//    // 다중 조회
-//    // 장르 조회 후 날짜 별 티켓 개수 카운트
-//    public List<TicketDTO> getSelectedGenreDateCount(String selectedGenre) {
-//        return ticketDAO.getSelectedGenreDateCount(selectedGenre);
-//    }
-//    // 장르 조회 후 해당 날짜 선택 후 해당 날짜의 데이터 추출
-
-
 }
