@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductImageDTO {
-    private String imageUrl;
+    private String image_Url;
     private boolean flag;
 
 }

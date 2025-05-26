@@ -24,10 +24,8 @@
     <!-- 해당 idx에 맞는 정보 가져오기 -->
     <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="int">
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-               USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
+               USER_IDX, PRICE, MAIN.FLAG, CONTENT
         FROM PRODUCT_TBL MAIN
-        LEFT OUTER JOIN PRODUCT_IMAGE_TBL DETAIL ON
-                MAIN.IDX = DETAIL.PRODUCT_IDX
         WHERE MAIN.IDX = #{idx}
     </select>
 
@@ -42,7 +40,7 @@
     <!-- 상품 이미지 정보 등록 (상품코드번호, 이미지 주소 ) -->
     <insert id="insertProductDetail" >
         INSERT INTO PRODUCT_IMAGE_TBL ( PRODUCT_IDX, IMAGE_URL, FLAG)
-        VALUES (#{product_idx}, #{imageUrl}, #{flag} )
+        VALUES (#{product_idx}, #{image_Url}, #{flag} )
     </insert>
 
     <!-- 상품 이미지 가져오기 -->
