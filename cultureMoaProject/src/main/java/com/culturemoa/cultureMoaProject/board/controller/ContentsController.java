@@ -1,8 +1,6 @@
 package com.culturemoa.cultureMoaProject.board.controller;
 
-import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentsCommentInfoDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO;
+import com.culturemoa.cultureMoaProject.board.dto.*;
 import com.culturemoa.cultureMoaProject.board.service.ContentsCommentService;
 import com.culturemoa.cultureMoaProject.board.service.ContentsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,20 +69,28 @@ public class ContentsController {
 
 
     // 게시판 댓글 contents_idx, text만 불러오게 설정 - 게시글 댓글 목록 조회
-    @GetMapping("/comment/{id}")
-    public List<ContentsCommentInfoDTO> getComment() {
+    @GetMapping("/comment")
+    public List<ContentsCommentInfoDTO> getComment(@RequestParam("idx") Long idx) {
 //        System.out.println(contentsCommentService.getComment());
-        return contentsCommentService.getComment();
+        return contentsCommentService.getComment(idx);
     }
 
     // 게시글 댓글 등록
     @PostMapping("/comment")
     public Long getCommentInsert(
-            @RequestBody ContentsCommentInfoDTO ContentsCommentInfoDTO
+            @RequestBody ContentsCommentDTO commentDTO
     ) {
 //        System.out.println(contentsCommentService.getContentInsert(contentInfoDTO));
 
-        return contentsCommentService.getCommentInsert(ContentsCommentInfoDTO);
+        return contentsCommentService.getCommentInsert(commentDTO);
+    }
+
+    // 게시글 댓글 삭제
+    @PostMapping("/commentdelete")
+    public int getCommentDelete (
+            @RequestBody ContentsCommentDeleteInfoDTO contentsCommentDeleteInfoDTO
+    ) {
+        return contentsCommentService.getCommentDelete(contentsCommentDeleteInfoDTO);
     }
 
 }

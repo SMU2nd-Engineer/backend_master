@@ -1,6 +1,7 @@
 package com.culturemoa.cultureMoaProject.board.service;
 
 import com.culturemoa.cultureMoaProject.board.dto.ContentsCommentDTO;
+import com.culturemoa.cultureMoaProject.board.dto.ContentsCommentDeleteInfoDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentsCommentInfoDTO;
 import com.culturemoa.cultureMoaProject.board.repository.ContentsCommentDAO;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
@@ -26,27 +27,26 @@ public class ContentsCommentService {
     }
 
     // 게시글 댓글 목록 가져오기
-    public List<ContentsCommentInfoDTO> getComment() {
-        return contentsCommentDAO.getComment ();
+    public List<ContentsCommentInfoDTO> getComment(Long idx) {
+        return contentsCommentDAO.getComment (idx);
     }
 
     // 게시판 상세 페이지 댓글 등록
     public Long getCommentInsert(
-            ContentsCommentInfoDTO contentsCommentInfoDTO
+            ContentsCommentDTO commentDTO
     ) {
         // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
 //      String userId = handleAuth.getUserIdByAuth();
 //      입력 화면에 없는 user_idx, sdate DB 저장되게 설정
 //      user 정보 담겨 있음
-//        contentsCommentInfoDTO.setUser_idx((long) 1.00);
-//        contentsCommentInfoDTO.setSdate(LocalDateTime.now().withNano(0));
-        ContentsCommentDTO commentDTO = new ContentsCommentDTO();
+//        commentDTO.setUser_idx((long) 1.00);
+//        commentDTO.setSdate(LocalDateTime.now().withNano(0));
 //        int useridx = userDAO.getUserIdx(handleAuth.getUserIdByAuth());
         int useridx = 1;
 
         commentDTO.setUser_idx(Long.valueOf(useridx));
-        commentDTO.setContents_idx(contentsCommentInfoDTO.getContents_idx());
-        commentDTO.setText(contentsCommentInfoDTO.getText());
+//        commentDTO.setContents_idx(contentsCommentInfoDTO.getContents_idx());
+//        commentDTO.setText(contentsCommentInfoDTO.getText());
         commentDTO.setSdate(LocalDateTime.now());
 
         System.out.println("여기까지 실행 됨" + commentDTO);
@@ -57,4 +57,15 @@ public class ContentsCommentService {
         return 0L;
     }
 
+    // 게시글 상세페이지 - 댓글 삭제 기능
+    // 서비스는 전달받은 값이 없어서 그 값을 채워주기 위한 서비스임
+    public int getCommentDelete(
+            ContentsCommentDeleteInfoDTO contentsCommentDeleteInfoDTO
+    ) {
+        // 현재 DTO에 입력 값이 없어서 입력하기 위해 오늘 날짜 생성해서 넣기 - 시분초까지 출력
+        contentsCommentDeleteInfoDTO.setEdate(LocalDateTime.now().withNano(0));
+
+        // idx, 전체 날짜 값이 들어간 DTO를 DAO로 전달 한다.
+        return contentsCommentDAO.getCommentDelete(contentsCommentDeleteInfoDTO);
+    }
 }
