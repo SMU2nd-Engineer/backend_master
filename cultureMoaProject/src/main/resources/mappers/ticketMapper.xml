@@ -20,7 +20,7 @@
             </if>
             <!-- 제목/출연진 검색 -->
             <if test="query != null and query != ''">
-                AND (TITLE LIKE CONCAT('%', #{query}, '%') OR CAST LIKE CONCAT('%', #{query}, '%'))
+                AND (TITLE LIKE CONCAT('%', #{query}, '%') OR `CAST` LIKE CONCAT('%', #{query}, '%'))
             </if>
             <!-- 날짜 검색(사용자가 선택한 날짜에 하루라도 겹치면 포함) -->
             <if test="startDate != null and endDate != null">
@@ -33,30 +33,30 @@
     </select>
 
     <select id="getCalendarTicketCount" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
-        WITH RECURSIVE CALENDAR AS (
-            SELECT DATE(#{startDate}) AS DATE
+        WITH RECURSIVE calendar AS (
+            SELECT DATE(#{startDate}) AS date
             UNION ALL
-            SELECT CALENDAR(DATE, INTERVAL 1 DAY)
-            FROM CALENDAR
-            WHERE DATE &lt; #{endDate}
+            SELECT DATE_ADD(date, INTERVAL 1 DAY)
+            FROM calendar c
+            WHERE date &lt; #{endDate}
         )
         SELECT
-            DATE_FORMAT(C.DATE, '%Y-%M-%D') AS DATE,
-            SUM(CASE WHEN T.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS PERFORMANCE_COUNT,
-            SUM(CASE WHEN T.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS SPORTS_COUNT
+            DATE_FORMAT(c.date, '%Y-%m-%d') AS date,
+            SUM(CASE WHEN t.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS PERFORMANCE_COUNT,
+            SUM(CASE WHEN t.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS SPORTS_COUNT
         FROM
-        CALENDAR C
-        LEFT JOIN TICKET_TBL T
-        ON C.DATE BETWEEN T.SDATE AND T.EDATE
+        CALENDAR c
+        LEFT JOIN TICKET_TBL t
+        ON c.date BETWEEN t.SDATE AND t.EDATE
         <!-- 카테고리 필터 -->
         <if test="categories != null and categories.size() > 0">
-            AND T.SUB_IDX IN
+            AND t.SUB_IDX IN
             <foreach item="item" collection="categories" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>
-        GROUP BY C.DATE
-        ORDER BY C.DATE
+        GROUP BY c.date
+        ORDER BY c.date
     </select>
     <select id="getTicketInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO" >
         SELECT IDX, TITLE, COMPANY, LINK, SDATE, EDATE, PLACE, PRICE, GRADE, CAST, RUNNINGTIME, IMG, ETC

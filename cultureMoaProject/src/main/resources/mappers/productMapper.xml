@@ -106,6 +106,5 @@
             FLAG = #{flag},
         WHERE PRODUCT_IDX = #{product_idx}
     </update>
-    <delete id="deleteProductImage" parameterType=""
 
 </mapper>
