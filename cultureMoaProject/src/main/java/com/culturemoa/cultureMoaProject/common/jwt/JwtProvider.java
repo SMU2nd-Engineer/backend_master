@@ -87,7 +87,7 @@ public class JwtProvider {
      */
     public String getUserInfoByToken(String accessToken){
         try {
-            Claims claims = Jwts.parserBuilder().setSigningKey(KEY).build().parseClaimsJwt(accessToken).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(KEY).build().parseClaimsJws(accessToken).getBody();
 
             if(claims.isEmpty()) return "";
 

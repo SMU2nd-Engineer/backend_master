@@ -1,6 +1,7 @@
 package com.culturemoa.cultureMoaProject.chat.controller;
 
 import com.culturemoa.cultureMoaProject.chat.dto.ChatDTO;
+import com.culturemoa.cultureMoaProject.chat.dto.ChatRoomDTO;
 import com.culturemoa.cultureMoaProject.chat.service.ChatService;
 import com.culturemoa.cultureMoaProject.common.counters.service.CountersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import java.util.List;
 public class ChatController {
     private final ChatService chatService;
     private final CountersService countersService;
-    private static final String TYPE = "chat";
 
     @Autowired
     public ChatController(ChatService chatService, CountersService countersService) {
@@ -26,19 +26,32 @@ public class ChatController {
         return chatService.getChatByid(id);
     }
 
-    @GetMapping("/room/{chatRoom_id}")
-    public List<ChatDTO> getChatsByRoomId(@PathVariable Long chatRoom_id){
-        return chatService.getChatsByRoomId(chatRoom_id);
+    @GetMapping("/messages")
+    public List<ChatDTO> getChatsByChatRoomId(@RequestParam("chatRoomId") Long chatRoomId){
+        return chatService.getChatsByChatRoomId(chatRoomId);
     }
 
     @PostMapping
-    public ChatDTO createChat(@RequestBody ChatDTO chatDTO){
-        chatDTO.setId(countersService.getId(TYPE));
-        return chatService.createChat(chatDTO);
+    public ChatDTO saveChat(@RequestBody ChatDTO chatDTO){
+        chatDTO.setId(countersService.getId("chat"));
+
+        return chatService.saveChat(chatDTO);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteChat(@PathVariable Long id){
-        chatService.deleteChat(id);
+    @PostMapping("/rooms")
+    public ChatRoomDTO CreateChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
+        chatRoomDTO.setId(countersService.getId("chatroom"));
+
+        return chatService.createChatRoom(chatRoomDTO);
+    }
+
+    @GetMapping("/rooms")
+    public List<ChatRoomDTO> getChatRoomsByUserIdx(){
+        return chatService.getChatRooms();
+    }
+
+    @DeleteMapping("/rooms/{chatRoomId}")
+    public Long deleteChatRoom(@PathVariable Long chatRoomId){
+        return chatService.updateChatRoomFlag(chatRoomId);
     }
 }
