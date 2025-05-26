@@ -80,6 +80,7 @@
             keyProperty="idx" >
         INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, CONTENT, SDATE)
         VALUES( #{user_idx}, #{category_idx}, #{title}, #{content}, #{sdate});
+
     </insert>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 이미지 등록 insert -->

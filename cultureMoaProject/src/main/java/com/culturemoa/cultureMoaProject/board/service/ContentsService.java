@@ -19,16 +19,19 @@ public class ContentsService {
     private final ContentsDAO contentsDAO;
 
     @Autowired
-    public ContentsService(ContentsDAO contentsDAO, UserDAO userDAO) {
+    public ContentsService(ContentsDAO contentsDAO, UserDAO userDAO, HandleAuthentication handleAuth) {
         this.contentsDAO = contentsDAO;
         this.userDAO = userDAO;
+        // 사용자 인증 정보 가져오기
+        this.handleAuth = handleAuth;
     }
     @Autowired
     private final UserDAO userDAO;
 
-    // 사용자 인증 정보 가져오기
+
     @Autowired
     private HandleAuthentication handleAuth;
+
 
     public List<ContentsDTO> getAllContents() {
         return contentsDAO.getAllContents();
@@ -69,11 +72,15 @@ public class ContentsService {
     ) {
         // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
 //        String userId = handleAuth.getUserIdByAuth();
-//        // 입력 화면에 없는 user_idx, sdate DB 저장되게 설정
+
 //        // user 정보 담겨 있음
-//        int userIdx = userDAO.getUserIdx(userId);
-//        contentInfoDTO.setUser_idx((long) userIdx);
-        contentInfoDTO.setUser_idx((long) 1.00);
+        // 사용자 인증해서 user id를 자동으로 불러옴
+        String userid = handleAuth.getUserIdByAuth();
+        // 조회 해서 user id 불러옴
+        int useridx = userDAO.getUserIdx(userid);
+//        contentInfoDTO.setUserid(userid);
+//      입력 화면에 없는 user_idx, sdate DB 저장되게 설정
+        contentInfoDTO.setUser_idx((long) useridx);
         contentInfoDTO.setSdate(LocalDateTime.now().withNano(0));
 
         System.out.println("여기까지 실행 됨" + contentInfoDTO);

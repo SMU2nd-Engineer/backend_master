@@ -33,5 +33,6 @@ public class ContentInfoDTO {
 
     // 불러올 User 정보(작성자-회원 닉네임)
     private String nickname;
+//    private String userid;
 
 }
