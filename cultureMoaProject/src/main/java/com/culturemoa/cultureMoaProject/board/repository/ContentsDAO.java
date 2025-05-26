@@ -33,12 +33,18 @@ public class ContentsDAO {
         return sqlSessionTemplate.selectList("contentsMapper.getContentSearchs", searchMap);
     }
 
-    // ContentsService.Map을 받아서 조건에 맞는 쿼리 실행 : 게시글 등록하여 불러옴
+    // 게시글 등록 페이지
     public int getContentInsert(
             ContentInfoDTO contentInfoDTO
     ) {
         return sqlSessionTemplate.insert("contentsMapper.getContentInsert", contentInfoDTO);
     }
 
+    // 게시글 상세페이지
+    public ContentInfoDTO getParticular(
+            Long idx
+    ) {
+        return sqlSessionTemplate.selectOne("contentsMapper.getParticular", idx);
+    }
 
 }
