@@ -1,11 +1,11 @@
 package com.culturemoa.cultureMoaProject.chat.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Document(collection = "chat")
 @Data
@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 public class ChatDTO {
     @Id
     private Long id;
-    private Long user_idx;
-    private Long chatRoom_id;
+    private Long userIdx;
+    private Long chatRoomId;
     private String content;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime sendTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private Instant createdAt = Instant.now();
 }

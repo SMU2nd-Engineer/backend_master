@@ -1,52 +1,6 @@
 version: "3.8"
 
 services:
-  mysql:
-    image: mysql
-    container_name: mysql
-    networks:
-      - culturemoa-network
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: culturemoa
-      MYSQL_DATABASE: culturemoa
-      MYSQL_USER: culturemoa
-      MYSQL_PASSWORD: culturemoa
-      TZ: Asia/Seoul
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    networks:
-      - culturemoa-network
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: culturemoa
-      MONGO_INITDB_ROOT_PASSWORD: culturemoa
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo_data:/data/db
-    healthcheck:
-      test: [
-        "CMD-SHELL",
-        "mongosh --username culturemoa --password culturemoa --authenticationDatabase admin --quiet --eval \"db.adminCommand('ping').ok\" | grep 1"
-      ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   app:
     build:
       context: .
@@ -56,17 +10,10 @@ services:
       - culturemoa-network
     ports:
       - "8101:8100"
-    depends_on:
-      mysql:
-        condition: service_healthy
-      mongodb:
-        condition: service_healthy
     volumes:
       - app_data:/app/data   # 앱 데이터용 볼륨 (필요시 수정)
 
 volumes:
-  mysql_data:
-  mongo_data:
   app_data:
 
 networks:

@@ -58,6 +58,7 @@ public class SecurityConfig {
 //                                     "/user/passwordFind",
 //                                     "/user/passwordChange",
 //                                     ).permitAll() // 인증을 자동 허용하는 경로들
+                    .requestMatchers("/ws/**").permitAll() // 웹소켓 연결 허용하는 코드
                     .requestMatchers("/**").permitAll() // 모든 경로를 허용하는 test 코드
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
