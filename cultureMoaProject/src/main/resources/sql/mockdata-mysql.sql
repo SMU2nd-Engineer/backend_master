@@ -1,7 +1,7 @@
 -- 1. USER_TBL (샘플 유저 추가)
 INSERT INTO USER_TBL (ID, NAME, EMAIL, PASSWORD, ADDRESS, NICKNAME, SOCIAL_LOGIN, SDATE, CDATE)
 SELECT * FROM (
-    SELECT 'ryugeonu', '류건우', 'ryu@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 강남구(123)', '건우짱', 'kakao', '2023-01-01', '2023-01-11' UNION ALL
+    SELECT 'test', '류건우', 'ryu@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 강남구(123)', '건우짱', 'kakao', '2023-01-01', '2023-01-11' UNION ALL
     SELECT 'coegyeongsu', '고경수', 'ko@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 서초구(456)', '경수맨', 'google', '2023-01-02', '2023-01-21' UNION ALL
     SELECT 'areum92', '김아름', 'areum@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 마포구(789)', '아름이', 'naver', '2023-01-03', '2023-01-15' UNION ALL
     SELECT 'jiu52', '지유', 'jiu@example.com', '{bcrypt}$2a$10$2bFJEDsMWwGjIGqDIQK2seNgFa0CxRawL1s6QuKkV3fIXt0hXMA8C', '서울시 송파구(789)', '지유짱', 'regularLogin', '2023-01-04', '2023-01-16' UNION ALL
