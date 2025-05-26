@@ -1,9 +1,6 @@
 package com.culturemoa.cultureMoaProject.product.repository;
 
-import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
-import com.culturemoa.cultureMoaProject.product.dto.ProductDetailDTO;
-import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
-import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
+import com.culturemoa.cultureMoaProject.product.dto.*;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,5 +38,16 @@ public class ProductDAO {
     public List<ProductImageDTO> imageRead(int product_idx) {
         return sqlSessionTemplate.selectList("productMapper.imageRead", product_idx );
     }
+
+    public void updateProduct(ProductDTO productDTO) {
+        int updatedCount = sqlSessionTemplate.update("productMapper.updateProductDetail", productDTO);
+        if (updatedCount == 0) {
+            throw new RuntimeException("수정할 상품이 없습니다.");
+        }
+    }
+
+    public void deleteProductImages(Long idx) {
+    }
+
 
 }

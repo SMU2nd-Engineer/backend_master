@@ -1,9 +1,6 @@
 package com.culturemoa.cultureMoaProject.product.service;
 
-import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
-import com.culturemoa.cultureMoaProject.product.dto.ProductDetailDTO;
-import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
-import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
+import com.culturemoa.cultureMoaProject.product.dto.*;
 import com.culturemoa.cultureMoaProject.product.repository.ProductDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +25,12 @@ public class ProductService {
         this.productDAO = productDAO;
     }
 
+    // 상품 전체 정보 불러오기
     public List<ProductDTO> getAllProduct() {
         return productDAO.getAllProduct();
     }
 
+    // 상품 idx에 맞는 해당 디테일 젇보 불러오기
     public ProductDTO getProductByIdx(int idx) {
         ProductDTO product = productDAO.getProductByIdx(idx);
         List<ProductImageDTO> images = productDAO.imageRead(idx);
@@ -44,6 +43,7 @@ public class ProductService {
         return product;
     }
 
+    // 상품 등록
     @Transactional
     public void insertProduct(ProductDTO productDTO) {
 
@@ -63,6 +63,7 @@ public class ProductService {
         }
     }
 
+    // 이미지 저장
     public String saveImage(MultipartFile image, String uploadDir) throws IOException {
         String originalFilename = image.getOriginalFilename();
         String extension = "";
@@ -87,12 +88,47 @@ public class ProductService {
         return dbImagePath;
     }
 
+    // 상품 검색
     public List<ProductDTO> searchProducts(ProductSearchDTO searchDTO) {
         return productDAO.searchProducts(searchDTO);
     }
+
+    // 상세 이미지 불러오기
     public List<ProductImageDTO> imageRead(int product_idx){
         return productDAO.imageRead(product_idx);
     }
 
+    // 상품 수정
+    public void updateProduct(ProductDTO productDTO, ProductImageDTO productImageDTO) {
+        try {
+            productDAO.updateProduct(productDTO);
 
+            if(productImageDTO != null && productImageDTO.getImage_Url() != null) {
+                productDAO.updateProduct(productDTO);
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException("상품 수정에 실패했습니다.", e);
+        }
+    }
+
+    @Transactional
+    public void updateProductWithImages(ProductDTO productDTO, List<ProductImageDTO> imageList) {
+        // 기본 상품 정보 업데이트
+        productDAO.updateProduct(productDTO);
+
+        if (imageList != null && !imageList.isEmpty()) {
+            // 기존 이미지 모두 삭제
+            productDAO.deleteProductImages(productDTO.getIdx());
+
+            // 새로운 이미지 삽입
+            for (ProductImageDTO imageDTO : imageList) {
+                ProductDetailDTO detail = new ProductDetailDTO();
+                detail.setProduct_idx(productDTO.getIdx());
+                detail.setImage_Url(imageDTO.getImage_Url());
+                detail.setFlag(imageDTO.isFlag());
+
+                productDAO.insertProductDetail(detail);
+            }
+        }
+    }
 }

@@ -106,5 +106,44 @@ public class ProductController {
 //        System.out.print(productService.searchProduct());
         return productService.searchProducts(searchDTO);
     }
-}
+
+    @PutMapping("/edit/{idx}")
+    public ResponseEntity<String> updateProduct(
+            @PathVariable Long idx,
+            @RequestPart("product") ProductDTO productDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
+    ) throws IOException {
+        try {
+            String uploadDir = "C:/upload_img/";
+            productDTO.setIdx(idx);
+
+            List<ProductImageDTO> imageList = new ArrayList<>();
+
+            if (files != null && !files.isEmpty()) {
+                for (int i = 0; i < files.size(); i++) {
+                    MultipartFile file = files.get(i);
+                    if (!file.isEmpty()) {
+                        String imageUrl = productService.saveImage(file, uploadDir);
+                        boolean flag = (i == 0); // 첫번째 이미지는 대표 이미지 (flag true)
+                        imageList.add(new ProductImageDTO(imageUrl, flag));
+                    }
+                }
+                productDTO.setImageList(imageList);
+
+                if (!imageList.isEmpty()) {
+                    productDTO.setImage_Url(imageList.get(0).getImage_Url());
+                }
+            }
+            productService.updateProductWithImages(productDTO, imageList);
+
+            return ResponseEntity.ok("update success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("update failed");
+        }
+    }
+    }
+
+
+
 
