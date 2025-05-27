@@ -35,6 +35,7 @@ public class ProductController {
     @Autowired
     private HandleAuthentication handleAuth;
 
+    // 전체 목록 불러오기
     @GetMapping("/list")
     public List<ProductDTO> product() {
         System.out.println(productService.getAllProduct());
@@ -43,6 +44,7 @@ public class ProductController {
 
     }
 
+    // 해당 상품 불러오기
     @GetMapping("/detail/{idx}")
     public ProductDTO getProductByIdx(@PathVariable long idx) {
 
@@ -50,6 +52,7 @@ public class ProductController {
         return productService.getProductByIdx(idx);
     }
 
+    // 상품 업로드
     @GetMapping("/upload_img/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
@@ -111,21 +114,20 @@ public class ProductController {
         }
     }
 
-
+    // 검색
     @PostMapping("/search")
     public List<ProductDTO> searchProducts(@RequestBody ProductSearchDTO searchDTO) {
 //        System.out.print(productService.searchProduct());
         return productService.searchProducts(searchDTO);
     }
 
-
+    // 수정
     @PutMapping("/detail/{idx}")
-    public ResponseEntity<String> updateProductImages(
+    public ResponseEntity<?> updateProductImages(
             @PathVariable Long idx,
             @RequestPart("product") ProductDTO productDTO,
             @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
-        System.out.println("✅ [Controller] 수정 요청 도착 - idx: " + idx);
         try {
             String uploadDir = "C:/upload_img/";
             productDTO.setIdx(idx);
@@ -148,21 +150,26 @@ public class ProductController {
                         ProductImageDTO newImage = new ProductImageDTO();
                         newImage.setImage_Url(imageUrl);
                         newImage.setFlag(true); // 사용할 이미지
-                        imageList.add(newImage);
+                        imageList.add(0, newImage);
                     }
                 }
             }
             productDTO.setImageList(imageList);
             productService.updateProductImages(productDTO, productDTO.getImageList());
 
-            return ResponseEntity.ok("update success");
+            return ResponseEntity.ok(productDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("update failed");
         }
     }
 
-
+    // 상품 삭제
+    @PutMapping("/delete/{idx}")
+    public ResponseEntity<?> productDelete(@PathVariable long idx){
+        productService.deleteProduct(idx);
+        return ResponseEntity.ok("삭제 성공");
+    }
 
 }
 

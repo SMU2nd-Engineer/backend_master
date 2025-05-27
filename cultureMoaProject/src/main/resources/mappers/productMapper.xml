@@ -7,7 +7,7 @@
     <!-- 전체 정보 가져오기 -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
+                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
         FROM PRODUCT_TBL MAIN
         LEFT JOIN (
                     SELECT s1.*
@@ -19,6 +19,8 @@
                     ) s2 ON s1.product_idx = s2.product_idx AND s1.idx = s2.min_idx
                 ) DETAIL
         ON MAIN.IDX = DETAIL.PRODUCT_IDX
+        LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
+        WHERE MAIN.EDATE IS NULL
     </select>
 
     <!-- 해당 idx에 맞는 정보 가져오기 -->
@@ -47,7 +49,7 @@
     <select id="imageRead" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO" parameterType="long" >
         SELECT PRODUCT_IDX, IMAGE_URL, FLAG
         FROM PRODUCT_IMAGE_TBL
-        WHERE PRODUCT_IDX = #{product_idx}
+        WHERE PRODUCT_IDX = #{product_idx} AND FLAG = TRUE
     </select>
 
 
@@ -106,6 +108,12 @@
                 </choose>,
             FLAG = #{flag}
         WHERE PRODUCT_IDX = #{product_idx}
+    </update>
+    <!-- 상품 삭제 -->
+    <update id="deleteProduct" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductDeleteDTO" >
+        UPDATE PRODUCT_TBL
+        SET EDATE = #{eDate}
+        WHERE IDX = #{idx}
     </update>
 
 
