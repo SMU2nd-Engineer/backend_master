@@ -111,6 +111,13 @@ public class ChatService {
      * @return 생성된 채팅방 정보
      */
     public ChatRoomDTO createChatRoom(ChatRoomDTO chatRoomDTO){
+        Long userIdx = Long.valueOf(userDAO.getUserIdx(handleAuthentication.getUserIdByAuth()));
+        chatRoomDTO.getUsers().add(userIdx);
+
+        List<ChatRoomDTO> tmp = chatRoomRepository.findByUsersAll(chatRoomDTO.getUsers());
+
+        if(!tmp.isEmpty()) return tmp.get(0);
+
         chatRoomDTO.setFlag(true);
         chatRoomDTO.setLastMessageAt(Instant.now());
 
