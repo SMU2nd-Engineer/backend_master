@@ -1,11 +1,12 @@
 package com.culturemoa.cultureMoaProject.board.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * ContentsJoinUserDTO: 게시판 전체 정보와 user 테이블의 idx가
@@ -18,6 +19,8 @@ import java.time.LocalDateTime;
  */
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentInfoDTO {
@@ -34,5 +37,13 @@ public class ContentInfoDTO {
     // 불러올 User 정보(작성자-회원 닉네임)
     private String nickname;
 //    private String userid;
+    // 게시판 이미지 등록 테이블에서 불러올 정보
+//    @JsonProperty("image_Url")
+//    private String image_Url;
+//
+//    @JsonProperty("imageList")
+//    private List<ContentsImageSubmitDTO> imageList;
+//    private Long contents_idx;
+
 
 }

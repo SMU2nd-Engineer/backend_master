@@ -3,9 +3,14 @@ package com.culturemoa.cultureMoaProject.board.controller;
 import com.culturemoa.cultureMoaProject.board.dto.*;
 import com.culturemoa.cultureMoaProject.board.service.ContentsCommentService;
 import com.culturemoa.cultureMoaProject.board.service.ContentsService;
+import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,14 +51,14 @@ public class ContentsController {
     // 게시판 테이블 idx == user 테이블 idx 면
     // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자-nickname) 데이터 출력
     // 게시글 등록
-    @PostMapping ("/submit")
-    public Long getContentInsert(
-            @RequestBody ContentInfoDTO contentInfoDTO
-    ) {
-//        System.out.println(contentsService.getContentInsert(contentInfoDTO));
-
-        return contentsService.getContentInsert(contentInfoDTO);
-    }
+//    @PostMapping ("/submit")
+//    public Long getContentInsert(
+//            @RequestBody ContentsDTO contentsDTO
+//    ) {
+////        System.out.println(contentsService.getContentInsert(contentInfoDTO));
+//
+//        return contentsService.getContentInsert(contentsDTO);
+//    }
 
     // 게시판 테이블 idx == user 테이블 idx 면
     // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자-nickname) 데이터 출력
@@ -65,6 +70,30 @@ public class ContentsController {
 //        System.out.println(contentsService.getParticular(contentInfoDTO));
 
         return contentsService.getParticular(idx);
+    }
+
+    // 게시판 등록페이지 이미지 업로드
+    @PostMapping("/submit")
+    public ContentsDTO ContentsUpload (@RequestPart("contents") ContentsDTO contentDTO, @RequestPart("files")List<MultipartFile> files) {
+        System.out.println("이미지 업로드 실행");
+        try {
+            String uploadDir = "C:/board_upload_img/";
+            List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
+
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                if (!files.isEmpty()) {
+                    String boardImagUrl = contentsService.saveBoardImage(file, uploadDir);
+                    boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
+                }
+            }
+
+            contentsService.getContentInsert(contentDTO,boardImageList);
+            return contentDTO;
+        } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException(e);
+        }
     }
 
 
