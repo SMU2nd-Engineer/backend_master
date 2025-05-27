@@ -46,6 +46,10 @@ public class ProductDAO {
         }
     }
 
+    public int deleteProduct(ProductDeleteDTO productDeleteDTO){
+        return sqlSessionTemplate.update("productMapper.deleteProduct", productDeleteDTO);
+    }
+
 
 
 

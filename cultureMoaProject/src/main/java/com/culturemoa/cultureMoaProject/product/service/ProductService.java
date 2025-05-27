@@ -3,6 +3,7 @@ package com.culturemoa.cultureMoaProject.product.service;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.product.dto.*;
 import com.culturemoa.cultureMoaProject.product.repository.ProductDAO;
+import com.culturemoa.cultureMoaProject.user.exception.DBManipulationFailException;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -38,7 +40,7 @@ public class ProductService {
         return productDAO.getAllProduct();
     }
 
-    // 상품 idx에 맞는 해당 디테일 젇보 불러오기
+    // 상품 idx에 맞는 해당 디테일 정보 불러오기
     public ProductDTO getProductByIdx(long idx) {
 
         ProductDTO product = productDAO.getProductByIdx(idx);
@@ -56,6 +58,7 @@ public class ProductService {
         String userid = handleAuth.getUserIdByAuth();
         int user_idx = userDAO.getUserIdx(userid);
         productDTO.setUser_idx((long) user_idx);
+
         productDAO.insertProduct(productDTO);
         if (productDTO.getIdx() == 0) {
             throw new RuntimeException("Product insert failed.");
@@ -140,6 +143,19 @@ public class ProductService {
             }
         }
 
+    }
+
+    // 상품 삭제
+    public void deleteProduct(Long idx){
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ProductDeleteDTO deleteDTO = new ProductDeleteDTO(idx, localDateTime);
+
+        int productDeleteProcess = productDAO.deleteProduct(deleteDTO);
+
+        if(productDeleteProcess == 0) {
+            throw new DBManipulationFailException();
+        }
     }
 
 
