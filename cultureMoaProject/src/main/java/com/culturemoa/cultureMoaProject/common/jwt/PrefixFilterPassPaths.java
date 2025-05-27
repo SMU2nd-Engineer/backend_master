@@ -17,7 +17,8 @@ public class PrefixFilterPassPaths {
                 prefix + "/user/idFind",
                 prefix + "/user/passwordFind",
                 prefix + "/user/passwordChange",
-                prefix + "/logout"
+                prefix + "/logout",
+                prefix + "/product/upload_img"
         );
     }
 }

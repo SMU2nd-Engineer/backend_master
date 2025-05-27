@@ -139,6 +139,7 @@ public class ProductService {
                 productDAO.insertProductDetail(detail);
             }
         }
+
     }
 
 
