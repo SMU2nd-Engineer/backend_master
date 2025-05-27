@@ -17,11 +17,11 @@ public class PaymentController {
 
     @PostMapping("/ready")
     public ResponseEntity<PaymentResponseDTO> readyPayment(
-            @RequestParam int payMethod,
+//            @RequestParam int payMethod,
             @RequestBody PaymentReadyRequestDTO request
             ){
         // payMethod를 기반으로 어떤 PG사를 이용할지 선택
-        PaymentGatewayService service = getPaymentService(payMethod);
+        PaymentGatewayService service = getPaymentService(6001);
         // service객체의 readyToPay 메서드 호출하고 결과를 PaymentResponseDTO로 반환
         PaymentResponseDTO response = service.readyToPay(request);
         // HTTP 상태코드 200(ok)과 함께 response를 JSON으로 변환하여 클라이언트에 응답
@@ -30,10 +30,10 @@ public class PaymentController {
 
     @PostMapping("/approve")
     public ResponseEntity<KakaoApproveResponseDTO> approvePayment(
-            @RequestBody PaymentApproveRequestDTO request,
-            @RequestParam int payMethod
+            @RequestBody PaymentApproveRequestDTO request
+//            @RequestParam int payMethod
     ) {
-        PaymentGatewayService service = getPaymentService(payMethod);
+        PaymentGatewayService service = getPaymentService(6001);
         System.out.println("approvePayment called with pgToken: " + request.getPgToken());
 
         KakaoApproveResponseDTO response = service.approvePayment(request);
@@ -42,20 +42,20 @@ public class PaymentController {
 
     @PostMapping("/cancel")
     public ResponseEntity<KakaoCancelResponseDTO> cancel(
-            @RequestParam int payMethod,
-            @RequestBody String tid
+//            @RequestParam int payMethod
+            @RequestBody KakaoCancelRequestDTO request
     ) {
-        PaymentGatewayService service = getPaymentService(payMethod);
-        KakaoCancelResponseDTO cancelInfo = service.cancelPayment(tid);
+        PaymentGatewayService service = getPaymentService(6001);
+        KakaoCancelResponseDTO cancelInfo = service.cancelPayment(request);
         return ResponseEntity.ok(cancelInfo);
     }
 
     @PostMapping("/fail")
     public ResponseEntity<String> fail(
-            @RequestParam int payMethod,
+//            @RequestParam int payMethod,
             @RequestBody KakaoFailRequestDTO request
     ){
-        PaymentGatewayService service = getPaymentService(payMethod);
+        PaymentGatewayService service = getPaymentService(6001);
         String failMessage = request.getReason() != null ? request.getReason() : "알 수 없는 오류";
 
         service.handleFailedPayment(request.getTid(), failMessage);
