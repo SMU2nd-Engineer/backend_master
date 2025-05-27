@@ -13,7 +13,7 @@ public interface PaymentGatewayService {
     // 사용자가 결제 완료 후, 결제 승인 처리(최종 결제 확정)
     KakaoApproveResponseDTO approvePayment(PaymentApproveRequestDTO request);
     // 결제 수단 문자열로 반환
-    KakaoCancelResponseDTO cancelPayment(String tid);
+    KakaoCancelResponseDTO cancelPayment(KakaoCancelRequestDTO request);
     void handleFailedPayment(String tid, String methodResultMessage);
     static String getPayMethod(int payMethod){
         return switch (payMethod) {

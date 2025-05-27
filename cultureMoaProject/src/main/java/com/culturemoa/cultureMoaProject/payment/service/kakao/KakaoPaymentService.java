@@ -77,7 +77,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             PaymentHistory history = new PaymentHistory();
             history.setTid(body.getTid());
             history.setAmount(requestDTO.getAmount());
-            history.setPayMethod(requestDTO.getPayMethod());
+            history.setPayMethod(6001);
             history.setProductIdx(requestDTO.getProductIdx());
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
             history.setBuyerIdx(requestDTO.getBuyerIdx());
@@ -160,8 +160,8 @@ public class KakaoPaymentService implements PaymentGatewayService {
     }
 
     @Override
-    public KakaoCancelResponseDTO cancelPayment(String tid) {
-        int cancelAmount = paymentDAO.selectAmountByTid(tid);
+    public KakaoCancelResponseDTO cancelPayment(KakaoCancelRequestDTO cancelDTO) {
+        Integer cancelAmount = paymentDAO.selectAmountByTid(cancelDTO.getTid());
 
         // HTTP 요청 헤더를 설정하는 객체
         HttpHeaders headers = new HttpHeaders();
@@ -173,7 +173,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
         // 요청 바드 구성
         Map<String, Object> params = new HashMap<>();
         params.put("cid", kakaoPayProperties.getCid());
-        params.put("tid", tid);
+        params.put("tid", cancelDTO.getTid());
         params.put("cancel_amount", cancelAmount);
         params.put("cancel_tax_free_amount", 0);
 
@@ -189,7 +189,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
 
         if(response != null) {
             PaymentStatus status = new PaymentStatus();
-            status.setTid(tid);
+            status.setTid(cancelDTO.getTid());
             status.setCanceledAt(response.getCanceledAt());
 
             paymentDAO.updatePaymentStatusInfo(status);

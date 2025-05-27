@@ -1,9 +1,9 @@
 package com.culturemoa.cultureMoaProject.common.security;
 
-import com.culturemoa.cultureMoaProject.common.jwt.JwtAuthenticationFilter;
-import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
-import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
+import com.culturemoa.cultureMoaProject.common.jwt.*;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * SecurityConfig
@@ -31,7 +32,8 @@ public class SecurityConfig {
     @Value("${cors.auth.path}")
     private String frontPath;
 
-
+    @Value("${spring.mvc.servlet.path}")
+    private String apiPrefix;
 
     private final JwtValidator jwtValidator;
     private final JwtProvider jwtProvider;
@@ -40,6 +42,23 @@ public class SecurityConfig {
     public SecurityConfig(JwtValidator jwtValidator, JwtProvider jwtProvider) {
         this.jwtValidator = jwtValidator;
         this.jwtProvider = jwtProvider;
+    }
+
+    // 경로 찍기
+    @PostConstruct
+    public void init() {
+        System.out.println("✅ CORS 허용 origin: " + frontPath);
+    }
+
+    /**
+     * 스프링 시큐리티 cors 문제로 origin 확인을 위하여 추가 설정
+     */
+    @Bean
+    public FilterRegistrationBean<CorsLoggingFilter> corsLoggingFilter() {
+        FilterRegistrationBean<CorsLoggingFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new CorsLoggingFilter());
+        registrationBean.setOrder(-102); // Spring Security보다 먼저 실행
+        return registrationBean;
     }
 
     /**
@@ -52,25 +71,17 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (API 서버에서는 보통 꺼둠)
             .cors(cors -> {})             // CORS 설정 적용 (아래 Bean에서 지정)
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/user/login",
-                                     "/refresh",
-                                     "/user/logout",
-                                     "/user/kakaoAuth",
-                                     "/user/naverAuth",
-                                     "/user/googleAuth",
-                                     "/user/duplicatecheck",
-                                     "/user/idFind",
-                                     "/user/passwordFind",
-                                     "/user/passwordChange",
-                                     "/logout"
-                                     ).permitAll() // 인증을 자동 허용하는 경로들
-                    .requestMatchers("/ws/**").permitAll() // 웹소켓 연결 허용하는 코드
-//                    .requestMatchers("/**").permitAll() // 모든 경로를 허용하는 test 코드
-                    .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
-            )
+            .authorizeHttpRequests(auth -> {
+                // 경로 리스트를 prefix에 따라 동적으로 구성
+                List<String> permitPaths = PrefixFilterPassPaths.getPermitPaths(apiPrefix);
+                for (String path : permitPaths) {
+                    auth.requestMatchers(path).permitAll();
+                }
+                auth.requestMatchers("/ws/**").permitAll();
+                auth.anyRequest().authenticated(); // 나머지 모든 요청은 인증 필요
+            })
             .logout(logout -> logout.disable()) // 시큐리티 기본 로그아웃으로 get 요청을 방지
-            .addFilterBefore(new JwtAuthenticationFilter(jwtValidator, jwtProvider), UsernamePasswordAuthenticationFilter.class); // JWT 필터 등록 (기존 필터 앞에 추가)
+            .addFilterBefore(new JwtAuthenticationFilter(jwtValidator, jwtProvider, apiPrefix), UsernamePasswordAuthenticationFilter.class); // JWT 필터 등록 (기존 필터 앞에 추가)
         return http.build();
     }
 

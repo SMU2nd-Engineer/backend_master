@@ -20,7 +20,7 @@
         FROM CONTENTS_TBL CONT
         LEFT OUTER JOIN USER_TBL USERT ON
         CONT.USER_IDX = USERT.IDX
-        WHERE CONT.EDATE is NULL
+        WHERE CONT.EDATE IS NULL
     </select>
 
     <!-- JOIN된 CONTENTS_TBL과 USER_TBL의 검색어 조회 - search -->
@@ -104,12 +104,17 @@
         AND   CONT.IDX = #{idx}
     </select>
 
-    <!-- CONTENTS_TBL, USER_TBL의 댓글 불러오기 - 게시글 상세페이지 -->
+    <!-- CONTENTS_TBL, USER_TBL의 댓글 불러오기 - 게시글 상세페이지
+    AS comment_idx: ContentsCommentInfoDTO에 컬럼명이 일치해야되서 선언함
+    -->
     <select id="getComment" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentInfoDTO" >
-        SELECT COMNT.CONTENTS_IDX, COMNT.TEXT
+        SELECT COMNT.CONTENTS_IDX, COMNT.TEXT, COMNT.SDATE,
+        USERT.NICKNAME, COMNT.IDX AS comment_idx
         FROM CONTENTS_COMMENT_TBL COMNT
-        WHERE COMNT.CDATE is NOT ULL
-        AND   COMNT.EDATE is NULL
+        LEFT OUTER JOIN USER_TBL USERT ON
+        COMNT.USER_IDX = USERT.IDX
+        WHERE COMNT.CONTENTS_IDX = #{idx}
+        AND   COMNT.EDATE IS NULL
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 댓글 등록 - 게시글 상세페이지 -->
@@ -121,5 +126,11 @@
         VALUES(#{user_idx}, #{contents_idx}, #{text}, #{sdate});
     </insert>
 
+    <!-- CONTENTS_TBL, USER_TBL의 댓글 삭제 - 게시글 상세페이지 -->
+    <update id="getCommentDelete" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentDeleteInfoDTO">
+        UPDATE CONTENTS_COMMENT_TBL
+        SET EDATE = #{edate}
+        WHERE IDX = #{idx}
+    </update>
 
 </mapper>
