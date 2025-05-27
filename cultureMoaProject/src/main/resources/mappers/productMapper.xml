@@ -95,9 +95,6 @@
             TITLE = #{title},
             CONTENT = #{content},
             PRICE = #{price}
-            <if test="image_Url != null">
-                , image_Url = #{image_Url}
-            </if>
         WHERE IDX = #{idx}
     </update>
     <update id="updateImage" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO">

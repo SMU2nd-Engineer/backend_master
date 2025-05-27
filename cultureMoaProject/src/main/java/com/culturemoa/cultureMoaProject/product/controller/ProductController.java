@@ -119,7 +119,7 @@ public class ProductController {
     }
 
 
-    @PutMapping("/edit/{idx}")
+    @PutMapping("/detail/{idx}")
     public ResponseEntity<String> updateProductImages(
             @PathVariable Long idx,
             @RequestPart("product") ProductDTO productDTO,
