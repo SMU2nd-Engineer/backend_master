@@ -77,7 +77,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             PaymentHistory history = new PaymentHistory();
             history.setTid(body.getTid());
             history.setAmount(requestDTO.getAmount());
-            history.setPayMethod(requestDTO.getPayMethod());
+            history.setPayMethod(6001);
             history.setProductIdx(requestDTO.getProductIdx());
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
             history.setBuyerIdx(requestDTO.getBuyerIdx());
