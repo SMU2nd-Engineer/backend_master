@@ -15,7 +15,7 @@ public class ProductDetailDTO {
     private Long idx;
     private Long product_idx;
     private String image_Url;
-    private boolean flag;
+    private Boolean flag;
     private List<ProductImageDTO> imageList;
     private ProductDTO product;
 }

@@ -22,7 +22,7 @@
     </select>
 
     <!-- 해당 idx에 맞는 정보 가져오기 -->
-    <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="int">
+    <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="long">
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
                USER_IDX, PRICE, MAIN.FLAG, CONTENT
         FROM PRODUCT_TBL MAIN
@@ -44,7 +44,7 @@
     </insert>
 
     <!-- 상품 이미지 가져오기 -->
-    <select id="imageRead" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO" parameterType="int" >
+    <select id="imageRead" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO" parameterType="long" >
         SELECT PRODUCT_IDX, IMAGE_URL, FLAG
         FROM PRODUCT_IMAGE_TBL
         WHERE PRODUCT_IDX = #{product_idx}
@@ -102,9 +102,15 @@
     </update>
     <update id="updateImage" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO">
         UPDATE PRODUCT_IMAGE_TBL
-        SET IMAGE_URL = #{image_Url},
-            FLAG = #{flag},
+        SET IMAGE_URL =
+                <choose>
+                    <when test="image_Url != null"> #{image_Url}</when>
+                    <otherwise>NULL</otherwise>
+                </choose>,
+            FLAG = #{flag}
         WHERE PRODUCT_IDX = #{product_idx}
     </update>
+
+
 
 </mapper>
