@@ -1,7 +1,9 @@
 package com.culturemoa.cultureMoaProject.product.service;
 
+import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.product.dto.*;
 import com.culturemoa.cultureMoaProject.product.repository.ProductDAO;
+import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,28 +27,35 @@ public class ProductService {
         this.productDAO = productDAO;
     }
 
+    @Autowired
+    private UserDAO userDAO;
+
+    @Autowired
+    private HandleAuthentication handleAuth;
+
     // 상품 전체 정보 불러오기
     public List<ProductDTO> getAllProduct() {
         return productDAO.getAllProduct();
     }
 
     // 상품 idx에 맞는 해당 디테일 젇보 불러오기
-    public ProductDTO getProductByIdx(int idx) {
+    public ProductDTO getProductByIdx(long idx) {
+
         ProductDTO product = productDAO.getProductByIdx(idx);
         List<ProductImageDTO> images = productDAO.imageRead(idx);
         product.setImageList(images);
         if( images != null && !images.isEmpty()) {
             product.setImage_Url(images.get(0).getImage_Url());
         }
-
-
         return product;
     }
 
     // 상품 등록
     @Transactional
     public void insertProduct(ProductDTO productDTO) {
-
+        String userid = handleAuth.getUserIdByAuth();
+        int user_idx = userDAO.getUserIdx(userid);
+        productDTO.setUser_idx((long) user_idx);
         productDAO.insertProduct(productDTO);
         if (productDTO.getIdx() == 0) {
             throw new RuntimeException("Product insert failed.");
@@ -56,7 +65,7 @@ public class ProductService {
                 ProductDetailDTO detail = new ProductDetailDTO();
                 detail.setProduct_idx(productDTO.getIdx());
                 detail.setImage_Url(imageDTO.getImage_Url());
-                detail.setFlag(imageDTO.isFlag());
+                detail.setFlag(imageDTO.getFlag());
 
                 productDAO.insertProductDetail(detail);
             }
@@ -90,16 +99,19 @@ public class ProductService {
 
     // 상품 검색
     public List<ProductDTO> searchProducts(ProductSearchDTO searchDTO) {
+        String userid = handleAuth.getUserIdByAuth();
+        int user_idx = userDAO.getUserIdx(userid);
         return productDAO.searchProducts(searchDTO);
     }
 
     // 상세 이미지 불러오기
-    public List<ProductImageDTO> imageRead(int product_idx){
+    public List<ProductImageDTO> imageRead(long product_idx){
         return productDAO.imageRead(product_idx);
     }
 
     // 상품 수정
     public void updateProduct(ProductDTO productDTO, ProductImageDTO productImageDTO) {
+
         try {
             productDAO.updateProduct(productDTO);
 
@@ -112,23 +124,24 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProductWithImages(ProductDTO productDTO, List<ProductImageDTO> imageList) {
-        // 기본 상품 정보 업데이트
+    public void updateProductImages(ProductDTO productDTO, List<ProductImageDTO> imageList) {
+        Long idx = productDTO.getIdx();
+
         productDAO.updateProduct(productDTO);
 
         if (imageList != null && !imageList.isEmpty()) {
-            // 기존 이미지 모두 삭제
-            productDAO.deleteProductImages(productDTO.getIdx());
-
-            // 새로운 이미지 삽입
+            // 기존 이미지를 flag 0으로 업데이트
             for (ProductImageDTO imageDTO : imageList) {
                 ProductDetailDTO detail = new ProductDetailDTO();
-                detail.setProduct_idx(productDTO.getIdx());
+                detail.setProduct_idx(idx);
                 detail.setImage_Url(imageDTO.getImage_Url());
-                detail.setFlag(imageDTO.isFlag());
-
+                detail.setFlag(imageDTO.getFlag());
                 productDAO.insertProductDetail(detail);
             }
         }
     }
+
+
+
+
 }

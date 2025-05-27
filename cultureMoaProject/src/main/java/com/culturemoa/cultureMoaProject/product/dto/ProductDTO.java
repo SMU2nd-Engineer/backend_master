@@ -25,7 +25,7 @@ public class ProductDTO {
     private LocalDateTime eDate;
     private Long user_idx;
     private Long price;
-    private boolean flag;
+    private Boolean flag;
 
     @JsonProperty("image_Url")
     private String image_Url;

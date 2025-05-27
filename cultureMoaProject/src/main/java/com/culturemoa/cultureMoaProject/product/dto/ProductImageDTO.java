@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductImageDTO {
     private String image_Url;
-    private boolean flag;
+    private Boolean flag;
 
 }
 
