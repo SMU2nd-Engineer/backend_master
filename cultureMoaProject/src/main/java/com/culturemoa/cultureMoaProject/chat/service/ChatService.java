@@ -1,9 +1,7 @@
 package com.culturemoa.cultureMoaProject.chat.service;
 
 import com.culturemoa.cultureMoaProject.chat.ChatWebSocketHandler;
-import com.culturemoa.cultureMoaProject.chat.dto.ChatDTO;
-import com.culturemoa.cultureMoaProject.chat.dto.ChatRoomDTO;
-import com.culturemoa.cultureMoaProject.chat.dto.RoomReadDTO;
+import com.culturemoa.cultureMoaProject.chat.dto.*;
 import com.culturemoa.cultureMoaProject.chat.repository.ChatRepository;
 import com.culturemoa.cultureMoaProject.chat.repository.ChatRoomRepository;
 import com.culturemoa.cultureMoaProject.chat.repository.RoomReadRepository;
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,7 +54,7 @@ public class ChatService {
      * @param chatRoomId 채팅방 id
      * @return 채팅 목록
      */
-    public List<ChatDTO> getChatsByChatRoomId(Long chatRoomId){
+    public ChatListDTO getChatsByChatRoomId(Long chatRoomId){
         int userIdx = userDAO.getUserIdx(handleAuthentication.getUserIdByAuth());
 
         // 읽음 시간 갱신 (보낸 사람만)
@@ -63,7 +62,9 @@ public class ChatService {
         status.setLastReadAt(Instant.now());
         roomReadRepository.save(status);
 
-        return chatRepository.findByChatRoomId(chatRoomId);
+        List<ChatDTO> chatList = chatRepository.findByChatRoomId(chatRoomId);
+
+        return new ChatListDTO(Long.valueOf(userIdx), chatList);
     }
 
     /**
@@ -128,10 +129,24 @@ public class ChatService {
      * 채팅방 내역 GET 메서드
      * @return 채팅방 리스트
      */
-    public List<ChatRoomDTO> getChatRooms(){
+    public List<ChatRoomInfoDTO> getChatRooms(){
         Long userIdx = Long.valueOf(userDAO.getUserIdx(handleAuthentication.getUserIdByAuth()));
         System.out.println(userIdx);
-        return chatRoomRepository.findByUsersContainingOrderByLastMessageAtDesc(userIdx);
+
+        List<ChatRoomDTO> rooms = chatRoomRepository.findByUsersContainingOrderByLastMessageAtDesc(userIdx);
+        List<ChatRoomInfoDTO> roomInfos = new ArrayList<>();
+
+        rooms.forEach((room) -> {
+            ChatRoomInfoDTO info = new ChatRoomInfoDTO();
+            info.setId(room.getId());
+            info.setTitle(room.getTitle());
+            info.setUsers(room.getUsers());
+            info.setLastMessage(room.getLastMessage());
+            info.setLastMessageAt(room.getLastMessageAt());
+            info.setCount(countUnreadMessages(userIdx, room.getId()));
+            roomInfos.add(info);
+        });
+        return roomInfos;
     }
 
     /**
