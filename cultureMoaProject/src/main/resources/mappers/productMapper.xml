@@ -6,7 +6,7 @@
     </resultMap>
     <!-- 전체 정보 가져오기 -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
-        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
                 USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
         FROM PRODUCT_TBL MAIN
         LEFT JOIN (
@@ -25,9 +25,10 @@
 
     <!-- 해당 idx에 맞는 정보 가져오기 -->
     <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="long">
-        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-               USER_IDX, PRICE, MAIN.FLAG, CONTENT
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
+               USER_IDX, PRICE, MAIN.FLAG, CONTENT, USER.NICKNAME
         FROM PRODUCT_TBL MAIN
+        LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
         WHERE MAIN.IDX = #{idx}
     </select>
 
