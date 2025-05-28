@@ -74,25 +74,32 @@
 
     </select>
 
-    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 insert -->
+    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록(카테고리(팝니다/삽니다), 제목, 글 내용, 오늘날짜) insert -->
     <insert id="getContentInsert" useGeneratedKeys="true"
-            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO"
+            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDTO"
             keyProperty="idx" >
         INSERT INTO CONTENTS_TBL (USER_IDX, CATEGORY_IDX, TITLE, CONTENT, SDATE)
         VALUES( #{user_idx}, #{category_idx}, #{title}, #{content}, #{sdate});
+
     </insert>
 
-    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 이미지 등록 insert -->
-<!--    <insert id="getImageInsert" useGeneratedKeys="true"-->
-<!--            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO"-->
-<!--            keyProperty="idx" >-->
+    <!-- 게시글 이미지 등록 (게시글 고유 번호, 이미지 주소) insert -->
+    <insert id="getBoardImageInsert" useGeneratedKeys="true"
+            parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO"
+            keyProperty="idx" >
 
-<!--        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (IMAGE_URL)-->
-<!--        VALUES( #{image_url});-->
+        INSERT INTO CONTENTS_DETAIL_IMAGE_TBL (CONTENTS_IDX, IMAGE_URL)
+        VALUES( #{contents_idx}, #{image_url});
+    </insert>
 
-<!--    </insert>-->
+    <!-- 게시글 이미지 상세 정보 가져오기  -->
+    <select id="boardImageRead" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" parameterType="int" >
+        SELECT CONTENTS_IDX, IMAGE_URL
+        FROM CONTENTS_DETAIL_IMAGE_TBL
+        WHERE CONTENTS_IDX = #{contents_idx}
+    </select>
 
-    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 - 게시글 상세페이지 -->
+    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 정보 불러오기 - 게시글 상세페이지 -->
     <select id="getParticular" parameterType="Long" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
         SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE,
         CONT.CONTENT, CONT.SDATE,

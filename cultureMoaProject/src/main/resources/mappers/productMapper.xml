@@ -110,13 +110,13 @@
             FLAG = #{flag}
         WHERE PRODUCT_IDX = #{product_idx}
     </update>
+
     <!-- 상품 삭제 -->
     <update id="deleteProduct" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductDeleteDTO" >
         UPDATE PRODUCT_TBL
         SET EDATE = #{eDate}
         WHERE IDX = #{idx}
     </update>
-
 
 
 </mapper>

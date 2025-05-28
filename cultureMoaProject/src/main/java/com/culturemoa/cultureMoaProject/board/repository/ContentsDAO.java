@@ -2,7 +2,9 @@ package com.culturemoa.cultureMoaProject.board.repository;
 
 import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
+import com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO;
 import com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO;
+import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,11 +35,21 @@ public class ContentsDAO {
         return sqlSessionTemplate.selectList("contentsMapper.getContentSearchs", searchMap);
     }
 
-    // 게시글 등록 페이지
+    // 게시글 등록 페이지(카테고리, 제목, 글 내용(텍스트))
     public int getContentInsert(
-            ContentInfoDTO contentInfoDTO
+            ContentsDTO contentsDTO
     ) {
-        return sqlSessionTemplate.insert("contentsMapper.getContentInsert", contentInfoDTO);
+        return sqlSessionTemplate.insert("contentsMapper.getContentInsert", contentsDTO);
+    }
+
+    // 게시글 등록 페이지(이미지 등록)
+    public void getBoardImageInsert (ContentsDetailImageDTO detailImageDTO) {
+        sqlSessionTemplate.insert("contentsMapper.getBoardImageInsert", detailImageDTO);
+    }
+
+    // 게시글 등록 페이지(이미지 정보 불러오기)
+    public List<ContentInfoDTO> imageRead(int contents_idx) {
+        return sqlSessionTemplate.selectList("contentsMapper.boardImageRead", contents_idx );
     }
 
     // 게시글 상세페이지
