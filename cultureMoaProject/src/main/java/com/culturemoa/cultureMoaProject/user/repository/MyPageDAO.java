@@ -14,9 +14,12 @@ import java.util.Map;
 @Repository
 public class MyPageDAO {
 
-    @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+    private final SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
+    public MyPageDAO(SqlSessionTemplate sqlSessionTemplate) {
+        this.sqlSessionTemplate = sqlSessionTemplate;
+    }
     /**
      * 아이디를 사용하여 패스워드 체크를 위한 단방향 암호 가져오기
      * @param userId : 토큰에서 추출한 아이디

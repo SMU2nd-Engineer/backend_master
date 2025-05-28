@@ -26,17 +26,19 @@ import java.util.Map;
  */
 @Service
 public class UserService {
-    @Autowired
-    private UserDAO userDAO;
+
+    private final UserDAO userDAO;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthJwtService authJwtService;
+    private final HandleAuthentication handleAuth;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    
-    @Autowired
-    private AuthJwtService authJwtService;
-
-    @Autowired
-    private HandleAuthentication handleAuth;
+    public UserService (UserDAO userDAO, PasswordEncoder passwordEncoder, AuthJwtService authJwtService, HandleAuthentication handleAuth ) {
+        this.userDAO = userDAO;
+        this.passwordEncoder=passwordEncoder;
+        this.authJwtService=authJwtService;
+        this.handleAuth=handleAuth;
+    }
 
 
     /**

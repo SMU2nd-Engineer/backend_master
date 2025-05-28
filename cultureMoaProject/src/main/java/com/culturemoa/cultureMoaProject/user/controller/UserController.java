@@ -16,11 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+    private final SocialLoginService socialLoginService;
 
     @Autowired
-    private SocialLoginService socialLoginService;
+    public UserController(UserService userService, SocialLoginService socialLoginService) {
+        this.userService = userService;
+        this.socialLoginService = socialLoginService;
+    }
 
     /**
      * 회원 가입 페이지 정보를 이용 회원 가입 진행.
