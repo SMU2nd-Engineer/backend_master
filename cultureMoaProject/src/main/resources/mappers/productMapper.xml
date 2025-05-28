@@ -6,8 +6,8 @@
     </resultMap>
     <!-- 전체 정보 가져오기 -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
-        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
+                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
         FROM PRODUCT_TBL MAIN
         LEFT JOIN (
                     SELECT s1.*
@@ -19,13 +19,16 @@
                     ) s2 ON s1.product_idx = s2.product_idx AND s1.idx = s2.min_idx
                 ) DETAIL
         ON MAIN.IDX = DETAIL.PRODUCT_IDX
+        LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
+        WHERE MAIN.EDATE IS NULL
     </select>
 
     <!-- 해당 idx에 맞는 정보 가져오기 -->
-    <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="int">
-        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-               USER_IDX, PRICE, MAIN.FLAG, CONTENT
+    <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="long">
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
+               USER_IDX, PRICE, MAIN.FLAG, CONTENT, USER.NICKNAME
         FROM PRODUCT_TBL MAIN
+        LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
         WHERE MAIN.IDX = #{idx}
     </select>
 
@@ -44,10 +47,10 @@
     </insert>
 
     <!-- 상품 이미지 가져오기 -->
-    <select id="imageRead" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO" parameterType="int" >
+    <select id="imageRead" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO" parameterType="long" >
         SELECT PRODUCT_IDX, IMAGE_URL, FLAG
         FROM PRODUCT_IMAGE_TBL
-        WHERE PRODUCT_IDX = #{product_idx}
+        WHERE PRODUCT_IDX = #{product_idx} AND FLAG = TRUE
     </select>
 
 
@@ -95,16 +98,25 @@
             TITLE = #{title},
             CONTENT = #{content},
             PRICE = #{price}
-            <if test="image_Url != null">
-                , image_Url = #{image_Url}
-            </if>
         WHERE IDX = #{idx}
     </update>
     <update id="updateImage" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO">
         UPDATE PRODUCT_IMAGE_TBL
-        SET IMAGE_URL = #{image_Url},
-            FLAG = #{flag},
+        SET IMAGE_URL =
+                <choose>
+                    <when test="image_Url != null"> #{image_Url}</when>
+                    <otherwise>NULL</otherwise>
+                </choose>,
+            FLAG = #{flag}
         WHERE PRODUCT_IDX = #{product_idx}
     </update>
+
+    <!-- 상품 삭제 -->
+    <update id="deleteProduct" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductDeleteDTO" >
+        UPDATE PRODUCT_TBL
+        SET EDATE = #{eDate}
+        WHERE IDX = #{idx}
+    </update>
+
 
 </mapper>

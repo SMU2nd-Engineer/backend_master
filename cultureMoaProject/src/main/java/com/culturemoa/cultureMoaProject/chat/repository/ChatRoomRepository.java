@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface ChatRoomRepository extends MongoRepository<ChatRoomDTO, String> {
     @Query("{ 'flag': { '$ne': false } }")
     List<ChatRoomDTO> findByUsersContainingOrderByLastMessageAtDesc(Long userIdx);
+    @Query("{ 'users' : {$all: ?0 },'flag': { '$ne': false } }")
+    List<ChatRoomDTO> findByUsersAll(List<Long> users);
     Optional<ChatRoomDTO> findById(Long chatRoomId);
 }

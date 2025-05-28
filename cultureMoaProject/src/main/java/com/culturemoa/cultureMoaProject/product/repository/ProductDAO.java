@@ -20,7 +20,7 @@ public class ProductDAO {
         return sqlSessionTemplate.selectList("productMapper.getAllProduct");
     }
 
-    public ProductDTO getProductByIdx(int idx) {
+    public ProductDTO getProductByIdx(long idx) {
         return sqlSessionTemplate.selectOne("productMapper.getProductByIdx", idx);
     }
 
@@ -35,19 +35,23 @@ public class ProductDAO {
         return sqlSessionTemplate.selectList("productMapper.searchProducts", searchDTO);
     }
 
-    public List<ProductImageDTO> imageRead(int product_idx) {
+    public List<ProductImageDTO> imageRead(long product_idx) {
         return sqlSessionTemplate.selectList("productMapper.imageRead", product_idx );
     }
 
     public void updateProduct(ProductDTO productDTO) {
-        int updatedCount = sqlSessionTemplate.update("productMapper.updateProductDetail", productDTO);
+        int updatedCount = sqlSessionTemplate.update("productMapper.updateProduct", productDTO);
         if (updatedCount == 0) {
             throw new RuntimeException("수정할 상품이 없습니다.");
         }
     }
 
-    public void deleteProductImages(Long idx) {
+    public int deleteProduct(ProductDeleteDTO productDeleteDTO){
+        return sqlSessionTemplate.update("productMapper.deleteProduct", productDeleteDTO);
     }
+
+
+
 
 
 }

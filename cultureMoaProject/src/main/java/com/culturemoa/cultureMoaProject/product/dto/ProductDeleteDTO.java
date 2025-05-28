@@ -1,17 +1,15 @@
 package com.culturemoa.cultureMoaProject.product.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductImageDTO {
-    private String image_Url;
-    private Boolean flag;
-
+public class ProductDeleteDTO {
+    private Long idx;
+    private LocalDateTime eDate;
 }
-
