@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
+import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
@@ -25,21 +26,18 @@ import java.util.Map;
 @Service
 public class MyPageService {
 
-    @Autowired
-    private MyPageDAO myPageDAO;
-
-    // 디버그 용
-    private static final Logger logger = LoggerFactory.getLogger(MyPageService.class);
-
+    private final MyPageDAO myPageDAO;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDAO userDAO;
+    private final HandleAuthentication handleAuth;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private HandleAuthentication handleAuth;
+    public MyPageService (UserDAO userDAO, PasswordEncoder passwordEncoder, MyPageDAO myPageDAO, HandleAuthentication handleAuth ) {
+        this.userDAO = userDAO;
+        this.passwordEncoder=passwordEncoder;
+        this.myPageDAO=myPageDAO;
+        this.handleAuth=handleAuth;
+    }
 
 
     /**

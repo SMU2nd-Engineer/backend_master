@@ -15,8 +15,12 @@ import java.util.List;
 @RequestMapping("/mypage")
 public class MyPageController {
 
+    private final MyPageService myPageService;
+
     @Autowired
-    MyPageService myPageService;
+    public MyPageController(MyPageService myPageService) {
+        this.myPageService = myPageService;
+    }
 
 
     // checkMyInfoPassword 가 더 적절합니다. 동사+명사가 네이밍 룰이니까요
