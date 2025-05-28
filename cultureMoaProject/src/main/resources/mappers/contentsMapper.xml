@@ -93,10 +93,11 @@
     </insert>
 
     <!-- 게시글 이미지 상세 정보 가져오기  -->
-    <select id="boardImageRead" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" parameterType="int" >
-        SELECT CONTENTS_IDX, IMAGE_URL
+    <select id="boardImageRead" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO" parameterType="Long" >
+        SELECT CONTENTS_IDX, IMAGE_URL AS image_url
         FROM CONTENTS_DETAIL_IMAGE_TBL
         WHERE CONTENTS_IDX = #{contents_idx}
+        ORDER BY IDX
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 정보 불러오기 - 게시글 상세페이지 -->

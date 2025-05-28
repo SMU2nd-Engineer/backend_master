@@ -64,10 +64,9 @@ public class ContentsController {
     // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자-nickname) 데이터 출력
     // 게시글 상세페이지로 이동
     @GetMapping ("/detail/{idx}")
-    public ContentInfoDTO getParticular(
+    public ContentsDetailLoadImageInfoDTO getParticular(
             @PathVariable Long idx
     ) {
-//        System.out.println(contentsService.getParticular(contentInfoDTO));
 
         return contentsService.getParticular(idx);
     }

@@ -47,8 +47,8 @@ public class ContentsDAO {
         sqlSessionTemplate.insert("contentsMapper.getBoardImageInsert", detailImageDTO);
     }
 
-    // 게시글 등록 페이지(이미지 정보 불러오기)
-    public List<ContentInfoDTO> imageRead(int contents_idx) {
+//    // 게시글 상세 페이지(이미지 정보 불러오기)
+    public List<ContentsDetailImageDTO> boardImageRead(Long contents_idx) {
         return sqlSessionTemplate.selectList("contentsMapper.boardImageRead", contents_idx );
     }
 

@@ -1,9 +1,6 @@
 package com.culturemoa.cultureMoaProject.board.service;
 
-import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO;
+import com.culturemoa.cultureMoaProject.board.dto.*;
 import com.culturemoa.cultureMoaProject.board.repository.ContentsDAO;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
@@ -95,37 +92,32 @@ public class ContentsService {
         System.out.println("여기까지 실행 됨" + contentsDTO);
         // 게시글 등록(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
         if(contentsDAO.getContentInsert(contentsDTO) == 1){
+            // 텍스트 에디터 quill 이미지 저장
+            if (imgList != null) {
+                for (ContentsImageSubmitDTO imageSubmitDTO : imgList ) {
+                    ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
+                    detailImageDTO.setContents_idx(contentsDTO.getIdx());
+                    detailImageDTO.setImage_url(imageSubmitDTO.getImage_Url());
+
+                    contentsDAO.getBoardImageInsert(detailImageDTO);
+
+                }
+            }
             return contentsDTO.getIdx();
         };
 
-        // 텍스트 에디터 quill 이미지 저장
-        if (imgList != null) {
-            for (ContentsImageSubmitDTO imageSubmitDTO : imgList ) {
-                ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
-                detailImageDTO.setContents_idx(contentsDTO.getIdx());
-                detailImageDTO.setImage_Url(detailImageDTO.getImage_Url());
 
-                contentsDAO.getBoardImageInsert(detailImageDTO);
 
-            }
-        }
 
         return 1L;
     }
 
     // 게시판 등록페이지 이미지 저장
     public String saveBoardImage(MultipartFile image, String uploadDir) throws IOException {
-        String originalFilename = image.getOriginalFilename();
-        String extension = "";
-        
-        if (originalFilename != null && originalFilename.contains(".")) {
-            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        }
         
         // 파일 이름 생성
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS");
         String timestamp = LocalDateTime.now().toString().replace(":", "-");
-        String boardImageUrl = UUID.randomUUID() + "_" + timestamp + extension; // UUID 동일 파일명 방지
+        String boardImageUrl = UUID.randomUUID() + "_" + timestamp; // UUID 동일 파일명 방지
         
         // quill 에디터에서 등록한 이미지를 Blob 파일형식으로 변환 => 서버에 저장된 이미지 파일 주소 경로
         String boardImagePath = uploadDir + boardImageUrl;
@@ -144,9 +136,26 @@ public class ContentsService {
 
     // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자) 데이터 출력
     // 게시글 상세페이지
-    public ContentInfoDTO getParticular(Long idx) {
-        return contentsDAO.getParticular(idx);
+    public ContentsDetailLoadImageInfoDTO getParticular(Long idx) {
+        ContentsDetailLoadImageInfoDTO contentsDTO = new ContentsDetailLoadImageInfoDTO();
+
+        ContentInfoDTO contentInfoDTO = contentsDAO.getParticular(idx);
+        contentsDTO.setIdx(contentInfoDTO.getIdx());
+        contentsDTO.setUser_idx(contentInfoDTO.getUser_idx());
+        contentsDTO.setCategory_idx(contentInfoDTO.getCategory_idx());
+        contentsDTO.setTitle(contentInfoDTO.getTitle());
+        contentsDTO.setContent(contentInfoDTO.getContent());
+        contentsDTO.setSdate(contentInfoDTO.getSdate());
+        contentsDTO.setNickname(contentInfoDTO.getNickname());
+
+        System.out.println(contentsDAO.boardImageRead(idx));
+
+        contentsDTO.setDetailImageList(contentsDAO.boardImageRead(idx));
+        System.out.println(contentsDTO);
+        return contentsDTO;
 
         }
+
+
 
 }
