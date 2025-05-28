@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("board")
 public class ContentsController {
+    // 생성자 패턴을 사용한 경우 final로 변수 선언
     private ContentsService contentsService;
     private ContentsCommentService contentsCommentService;
 
@@ -34,6 +35,8 @@ public class ContentsController {
         return contentsService.getContentInfos();
     }
 
+    // List<ContentInfoDTO> 라면 별도의 기능이 없는 경우 단순 리스트 조회의 경우
+    // getContentInfos 가 맞는 네이밍
 
     // 게시판의 정보와 user의 idx를 조인한 게시글(데이터)목록에서 카테고리와 키워드 검색
     // 검색 조건이 여러개 일때 파라미터를 선택적으로 받음 (required = false)
@@ -48,6 +51,8 @@ public class ContentsController {
         return contentsService.getContentSearchs(category_idx, keyword, searchType);
     }
 
+    //주석 삭제
+
     // 게시판 테이블 idx == user 테이블 idx 면
     // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자-nickname) 데이터 출력
     // 게시글 등록
@@ -59,6 +64,8 @@ public class ContentsController {
 //
 //        return contentsService.getContentInsert(contentsDTO);
 //    }
+
+    //위 주석과 마찬가지 ContentInfoDTO를 조회하여 리턴 받는다면 getContentInfo 가 맞음
 
     // 게시판 테이블 idx == user 테이블 idx 면
     // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자-nickname) 데이터 출력
@@ -72,6 +79,7 @@ public class ContentsController {
         return contentsService.getParticular(idx);
     }
 
+    // ContentsDTO 삽입이니 insertContents 가 맞음
     // 게시판 등록페이지 이미지 업로드
     @PostMapping("/submit")
     public ContentsDTO ContentsUpload (@RequestPart("contents") ContentsDTO contentDTO, @RequestPart("files")List<MultipartFile> files) {
@@ -104,6 +112,7 @@ public class ContentsController {
         return contentsCommentService.getComment(idx);
     }
 
+    // get~~insert 는 말이 안되는 네이밍 다 고치세요 insertComment 가 맞음
     // 게시글 댓글 등록
     @PostMapping("/comment")
     public Long getCommentInsert(
@@ -114,6 +123,7 @@ public class ContentsController {
         return contentsCommentService.getCommentInsert(commentDTO);
     }
 
+    // get~~delete 마찬가지
     // 게시글 댓글 삭제
     @PostMapping("/commentdelete")
     public int getCommentDelete (

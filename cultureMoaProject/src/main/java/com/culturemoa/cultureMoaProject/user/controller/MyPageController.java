@@ -18,6 +18,8 @@ public class MyPageController {
     @Autowired
     MyPageService myPageService;
 
+
+    // checkMyInfoPassword 가 더 적절합니다. 동사+명사가 네이밍 룰이니까요
     /**
      * 마이페이지 접속할 때 비번 확인
      * @param myPagePasswordCheckDTO : 전달받은 비밀번호를 받을 dto

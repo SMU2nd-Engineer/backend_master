@@ -16,6 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PaymentController {
     // PG사 구분을 위한 서비스 매핑
+    // 명시적 생성자 및 Autowired 써주세요
     private final Map<String, PaymentGatewayService> paymentGatewayServices;
     private final Logger log = LoggerFactory.getLogger(PaymentController.class);
 
