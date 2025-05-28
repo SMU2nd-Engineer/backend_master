@@ -33,6 +33,7 @@ public class ContentsService {
         // 사용자 인증 정보 가져오기
         this.handleAuth = handleAuth;
     }
+    // 생성자 패턴이면 통합 하세요 생성자로 Autowired 여러개 하는거 아닙니다 생성자 패턴에서는
     @Autowired
     private final UserDAO userDAO;
 
