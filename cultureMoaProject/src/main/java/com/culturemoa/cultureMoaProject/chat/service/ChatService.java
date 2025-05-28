@@ -132,14 +132,6 @@ public class ChatService {
         Long userIdx = Long.valueOf(userDAO.getUserIdx(handleAuthentication.getUserIdByAuth()));
         System.out.println(userIdx);
         return chatRoomRepository.findByUsersContainingOrderByLastMessageAtDesc(userIdx);
-//        return mongoOperations.find(
-//                Query.query(
-//                        new Criteria().orOperator(
-//                                Criteria.where("fromUser").is(userIdx)
-//                                ,Criteria.where("toUser").is(userIdx)
-//                        ).andOperator(Criteria.where("flag").is(true))
-//                )
-//                , ChatRoomDTO.class);
     }
 
     /**
