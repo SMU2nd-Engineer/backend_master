@@ -1,10 +1,12 @@
 package com.culturemoa.cultureMoaProject.payment.service.kakao;
 
+import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.payment.dto.*;
 import com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory;
 import com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus;
 import com.culturemoa.cultureMoaProject.payment.repository.PaymentDAO;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
+import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -35,11 +37,14 @@ public class KakaoPaymentService implements PaymentGatewayService {
     private static final String KAKAO_CANCEL_URL = "https://open-api.kakaopay.com/online/v1/payment/cancel";
     private final KakaoPayProperties kakaoPayProperties;
     private final PaymentDAO paymentDAO;
+    private final UserDAO userDAO;
+    private final HandleAuthentication handleAuthentication;
 
     // 카카오페이 결제 준비 API를 호출하는 역할
     @Override
     public PaymentResponseDTO readyToPay(PaymentReadyRequestDTO requestDTO) {
         String tid = null;
+        int userIdx = userDAO.getUserIdx(handleAuthentication.getUserIdByAuth());
         try {
             // HTTP 요청 헤더를 설정하는 객체
             HttpHeaders headers = new HttpHeaders();
@@ -80,7 +85,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             history.setPayMethod(6001);
             history.setProductIdx(requestDTO.getProductIdx());
             history.setDeliveryAddress(requestDTO.getDeliveryAddress());
-            history.setBuyerIdx(requestDTO.getBuyerIdx());
+            history.setBuyerIdx(userIdx);
             history.setSellerIdx(requestDTO.getSellerIdx());
             history.setTradeType(requestDTO.getTradeType());
 
