@@ -192,9 +192,7 @@ public class MyPageService {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         Map<String, Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
-        UserFavoriteResponseDTO userFavoriteResponseDTO = new UserFavoriteResponseDTO();
-        userFavoriteResponseDTO.setUserFavoriteMap(favorites);
-        return userFavoriteResponseDTO;
+        return new UserFavoriteResponseDTO(favorites, myPageDAO.getCategorySubInfo());
     }
 
     /**
