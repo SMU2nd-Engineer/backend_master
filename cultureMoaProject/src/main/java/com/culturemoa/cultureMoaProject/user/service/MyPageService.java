@@ -108,11 +108,12 @@ public class MyPageService {
      */
     public MyPageMainDTO getMainInfoListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
+        MyPageGetUserInfoDTO myPageGetUserInfo = myPageDAO.getUserInfoById(userId);
         MyPageAverageRatingDTO myPageAverageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<MyPageSellListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
         List<MyPagePickProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
         List<ReviewListDTO> myMainReview = myPageDAO.getMyMainReviewListInfoByUserId(userId);
-        return new MyPageMainDTO(myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
+        return new MyPageMainDTO(myPageGetUserInfo, myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
     }
 
     /**
@@ -168,7 +169,9 @@ public class MyPageService {
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
         Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
         List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo(5005);
-        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList);
+        // 사용자 정보 가져오기
+        MyPageGetUserInfoDTO myPageGetUserInfo = myPageDAO.getUserInfoById(userId);
+        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList, myPageGetUserInfo);
     }
 
 
