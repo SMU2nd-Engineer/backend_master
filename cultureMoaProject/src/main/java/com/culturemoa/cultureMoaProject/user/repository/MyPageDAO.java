@@ -227,6 +227,11 @@ public class MyPageDAO {
         return sqlSessionTemplate.update("myPageMapper.insertOrUpdateEvaluation", reviewRegisterDTO);
     }
 
+    /**
+     * 리뷰 평가 기록 테이블에 값을 넣을 dao
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰의 idx와 리뷰 평가 항목이 기록된 dto
+     * @return : sql 실행 결과
+     */
     public int insertReviewEvaluationRecord (ReviewRegisterDTO reviewRegisterDTO) {
         return sqlSessionTemplate.insert("myPageMapper.insertReviewEvaluationRecord", reviewRegisterDTO);
     }

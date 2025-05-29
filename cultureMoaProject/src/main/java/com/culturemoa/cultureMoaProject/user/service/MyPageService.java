@@ -256,6 +256,10 @@ public class MyPageService {
         );
     }
 
+    /**
+     * 평가항목 수정시 작동할 서비스
+     * @param updateReviewInfoDTO : 업데이트할 리뷰 정보가 담긴 dto
+     */
     public void updateReviewAndEvaluation (UpdateReviewInfoDTO updateReviewInfoDTO) {
         // cDate 넣기
         updateReviewInfoDTO.setCDate(LocalDateTime.now().withNano(0));
