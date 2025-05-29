@@ -19,6 +19,7 @@ public class PrefixFilterPassPaths {
                 prefix + "/user/passwordChange",
                 prefix + "/logout",
                 prefix + "/product/upload_img",
+                prefix + "/board/board_upload_img",
                 prefix + "/ws"
         );
     }

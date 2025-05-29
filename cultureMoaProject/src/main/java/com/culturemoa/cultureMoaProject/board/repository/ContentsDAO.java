@@ -1,9 +1,6 @@
 package com.culturemoa.cultureMoaProject.board.repository;
 
-import com.culturemoa.cultureMoaProject.board.dto.ContentsDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO;
-import com.culturemoa.cultureMoaProject.board.dto.ContentsImageSubmitDTO;
+import com.culturemoa.cultureMoaProject.board.dto.*;
 import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,16 +44,37 @@ public class ContentsDAO {
         sqlSessionTemplate.insert("contentsMapper.getBoardImageInsert", detailImageDTO);
     }
 
+    // 게시글 상세페이지(이미지 수정)
+    public int postModifyContents ( ContentsDetailModifyInfoDTO modifyInfoDTO) {
+           return sqlSessionTemplate.update("contentsMapper.postModifyContents", modifyInfoDTO);
+
+    }
+
+
 //    // 게시글 상세 페이지(이미지 정보 불러오기)
     public List<ContentsDetailImageDTO> boardImageRead(Long contents_idx) {
         return sqlSessionTemplate.selectList("contentsMapper.boardImageRead", contents_idx );
     }
 
-    // 게시글 상세페이지
+    // 게시글 상세페이지 정보 불러오기
     public ContentInfoDTO getParticular(
             Long idx
     ) {
         return sqlSessionTemplate.selectOne("contentsMapper.getParticular", idx);
+    }
+
+    // 게시글 상세페이지 게시글 정보 수정
+    public void updateContents(ContentsDetailModifyInfoDTO modifyInfoDTO) {
+        int updateContent = sqlSessionTemplate.update("contentsMapper.updateContents", modifyInfoDTO);
+        if (updateContent == 0) {
+            throw new RuntimeException("수정할 게시글이 없습니다.");
+        }
+    }
+
+
+    // 게시글 상세페이지 게시글 삭제
+    public int deleteContents(ContentsDeleteInfoDTO contentsDeleteInfoDTO) {
+        return  sqlSessionTemplate.update("contentsMapper.deleteContents", contentsDeleteInfoDTO);
     }
 
 }

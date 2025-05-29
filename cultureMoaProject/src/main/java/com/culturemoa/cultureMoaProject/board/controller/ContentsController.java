@@ -6,10 +6,18 @@ import com.culturemoa.cultureMoaProject.board.service.ContentsService;
 import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +103,41 @@ public class ContentsController {
         }
     }
 
+    // 게시글 이미지 - 상세페이지에서 보이는 화면에 전달
+    @GetMapping("/board_upload_img/{filename:.+}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get("C:/board_upload_img").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // 파일 확장자에 따라 Content-Type 지정
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // 기본값
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } catch (
+                MalformedURLException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // 등록된 게시글 삭제(상세페이지의 삭제버튼)
+    @PutMapping("/delete/{idx}")
+    public ResponseEntity<?> contentDelete(@PathVariable Long idx) {
+        contentsService.deleteContents(idx);
+        return  ResponseEntity.ok("게시글 삭제 성공");
+    }
 
     // 게시판 댓글 contents_idx, text만 불러오게 설정 - 게시글 댓글 목록 조회
     @GetMapping("/comment")
@@ -119,6 +162,29 @@ public class ContentsController {
             @RequestBody ContentsCommentDeleteInfoDTO contentsCommentDeleteInfoDTO
     ) {
         return contentsCommentService.getCommentDelete(contentsCommentDeleteInfoDTO);
+    }
+    // 게시판 상세페이지(수정 버튼) - 이미지 수정
+    @PostMapping("/edit")
+    public ContentsDetailModifyInfoDTO ContentsModify (@RequestPart("contents") ContentsDetailModifyInfoDTO modifyInfoDTO, @RequestPart("files")List<MultipartFile> files) {
+        System.out.println("이미지 업로드 실행");
+        try {
+            String uploadDir = "C:/board_upload_img/";
+            List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
+
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                if (!files.isEmpty()) {
+                    String boardImagUrl = contentsService.saveBoardImage(file, uploadDir);
+                    boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
+                }
+            }
+
+            contentsService.postModifyContents(modifyInfoDTO,boardImageList);
+            return modifyInfoDTO;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
 }

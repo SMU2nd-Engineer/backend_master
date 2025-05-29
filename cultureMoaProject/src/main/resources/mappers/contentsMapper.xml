@@ -112,6 +112,23 @@
         AND   CONT.IDX = #{idx}
     </select>
 
+    <!-- 등록된 게시글 수정(상세페이지 수정버튼) -->
+    <update id="updateContents" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailModifyInfoDTO">
+        UPDATE CONTENTS_TBL
+           SET CATEGORY_IDX = #{category_idx},
+               TITLE = #{title},
+               CONTENT = #{content},
+               CDATE = #{cdate},
+         WHERE IDX = #{id}
+    </update>
+
+    <!-- 등록된 게시글 삭제(상세페이지 삭제버튼) -->
+    <update id="deleteContents" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDeleteInfoDTO">
+        UPDATE CONTENTS_TBL
+        SET EDATE = #{edate}
+        WHERE IDX = #{idx}
+    </update>
+
     <!-- CONTENTS_TBL, USER_TBL의 댓글 불러오기 - 게시글 상세페이지
     AS comment_idx: ContentsCommentInfoDTO에 컬럼명이 일치해야되서 선언함
     -->

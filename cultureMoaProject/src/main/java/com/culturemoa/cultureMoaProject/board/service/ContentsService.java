@@ -106,19 +106,25 @@ public class ContentsService {
             return contentsDTO.getIdx();
         };
 
-
-
-
         return 1L;
     }
 
     // 게시판 등록페이지 이미지 저장
     public String saveBoardImage(MultipartFile image, String uploadDir) throws IOException {
-        
+
+        String originalFilename = image.getOriginalFilename();
+
+
+        String extension = "";
+
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+
         // 파일 이름 생성
         String timestamp = LocalDateTime.now().toString().replace(":", "-");
-        String boardImageUrl = UUID.randomUUID() + "_" + timestamp; // UUID 동일 파일명 방지
-        
+        String boardImageUrl = UUID.randomUUID() + "_" + timestamp + extension; // UUID 동일 파일명 방지
+
         // quill 에디터에서 등록한 이미지를 Blob 파일형식으로 변환 => 서버에 저장된 이미지 파일 주소 경로
         String boardImagePath = uploadDir + boardImageUrl;
         
@@ -135,7 +141,7 @@ public class ContentsService {
 
 
     // 게시판 테이블(카테고리, 제목, 날짜), user 테이블(작성자) 데이터 출력
-    // 게시글 상세페이지
+    // 게시글 상세페이지 게시글 정보 불러오기
     public ContentsDetailLoadImageInfoDTO getParticular(Long idx) {
         ContentsDetailLoadImageInfoDTO contentsDTO = new ContentsDetailLoadImageInfoDTO();
 
@@ -156,6 +162,55 @@ public class ContentsService {
 
         }
 
+    // 등록된 게시글 수정(상세페이지의 수정버튼)
+    public void  updateContents(ContentsDetailModifyInfoDTO modifyInfoDTO) {
+        // 입력화면에 없는 것을 DB에 저장
+        modifyInfoDTO.setCdate(LocalDateTime.now().withNano(0));
+    }
 
+    // 등록된 게시글 이미지 수정
+    public Long postModifyContents(
+            // 등록해야할 칼럼들, 불러와야 할 이미지 Url 주소를 리스트로 저장
+            ContentsDetailModifyInfoDTO modifyInfoDTO, List<ContentsImageSubmitDTO> imgList
+    ) {
+//       user 정보 담겨 있음
+        // 사용자 인증해서 user id를 자동으로 불러옴
+        String userid = handleAuth.getUserIdByAuth();
+        // 조회 해서 user id 불러옴
+        int useridx = userDAO.getUserIdx(userid);
+//        contentInfoDTO.setUserid(userid);
+//      입력 화면에 없는 cdate DB 저장되게 설정
+        modifyInfoDTO.setCdate(LocalDateTime.now().withNano(0));
+
+        System.out.println("여기까지 실행 됨" + modifyInfoDTO);
+        // 게시글 등록(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
+        if(contentsDAO.postModifyContents(modifyInfoDTO) == 1){
+            // 텍스트 에디터 quill 이미지 저장
+            if (imgList != null) {
+                for (ContentsImageSubmitDTO imageSubmitDTO : imgList ) {
+                    ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
+                    detailImageDTO.setContents_idx(modifyInfoDTO.getIdx());
+                    detailImageDTO.setImage_url(imageSubmitDTO.getImage_Url());
+
+                    contentsDAO.getBoardImageInsert(detailImageDTO);
+
+                }
+            }
+            return modifyInfoDTO.getIdx();
+        };
+
+        return 1L;
+    }
+
+
+
+    // 등록된 게시글 삭제(상세페이지의 삭제버튼)
+    public int deleteContents(Long idx){
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ContentsDeleteInfoDTO deleteInfoDTO = new ContentsDeleteInfoDTO(idx, localDateTime);
+
+        return contentsDAO.deleteContents(deleteInfoDTO);
+
+    }
 
 }
