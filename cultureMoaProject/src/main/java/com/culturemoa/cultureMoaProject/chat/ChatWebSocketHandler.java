@@ -37,13 +37,15 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private final RoomReadRepository roomReadRepository;
     private final JwtProvider jwtProvider;
     private final UserDAO userDAO;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ChatWebSocketHandler(ChatRepository chatRepository, RoomReadRepository roomReadRepository, JwtProvider jwtProvider, UserDAO userDAO) {
+    public ChatWebSocketHandler(ChatRepository chatRepository, RoomReadRepository roomReadRepository, JwtProvider jwtProvider, UserDAO userDAO, ObjectMapper objectMapper) {
         this.chatRepository = chatRepository;
         this.roomReadRepository = roomReadRepository;
         this.jwtProvider = jwtProvider;
         this.userDAO = userDAO;
+        this.objectMapper = objectMapper;
     }
 
     public Map<String, Set<WebSocketSession>> getRoomSessions() {
@@ -75,7 +77,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
 
             ChatSessionInfo senderInfo = sessionInfoMap.get(session);
             if (senderInfo == null) {
