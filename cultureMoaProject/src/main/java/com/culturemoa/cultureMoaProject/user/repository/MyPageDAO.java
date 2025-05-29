@@ -227,6 +227,10 @@ public class MyPageDAO {
         return sqlSessionTemplate.update("myPageMapper.insertOrUpdateEvaluation", reviewRegisterDTO);
     }
 
+    public int insertReviewEvaluationRecord (ReviewRegisterDTO reviewRegisterDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertReviewEvaluationRecord", reviewRegisterDTO);
+    }
+
     /**
      * 리뷰 idx를 이용하여 리뷰 내용을 찾아서 가져오기
      * @param reviewIdx : 경로 파라미터 값
