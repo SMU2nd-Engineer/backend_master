@@ -255,20 +255,15 @@ public class MyPageService {
     }
 
     public void updateReviewAndEvaluation (UpdateReviewInfoDTO updateReviewInfoDTO) {
-        System.out.println("=======updateReviewInfoDTO====== : " + updateReviewInfoDTO);
         // cDate 넣기
         updateReviewInfoDTO.setCDate(LocalDateTime.now().withNano(0));
         // 평가 항목 +/-를 위한 map 객체 생성
         Map<String, Object> userIdxAndEvaluationMap = new HashMap<>();
         userIdxAndEvaluationMap.put("sellerIdx", updateReviewInfoDTO.getSellerIdx());
         userIdxAndEvaluationMap.putAll(updateReviewInfoDTO.getChangeValueEvaluation());
-        System.out.println("=======userIdxAndEvaluationMap====== : " + userIdxAndEvaluationMap);
         myPageDAO.updateReview(updateReviewInfoDTO);
-        System.out.println("=======myPageDAO.updateReview(updateReviewInfoDTO);====== : " + myPageDAO.updateReview(updateReviewInfoDTO));
         myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);
-        System.out.println("=======myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);====== : " + myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap));
         myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);
-        System.out.println("=======myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);====== : " + myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO));
 
     }
 

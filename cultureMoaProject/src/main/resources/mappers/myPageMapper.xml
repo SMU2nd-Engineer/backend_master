@@ -386,16 +386,16 @@
     <update id="changeCountUserEvaluation" parameterType="map">
         UPDATE USER_REVIEW_EVALUATION_TBL
         <set>
-            <if test="EVAL_5001 != null">EVAL_5001 = EVAL_5001 + #{EVAL_5001},</if>
-            <if test="EVAL_5002 != null">EVAL_5002 = EVAL_5002 + #{EVAL_5002},</if>
-            <if test="EVAL_5003 != null">EVAL_5003 = EVAL_5003 + #{EVAL_5003},</if>
-            <if test="EVAL_5004 != null">EVAL_5004 = EVAL_5004 + #{EVAL_5004},</if>
-            <if test="EVAL_5005 != null">EVAL_5005 = EVAL_5005 + #{EVAL_5005},</if>
-            <if test="EVAL_5006 != null">EVAL_5006 = EVAL_5006 + #{EVAL_5006},</if>
-            <if test="EVAL_5007 != null">EVAL_5007 = EVAL_5007 + #{EVAL_5007},</if>
-            <if test="EVAL_5008 != null">EVAL_5008 = EVAL_5008 + #{EVAL_5008},</if>
-            <if test="EVAL_5009 != null">EVAL_5009 = EVAL_5009 + #{EVAL_5009},</if>
-            <if test="EVAL_5010 != null">EVAL_5010 = EVAL_5010 + #{EVAL_5010}</if>
+            <if test="EVAL_5001 != null">EVAL_5001 = GREATEST(EVAL_5001 + #{EVAL_5001}, 0),</if>
+            <if test="EVAL_5002 != null">EVAL_5002 = GREATEST(EVAL_5002 + #{EVAL_5002}, 0),</if>
+            <if test="EVAL_5003 != null">EVAL_5003 = GREATEST(EVAL_5003 + #{EVAL_5003}, 0),</if>
+            <if test="EVAL_5004 != null">EVAL_5004 = GREATEST(EVAL_5004 + #{EVAL_5004}, 0),</if>
+            <if test="EVAL_5005 != null">EVAL_5005 = GREATEST(EVAL_5005 + #{EVAL_5005}, 0),</if>
+            <if test="EVAL_5006 != null">EVAL_5006 = GREATEST(EVAL_5006 + #{EVAL_5006}, 0),</if>
+            <if test="EVAL_5007 != null">EVAL_5007 = GREATEST(EVAL_5007 + #{EVAL_5007}, 0),</if>
+            <if test="EVAL_5008 != null">EVAL_5008 = GREATEST(EVAL_5008 + #{EVAL_5008}, 0),</if>
+            <if test="EVAL_5009 != null">EVAL_5009 = GREATEST(EVAL_5009 + #{EVAL_5009}, 0),</if>
+            <if test="EVAL_5010 != null">EVAL_5010 = GREATEST(EVAL_5010 + #{EVAL_5010}, 0)</if>
         </set>
         WHERE USER_IDX = #{sellerIdx}
     </update>
