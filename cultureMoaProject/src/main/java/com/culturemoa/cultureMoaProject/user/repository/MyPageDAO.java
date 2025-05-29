@@ -228,6 +228,15 @@ public class MyPageDAO {
     }
 
     /**
+     * 리뷰 평가 기록 테이블에 값을 넣을 dao
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰의 idx와 리뷰 평가 항목이 기록된 dto
+     * @return : sql 실행 결과
+     */
+    public int insertReviewEvaluationRecord (ReviewRegisterDTO reviewRegisterDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertReviewEvaluationRecord", reviewRegisterDTO);
+    }
+
+    /**
      * 리뷰 idx를 이용하여 리뷰 내용을 찾아서 가져오기
      * @param reviewIdx : 경로 파라미터 값
      * @return : 찾은 정보가 담긴 dto

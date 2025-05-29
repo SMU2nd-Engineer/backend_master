@@ -231,10 +231,12 @@ public class MyPageService {
         reviewRegisterDTO.setBuyerIdx(userIdx);
         // 등록날짜 넣기
         reviewRegisterDTO.setSDate(LocalDateTime.now().withNano(0));
-        // user_review_tbl에 데이터 넣는 dao 호출
+        // user_review_tbl에 데이터 넣는 dao 호출 후 이 때 마이바티스로 자동으로 삽입된 행의 idx가 dto에 들어감
         int insertResult = myPageDAO.insertReviewInfo(reviewRegisterDTO);
         // user_review_evaluation 데이터 삽입 또는 업데이트 (판매자에 대한 평가를 남기기)
-        int updateResult = myPageDAO.updateReviewEvaluation(reviewRegisterDTO);
+        int updateEvaluationResult = myPageDAO.updateReviewEvaluation(reviewRegisterDTO);
+        // 거래 평가 항목을 기록하는 부분
+        int updateRecordResult = myPageDAO.insertReviewEvaluationRecord(reviewRegisterDTO);
         // 정상적으로 진행할 경우 1을 반환하므로 0일 경우 예외 처리
         if(insertResult == 0) {
             throw new DontInsertException();
@@ -254,6 +256,10 @@ public class MyPageService {
         );
     }
 
+    /**
+     * 평가항목 수정시 작동할 서비스
+     * @param updateReviewInfoDTO : 업데이트할 리뷰 정보가 담긴 dto
+     */
     public void updateReviewAndEvaluation (UpdateReviewInfoDTO updateReviewInfoDTO) {
         // cDate 넣기
         updateReviewInfoDTO.setCDate(LocalDateTime.now().withNano(0));
