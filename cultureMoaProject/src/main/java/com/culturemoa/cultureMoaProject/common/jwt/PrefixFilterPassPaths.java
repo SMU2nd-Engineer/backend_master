@@ -20,7 +20,7 @@ public class PrefixFilterPassPaths {
                 prefix + "/logout",
                 prefix + "/product/upload_img",
                 prefix + "/board/board_upload_img",
-                "/ws"
+                prefix + "/ws"
 
         );
     }
