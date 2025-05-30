@@ -1,7 +1,9 @@
 package com.culturemoa.cultureMoaProject.chat.controller;
 
 import com.culturemoa.cultureMoaProject.chat.dto.ChatDTO;
+import com.culturemoa.cultureMoaProject.chat.dto.ChatListDTO;
 import com.culturemoa.cultureMoaProject.chat.dto.ChatRoomDTO;
+import com.culturemoa.cultureMoaProject.chat.dto.ChatRoomInfoDTO;
 import com.culturemoa.cultureMoaProject.chat.service.ChatService;
 import com.culturemoa.cultureMoaProject.common.counters.service.CountersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class ChatController {
     }
 
     @GetMapping("/messages")
-    public List<ChatDTO> getChatsByChatRoomId(@RequestParam("chatRoomId") Long chatRoomId){
+    public ChatListDTO getChatsByChatRoomId(@RequestParam("chatRoomId") Long chatRoomId){
         return chatService.getChatsByChatRoomId(chatRoomId);
     }
 
@@ -46,7 +48,7 @@ public class ChatController {
     }
 
     @GetMapping("/rooms")
-    public List<ChatRoomDTO> getChatRoomsByUserIdx(){
+    public List<ChatRoomInfoDTO> getChatRoomsByUserIdx(){
         return chatService.getChatRooms();
     }
 

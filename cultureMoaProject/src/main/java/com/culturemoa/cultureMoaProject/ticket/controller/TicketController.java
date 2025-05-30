@@ -18,6 +18,9 @@ public class TicketController {
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
+
+    // 보통은 List타입 반환은 getTickets 를 사용하구요
+    // 만약 조건이 걸려서 다른 내용이라면 getTicketsBy조건 이런식 네이밍이 맞습니다.
     // 티켓 전체
     @GetMapping("/list")
     public List<TicketDTO> getAllTicket(){
@@ -37,6 +40,7 @@ public class TicketController {
         return ticketService.searchTickets(categories, query, startDate, endDate);
     }
 
+    // 마찬가지 getDateCounts 가 맞을듯 조건이 있다면 By~
     @GetMapping("/calendar")
     public List<DateCountDTO> getCalendarTicketCount(@RequestParam("month") String month, @RequestParam(value = "categories", required = false) String categories) {
         System.out.println("month: " + month);

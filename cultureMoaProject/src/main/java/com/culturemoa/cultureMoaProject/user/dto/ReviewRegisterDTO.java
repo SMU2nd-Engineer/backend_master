@@ -21,4 +21,5 @@ public class ReviewRegisterDTO {
     private List<String> evaluation;
     private int transactionIdx;
     private LocalDateTime sDate;
+    private int reviewIdx;
 }

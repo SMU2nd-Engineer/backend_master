@@ -24,6 +24,7 @@ import java.util.UUID;
 public class ProductService {
     private final ProductDAO productDAO;
 
+    // 생성자 패턴으로 통일하세요..
     @Autowired
     public ProductService(ProductDAO productDAO){
         this.productDAO = productDAO;

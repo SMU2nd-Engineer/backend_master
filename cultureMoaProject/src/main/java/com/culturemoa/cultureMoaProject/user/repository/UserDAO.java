@@ -14,9 +14,13 @@ import java.util.Map;
  */
 @Repository
 public class UserDAO {
-    
+
+    private final SqlSessionTemplate sqlSessionTemplate;
+
     @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+    public UserDAO(SqlSessionTemplate sqlSessionTemplate) {
+        this.sqlSessionTemplate = sqlSessionTemplate;
+    }
 
         // userMapper 라는 부분과 5단계에 있는 mapper.xml 파일의 namespace를 동일하게 맞춰준다
         //.getUserInfo 와 5단계에 있는 <select id= 부분를 동일하게 맞춰준다.

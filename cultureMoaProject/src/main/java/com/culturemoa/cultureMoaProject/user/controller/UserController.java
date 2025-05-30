@@ -16,11 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+    private final SocialLoginService socialLoginService;
 
     @Autowired
-    private SocialLoginService socialLoginService;
+    public UserController(UserService userService, SocialLoginService socialLoginService) {
+        this.userService = userService;
+        this.socialLoginService = socialLoginService;
+    }
 
     /**
      * 회원 가입 페이지 정보를 이용 회원 가입 진행.
@@ -172,7 +176,7 @@ public class UserController {
      * @param userRegisterFavoriteDTO : 프론트에서 받은 데이터를 저장할 DTO
      * @return : 성공했을 경우 message 전달
      */
-    @PostMapping("/registrationFavorites")
+    @PostMapping("/favoriteRegistration")
     public ResponseEntity<?> insertFavorites (@RequestBody UserRegisterFavoriteDTO userRegisterFavoriteDTO) {
         userService.insertUserFavoriteWithIdxAndDate(userRegisterFavoriteDTO);
         return ResponseEntity.ok("선호도가 정상적으로 등록되었습니다.");

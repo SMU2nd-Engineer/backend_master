@@ -18,4 +18,5 @@ public class MyPageReviewDTO {
     private MyPageAverageRatingDTO myAverageRating;
     private Map<String, Integer> myEvaluationList;
     private List<UserCategorySubDTO> evaluationList;
+    private MyPageGetUserInfoDTO myPageGetUserInfo;
 }

@@ -26,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("product")
 public class ProductController {
+    // 생성자 패턴으로 Autowired 사용해주세요
     @Autowired
     private ProductService productService;
 
@@ -35,6 +36,8 @@ public class ProductController {
     @Autowired
     private HandleAuthentication handleAuth;
 
+    // 네이밍 규칙 바꾸세요 getProducts가 맞겠죠
+    // 하위 service도 마찬가집니다
     // 전체 목록 불러오기
     @GetMapping("/list")
     public List<ProductDTO> product() {
@@ -81,6 +84,7 @@ public class ProductController {
         }
     }
 
+    // 메서드가 왜 대문자로 시작하죠
     @PostMapping("/upload")
     public ProductDTO ProductUpload(@RequestPart("product") ProductDTO productDTO, @RequestPart("files") List<MultipartFile> files) {
         System.out.println("업로드 실행");
@@ -164,6 +168,7 @@ public class ProductController {
         }
     }
 
+    // 네이밍 룰은 동사+명사입니다
     // 상품 삭제
     @PutMapping("/delete/{idx}")
     public ResponseEntity<?> productDelete(@PathVariable long idx){
