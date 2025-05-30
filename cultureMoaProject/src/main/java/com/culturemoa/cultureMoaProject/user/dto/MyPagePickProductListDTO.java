@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 public class MyPagePickProductListDTO {
     private int idx;
     private String title;
+    @JsonProperty("image_Url")
     private String imageUrl;
     private String price;
     private String content;
