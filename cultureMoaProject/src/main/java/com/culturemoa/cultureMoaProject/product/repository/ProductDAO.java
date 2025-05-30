@@ -36,7 +36,7 @@ public class ProductDAO {
     }
 
     // 네이밍 수정하세요 ex) getProductImagesByProductIdx
-    public List<ProductImageDTO> imageRead(long product_idx) {
+    public List<ProductImageDTO> getProductImagesByProductIdx(long product_idx) {
         return sqlSessionTemplate.selectList("productMapper.imageRead", product_idx );
     }
 

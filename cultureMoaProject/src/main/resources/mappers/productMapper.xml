@@ -26,7 +26,7 @@
     <!-- 해당 idx에 맞는 정보 가져오기 -->
     <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="long">
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
-               USER_IDX, PRICE, MAIN.FLAG, CONTENT, USER.NICKNAME
+               USER_IDX, PRICE, MAIN.FLAG, CONTENT, USER.NICKNAME, USER.ID
         FROM PRODUCT_TBL MAIN
         LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
         WHERE MAIN.IDX = #{idx}

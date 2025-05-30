@@ -23,18 +23,15 @@ import java.util.UUID;
 @Service
 public class ProductService {
     private final ProductDAO productDAO;
-
+    private final UserDAO userDAO;
+    private final HandleAuthentication handleAuth;
     // 생성자 패턴으로 통일하세요..
     @Autowired
-    public ProductService(ProductDAO productDAO){
+    public ProductService(ProductDAO productDAO, UserDAO userDAO, HandleAuthentication handleAuth){
         this.productDAO = productDAO;
+        this.userDAO = userDAO;
+        this.handleAuth = handleAuth;
     }
-
-    @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private HandleAuthentication handleAuth;
 
     // 상품 전체 정보 불러오기
     public List<ProductDTO> getAllProduct() {
@@ -45,7 +42,7 @@ public class ProductService {
     public ProductDTO getProductByIdx(long idx) {
 
         ProductDTO product = productDAO.getProductByIdx(idx);
-        List<ProductImageDTO> images = productDAO.imageRead(idx);
+        List<ProductImageDTO> images = productDAO.getProductImagesByProductIdx(idx);
         product.setImageList(images);
         if( images != null && !images.isEmpty()) {
             product.setImage_Url(images.get(0).getImage_Url());
@@ -59,6 +56,10 @@ public class ProductService {
         String userid = handleAuth.getUserIdByAuth();
         int user_idx = userDAO.getUserIdx(userid);
         productDTO.setUser_idx((long) user_idx);
+
+        if(productDTO.getImageList() == null || productDTO.getImageList().isEmpty()) {
+            throw new IllegalArgumentException("상품 이미지를 포함해주세요");
+        }
 
         productDAO.insertProduct(productDTO);
         if (productDTO.getIdx() == 0) {
@@ -110,7 +111,7 @@ public class ProductService {
 
     // 상세 이미지 불러오기
     public List<ProductImageDTO> imageRead(long product_idx){
-        return productDAO.imageRead(product_idx);
+        return productDAO.getProductImagesByProductIdx(product_idx);
     }
 
     // 상품 수정
