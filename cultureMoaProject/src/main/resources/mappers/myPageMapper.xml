@@ -435,7 +435,13 @@
     </update>
 
     <!--  유저 pick 에서 상품 정보와 userIdx를 이용하여 상품 정보를 개수를 count 하기  -->
-    <select id="getUserPeakProductInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO " resultType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO" >
-        SELECT COUNT(*) FROM USER_PEAK_TBL WHERE USER_IDX = #{userIdx} AND PRODUCT_IDX = #{idx} AND EDATE IS NULL
+    <select id="getUserPeakProductInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO" >
+        SELECT COUNT(*) FROM USER_PICK_TBL WHERE USER_IDX = #{userIdx} AND PRODUCT_IDX = #{idx} AND EDATE IS NULL
     </select>
+
+<!--  유저 PICK 테이블에 찜을 추가하기 위한 MAPPER  -->
+    <insert id="insertUserPeakInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO">
+        INSERT INTO USER_PICK_TBL (USER_IDX, PRODUCT_DIX, SDATE)
+        VALUES (#{userIdx}, #{idx}, #{sDate})
+    </insert>
 </mapper>

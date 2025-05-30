@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  * isPeak : select 를 통해서 담길 count 출력 값 0이면 peak이 아닌것이고 1이면 peak인것.
  * userId : 사용자 정보
  * idx : 프론트에서 받은 상품 idx
+ * sDate : 등록 날짜
  */
 @Data
 @NoArgsConstructor

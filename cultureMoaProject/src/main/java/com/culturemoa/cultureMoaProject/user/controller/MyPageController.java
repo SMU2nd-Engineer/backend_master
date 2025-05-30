@@ -218,9 +218,9 @@ public class MyPageController {
 
 
 
-    @PostMapping("insertUserPeak")
-    public ResponseEntity<?> insertUserPeak (@RequestBody UserPickInfoDTO userPickInfoDTO) {
-        return ResponseEntity.ok(myPageService.insertUserPeakByAuth);
-    }
+//    @PostMapping("insertUserPeak")
+//    public ResponseEntity<?> insertUserPeak (@RequestBody UserPickInfoDTO userPickInfoDTO) {
+//        return ResponseEntity.ok(myPageService.insertUserPeakByAuth);
+//    }
 
 }
