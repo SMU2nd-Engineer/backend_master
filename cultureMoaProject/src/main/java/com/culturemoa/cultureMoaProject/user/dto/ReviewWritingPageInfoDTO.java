@@ -15,6 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewWritingPageInfoDTO {
-    private SellerInfoDTO sellerInfo;
+    private List<SellerInfoDTO> sellerInfo;
     private List<UserCategorySubDTO> evaluationCategories;
 }
