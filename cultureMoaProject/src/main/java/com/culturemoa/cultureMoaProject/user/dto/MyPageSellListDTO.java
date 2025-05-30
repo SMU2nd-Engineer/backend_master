@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class MyPageSellListDTO {
     private int price;
     private int flag;
     private String content;
+    @JsonProperty("image_Url") // 상품 컴포넌트 사용하기 위하여 변경
     private String imageUrl;
     private int categoryIdx;
     private int categoryGenreIdx;
