@@ -1,6 +1,5 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
-import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
@@ -8,10 +7,7 @@ import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.repository.MyPageDAO;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -272,6 +268,13 @@ public class MyPageService {
         myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);
         myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);
 
+    }
+
+    public UserPickInfoDTO getUserPeakInfoByDTO (UserPickInfoDTO userPickInfoDTO) {
+        String userId = handleAuth.getUserIdByAuth();
+        // userIdx넣기
+        userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
+        return myPageDAO.getUserPeakInfoByProductAndUserIdx(userPickInfoDTO);
     }
 
 }

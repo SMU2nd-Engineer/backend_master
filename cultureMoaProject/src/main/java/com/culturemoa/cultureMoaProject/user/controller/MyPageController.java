@@ -206,4 +206,21 @@ public class MyPageController {
         return ResponseEntity.ok("정상적으로 업데이트가 진행되었습니다.");
     }
 
+    /**
+     * 전달 받은 상품 정보를 이용하여 유저 pick 테이블에서 원하는 정보 가져오기
+     * @param userPickInfoDTO : peak 데이터가 담긴 dto
+     * @return
+     */
+    @PostMapping("pickInfo")
+    public ResponseEntity<?> getUserPeakInfo (@RequestBody UserPickInfoDTO userPickInfoDTO) {
+        return ResponseEntity.ok(myPageService.getUserPeakInfoByDTO(userPickInfoDTO));
+    }
+
+
+
+    @PostMapping("insertUserPeak")
+    public ResponseEntity<?> insertUserPeak (@RequestBody UserPickInfoDTO userPickInfoDTO) {
+        return ResponseEntity.ok(myPageService.insertUserPeakByAuth);
+    }
+
 }
