@@ -33,4 +33,18 @@
     <select id="getProductIdxByTid" parameterType="string" resultType="int">
         SELECT PRODUCT_IDX FROM PAYMENT_HISTORY_TBL WHERE TID = #{tid}
     </select>
+    <!-- 결제 완료되면 USER_TRANSACTION_TBL에 거래내역 insert -->
+    <insert id="insertUserTransaction" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserTransactionDTO" useGeneratedKeys="true" keyProperty="idx">
+        insert into USER_TRANSACTION_TBL
+        (USER_IDX, PRODUCT_IDX, SDATE)
+        values
+        (#{userIdx}, #{productIdx}, #{sdate})
+    </insert>
+    <!-- 거래내역 존재 여부 확인 -->
+    <select id="countUserTransactionByProductIdx" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM USER_TRANSACTION_TBL
+        WHERE PRODUCT_IDX = #{productIdx}
+    </select>
+
 </mapper>

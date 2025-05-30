@@ -214,7 +214,7 @@ public class MyPageService {
     public ReviewWritingPageInfoDTO sellerAndEvaluationCategoriesInfo () {
         try {
             String userId = handleAuth.getUserIdByAuth();
-            SellerInfoDTO seller = myPageDAO.getSellerInfoByUserId(userId);
+            List<SellerInfoDTO> seller = myPageDAO.getSellerInfoByUserId(userId);
             List<UserCategorySubDTO> userCategorySubDTO = myPageDAO.getEvaluationCategorySubInfo(5010);
             return new ReviewWritingPageInfoDTO(seller, userCategorySubDTO);
         } catch (Exception e) {

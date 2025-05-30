@@ -1,7 +1,9 @@
 package com.culturemoa.cultureMoaProject.payment.repository;
 
+import com.culturemoa.cultureMoaProject.payment.dto.ProductFlagUpdate;
 import com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory;
 import com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus;
+import com.culturemoa.cultureMoaProject.user.dto.UserTransactionDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,27 +14,37 @@ public class PaymentDAO {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    public int insertPaymentHistory(PaymentHistory paymentHistory){
-        return sqlSessionTemplate.insert("paymentMapper.insertPaymentHistory", paymentHistory);
+    public void insertPaymentHistory(PaymentHistory paymentHistory){
+        sqlSessionTemplate.insert("paymentMapper.insertPaymentHistory", paymentHistory);
     }
 
-    public int insertPaymentStatus(PaymentStatus paymentStatus){
-        return sqlSessionTemplate.insert("paymentMapper.insertPaymentStatus", paymentStatus);
+    public void insertPaymentStatus(PaymentStatus paymentStatus){
+        sqlSessionTemplate.insert("paymentMapper.insertPaymentStatus", paymentStatus);
     }
 
     public int selectAmountByTid(String tid) {
         return sqlSessionTemplate.selectOne("paymentMapper.selectAmountByTid", tid);
     }
 
-    public int updatePaymentStatusInfo(PaymentStatus paymentStatus) {
-        return sqlSessionTemplate.update("paymentMapper.updatePaymentStatusInfo", paymentStatus);
+    public void updatePaymentStatusInfo(PaymentStatus paymentStatus) {
+        sqlSessionTemplate.update("paymentMapper.updatePaymentStatusInfo", paymentStatus);
     }
 
-    public int updateProductFlag(boolean flag, int productIdx) {
-        return sqlSessionTemplate.update("productMapper.updateProductFlag", flag);
+    public void updateProductFlag(ProductFlagUpdate productFlagUpdate) {
+        sqlSessionTemplate.update("productMapper.updateProductFlag", productFlagUpdate);
     }
 
     public int getProductIdxByTid(String tid) {
         return sqlSessionTemplate.selectOne("paymentMapper.getProductIdxByTid", tid);
+    }
+
+    public void insertUserTransaction(UserTransactionDTO userTransaction){
+        sqlSessionTemplate.insert("paymentMapper.insertUserTransaction", userTransaction);
+    }
+
+    public boolean existUserTransactionByProductIdx(int productIdx){
+        Integer count = sqlSessionTemplate.selectOne("paymentMapper.countUserTransactionByProductIdx", productIdx);
+        System.out.println("거래내역에 productIdx 존재하는지 :"+count);
+        return count != null && count > 0;
     }
 }

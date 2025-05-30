@@ -204,8 +204,8 @@ public class MyPageDAO {
      * @param userId : 유저 아이디
      * @return : 이름이 반환
      */
-    public SellerInfoDTO getSellerInfoByUserId (String userId) {
-        return sqlSessionTemplate.selectOne("myPageMapper.getSellerInfo", userId);
+    public List<SellerInfoDTO> getSellerInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getSellerInfo", userId);
     }
 
 
