@@ -59,8 +59,16 @@
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
                 USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
         FROM PRODUCT_TBL MAIN
-        LEFT OUTER JOIN PRODUCT_IMAGE_TBL DETAIL ON
-                 MAIN.IDX = DETAIL.PRODUCT_IDX
+        LEFT JOIN (
+                SELECT s1.*
+                FROM PRODUCT_IMAGE_TBL s1
+                INNER JOIN (
+                SELECT product_idx, MIN(idx) AS min_idx
+                FROM PRODUCT_IMAGE_TBL
+                GROUP BY product_idx
+                ) s2 ON s1.product_idx = s2.product_idx AND s1.idx = s2.min_idx
+            ) DETAIL ON
+             MAIN.IDX = DETAIL.PRODUCT_IDX
         <where>
             1 = 1
 <!--            <if test="searchDTO.getCategory_idx() > 0">-->

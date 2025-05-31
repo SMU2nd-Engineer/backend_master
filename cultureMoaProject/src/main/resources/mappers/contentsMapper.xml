@@ -2,15 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="contentsMapper">
 
-<!--     Contents 조회 -->
-<!--    <select id="getAllContents" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsDTO" >-->
-<!--        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE, CONT.DIVISION,-->
-<!--               CONT.CONTENT, CONT.SDATE-->
-<!--        FROM CONTENTS_TBL CONT-->
-<!--        LEFT OUTER JOIN USER_TBL USERT ON-->
-<!--             CONT.USER_IDX = USERT.IDX-->
-<!--    </select>-->
-
     <!-- CONTENTS_TBL의 content와 USER_TBL의 유저 정보 조인
     edate는 끝 날짜라 값이 있으면 안됨 그래서 null이어야 함 -->
     <select id="getContentInfos" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
@@ -158,4 +149,17 @@
         WHERE IDX = #{idx}
     </update>
 
+
+    <select id="getContentByTitleAndContent" parameterType="String" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
+        SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE,
+        CONT.CONTENT, CONT.SDATE, USERT.NICKNAME
+        FROM CONTENTS_TBL CONT
+        LEFT OUTER JOIN USER_TBL USERT ON
+        CONT.USER_IDX = USERT.IDX
+        WHERE CONT.EDATE IS NULL
+            AND (
+                CONT.TITLE LIKE '%${keyword}%'
+                OR CONT.CONTENT LIKE '%${keyword}%'
+            )
+    </select>
 </mapper>
