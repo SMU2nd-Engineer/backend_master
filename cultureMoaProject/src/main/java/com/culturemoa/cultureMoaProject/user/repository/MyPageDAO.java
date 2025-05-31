@@ -279,4 +279,22 @@ public class MyPageDAO {
         return sqlSessionTemplate.update("myPageMapper.updateReviewEvaluationRecord", updateReviewInfoDTO);
     }
 
+    /**
+     * 찜 정보를 확인하기 위해서 찜 정보를 얻기 위한 dao
+     * @param userPickInfoDTO : userIdx와 productIdx값이 담긴 dto
+     * @return : UserPickInfoDTO 반환
+     */
+    public UserPickInfoDTO getUserPeakInfoByProductAndUserIdx(UserPickInfoDTO userPickInfoDTO) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getUserPeakProductInfo", userPickInfoDTO);
+    }
+
+    /**
+     * 찜 선택시 삽입하는 dto 추가
+     * @param userPickInfoDTO : 찜 목록에 추가할 정보가 담긴 dto
+     * @return : 삽입행 개수 반환
+     */
+    public int insertUserPickByDTO(UserPickInfoDTO userPickInfoDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertUserPeakInfo", userPickInfoDTO);
+    }
+
 }
