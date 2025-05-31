@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -207,10 +208,13 @@ public class MyPageService {
      * 리뷰 남기기 페이지를 구성하는 자료 가져오기 service
      * @return : SellerAndEvaluationCategoriesInfoDTO
      */
-    public ReviewWritingPageInfoDTO sellerAndEvaluationCategoriesInfo () {
+    public ReviewWritingPageInfoDTO sellerAndEvaluationCategoriesInfo (ReviewInitInfoDTO reviewInitInfoDTO) {
         try {
             String userId = handleAuth.getUserIdByAuth();
-            List<SellerInfoDTO> seller = myPageDAO.getSellerInfoByUserId(userId);
+            reviewInitInfoDTO.setUserId(userId);
+            System.out.println("id가 들어간 reviewInitInfoDTO 정보는 : " + reviewInitInfoDTO);
+            SellerInfoDTO seller = myPageDAO.getSellerInfoByDTO(reviewInitInfoDTO);
+            System.out.println("seller 정보는 : " + seller);
             List<UserCategorySubDTO> userCategorySubDTO = myPageDAO.getEvaluationCategorySubInfo(5010);
             return new ReviewWritingPageInfoDTO(seller, userCategorySubDTO);
         } catch (Exception e) {

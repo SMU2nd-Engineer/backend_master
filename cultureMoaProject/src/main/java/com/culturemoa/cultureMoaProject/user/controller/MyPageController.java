@@ -165,12 +165,12 @@ public class MyPageController {
     }
 
     /**
-     * 리뷰 남기기에서 판매자 정보와 거래 평가 항목을 요청시 처리하는 컨트롤러
+     * 리뷰 남기기에서 상품 idx와 상품 판매자 userIdx를 이용하여 거래 정보 idx를 얻기 위한 컨트롤러
      * @return 판매자 이름과 거래평가를 전달
      */
-    @GetMapping("/getSellerAndCategoryInfo")
-    public ResponseEntity<?> getSellerAndCategoryInfo (){
-        return ResponseEntity.ok(myPageService.sellerAndEvaluationCategoriesInfo());
+    @PostMapping("/getReviewInitInfo")
+    public ResponseEntity<?> getSellerAndCategoryInfo (@RequestBody ReviewInitInfoDTO reviewInitInfoDTO){
+        return ResponseEntity.ok(myPageService.sellerAndEvaluationCategoriesInfo(reviewInitInfoDTO));
     }
 
     /**

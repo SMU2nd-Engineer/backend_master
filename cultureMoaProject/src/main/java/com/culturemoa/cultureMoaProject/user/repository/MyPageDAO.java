@@ -201,11 +201,11 @@ public class MyPageDAO {
 
     /**
      * 리뷰 페이지에서 사용할 거래 상대 이름을 가져올 dao
-     * @param userId : 유저 아이디
+     * @param reviewInitInfoDTO : 판매자 idx,
      * @return : 이름이 반환
      */
-    public List<SellerInfoDTO> getSellerInfoByUserId (String userId) {
-        return sqlSessionTemplate.selectList("myPageMapper.getSellerInfo", userId);
+    public SellerInfoDTO getSellerInfoByDTO (ReviewInitInfoDTO reviewInitInfoDTO) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getSellerInfo", reviewInitInfoDTO);
     }
 
 
@@ -279,6 +279,11 @@ public class MyPageDAO {
         return sqlSessionTemplate.update("myPageMapper.updateReviewEvaluationRecord", updateReviewInfoDTO);
     }
 
+    /**
+     * 리뷰 idx를 이용하여 상품 정보를 가져오기.
+     * @param reviewIdx
+     * @return
+     */
     public FetchReviewProductInfoDTO getProductInfoByReviewIdx (int reviewIdx) {
         return sqlSessionTemplate.selectOne("myPageMapper.getProductInfoByReviewIdx", reviewIdx);
     }
