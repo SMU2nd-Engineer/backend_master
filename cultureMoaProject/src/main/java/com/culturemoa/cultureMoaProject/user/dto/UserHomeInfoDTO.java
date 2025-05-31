@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserHomeInfoDTO {
 
-    List<>
+//    List<>
     List<MyPageBoardDTO> boardList;
 
 }
