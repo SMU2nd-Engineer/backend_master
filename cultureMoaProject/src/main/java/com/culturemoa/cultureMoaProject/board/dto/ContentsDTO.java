@@ -3,6 +3,7 @@ package com.culturemoa.cultureMoaProject.board.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +17,8 @@ public class ContentsDTO {
     private String title;
 //    private int division;
     private String content;
-    private LocalDateTime sdate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime sdate; // 날짜 포맷된 sdate
     private LocalDateTime edate;
 
 }

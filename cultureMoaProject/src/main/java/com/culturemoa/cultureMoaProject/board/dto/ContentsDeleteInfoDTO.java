@@ -14,6 +14,7 @@ public class ContentsDeleteInfoDTO {
     // 게시글 댓글 정보
     private Long idx;
     // 삭제되는 날짜를 입력하기 위해서 사용
-    @DateTimeFormat(pattern = "MM/dd")
+//    @DateTimeFormat(pattern = "MM/dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime edate; // 날짜 포맷된 sdate
 }
