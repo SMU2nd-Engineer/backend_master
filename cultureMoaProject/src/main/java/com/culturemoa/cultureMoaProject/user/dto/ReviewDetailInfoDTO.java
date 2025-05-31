@@ -14,4 +14,6 @@ public class ReviewDetailInfoDTO {
     private FetchReviewRegisterInfoDTO fetchReviewRegisterInfo;
     private Map<String, Integer> ReviewEvaluationRecord;
     private List<UserCategorySubDTO> evaluationCategories;
+    private FetchReviewProductInfoDTO fetchReviewProductInfoDTO;
+
 }

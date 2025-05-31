@@ -249,7 +249,8 @@ public class MyPageService {
         return new ReviewDetailInfoDTO(
                 myPageDAO.searchReviewInfoByReviewIdx(reviewIdx),
                 myPageDAO.searchEvaluationRecord(reviewIdx),
-                myPageDAO.getEvaluationCategorySubInfo(5010)
+                myPageDAO.getEvaluationCategorySubInfo(5010),
+                myPageDAO.getProductInfoByReviewIdx(reviewIdx)
         );
     }
 

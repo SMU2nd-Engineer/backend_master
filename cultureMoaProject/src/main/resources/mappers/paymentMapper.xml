@@ -10,6 +10,7 @@
         values
         (#{tid}, #{amount}, #{payMethod}, #{buyerIdx}, #{sellerIdx}, #{productIdx}, #{tradeType}, #{deliveryAddress})
     </insert>
+
     <!-- 결제 상태(created_at) DB저장 -->
     <insert id="insertPaymentStatus" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus" useGeneratedKeys="true" keyProperty="idx">
         insert into PAYMENT_STATUS_TBL
@@ -17,10 +18,12 @@
         values
         (#{tid}, #{createdAt}, #{approvedAt}, #{canceledAt}, #{failedAt})
     </insert>
+
     <!-- tid로 결제 취소 금액 조회 -->
     <select id="selectAmountByTid" parameterType="string" resultType="int">
         select AMOUNT from PAYMENT_HISTORY_TBL where TID = #{tid}
     </select>
+
     <!--  tid를 통해 결제 상태 없데이트  -->
     <update id="updatePaymentStatusInfo" parameterType="com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus" >
         update PAYMENT_STATUS_TBL
@@ -29,10 +32,12 @@
         </set>
         where TID = #{tid}
     </update>
+
     <!-- tid로 product_idx 조회 -->
     <select id="getProductIdxByTid" parameterType="string" resultType="int">
         SELECT PRODUCT_IDX FROM PAYMENT_HISTORY_TBL WHERE TID = #{tid}
     </select>
+
     <!-- 결제 완료되면 USER_TRANSACTION_TBL에 거래내역 insert -->
     <insert id="insertUserTransaction" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserTransactionDTO" useGeneratedKeys="true" keyProperty="idx">
         insert into USER_TRANSACTION_TBL
@@ -40,6 +45,7 @@
         values
         (#{userIdx}, #{productIdx}, #{sdate})
     </insert>
+
     <!-- 거래내역 존재 여부 확인 -->
     <select id="countUserTransactionByProductIdx" parameterType="int" resultType="int">
         SELECT COUNT(*)
