@@ -33,21 +33,21 @@
     </select>
 
     <select id="getCalendarTicketCount" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
-        WITH RECURSIVE calendar AS (
-            SELECT DATE(#{startDate}) AS date
+        WITH RECURSIVE CALENDAR AS (
+            SELECT DATE(#{startDate}) AS DATE
             UNION ALL
-            SELECT DATE_ADD(date, INTERVAL 1 DAY)
-            FROM calendar c
-            WHERE date &lt; #{endDate}
+            SELECT DATE_ADD(DATE, INTERVAL 1 DAY)
+            FROM CALENDAR c
+            WHERE DATE &lt; #{endDate}
         )
         SELECT
-            DATE_FORMAT(c.date, '%Y-%m-%d') AS date,
+            DATE_FORMAT(c.DATE, '%Y-%m-%d') AS DATE,
             SUM(CASE WHEN t.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS PERFORMANCE_COUNT,
             SUM(CASE WHEN t.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS SPORTS_COUNT
         FROM
         CALENDAR c
         LEFT JOIN TICKET_TBL t
-        ON c.date BETWEEN t.SDATE AND t.EDATE
+        ON c.DATE BETWEEN t.SDATE AND t.EDATE
         <!-- 카테고리 필터 -->
         <if test="categories != null and categories.size() > 0">
             AND t.SUB_IDX IN
@@ -55,8 +55,8 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY c.date
-        ORDER BY c.date
+        GROUP BY c.DATE
+        ORDER BY c.DATE
     </select>
     <select id="getTicketInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO" >
         SELECT IDX, TITLE, COMPANY, LINK, SDATE, EDATE, PLACE, PRICE, GRADE, CAST, RUNNINGTIME, IMG, ETC
