@@ -51,7 +51,7 @@ public class UserService {
         // 비밀번호 암호화
         pUserDTO.setPassword(passwordEncoder.encode(pUserDTO.getPassword()));
         // 등록 날짜 넣기
-        pUserDTO.setSDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        pUserDTO.setSDate(LocalDateTime.now()); // 나노초 제거
         // 일반 회원 가입이면 socialLogin에 일반 로그인을 알 수 있도록 값 추가 아니면 그대로 사용하기
         if(pUserDTO.getSocialLogin() == null || pUserDTO.getSocialLogin().isEmpty()) {
             pUserDTO.setSocialLogin("regularLogin");
@@ -171,7 +171,7 @@ public class UserService {
         // 비밀번호 암호화
         pChangeDto.setPassword(passwordEncoder.encode(pChangeDto.getPassword()));
         // 등록 날짜 넣기
-        pChangeDto.setCDate(LocalDateTime.now().withNano(0)); // 나노초 제거
+        pChangeDto.setCDate(LocalDateTime.now()); // 나노초 제거
         // DAO로 비밀번호 업데이트하기
         int ChangeCheck = userDAO.updateUserPassword(pChangeDto);
 
@@ -189,7 +189,7 @@ public class UserService {
         // 유저 아이디 추출하기
         String userId = handleAuth.getUserIdByAuth();
         // 회원 탈퇴, 정보 수정 날짜 생성하기
-        LocalDateTime localDateTime = LocalDateTime.now().withNano(0);
+        LocalDateTime localDateTime = LocalDateTime.now();
 
         // 생성자를 사용하여 바로 값 넘겨 주기
         int userWithdrawalProcess = userDAO.updateWithdrawal(new UserWithdrawalDTO(userId,localDateTime, localDateTime));
