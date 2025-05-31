@@ -278,7 +278,10 @@
 
 
     <!--  사용자가 입력한 리뷰 내용 넣기  -->
-    <insert id="insertReviewTbl" parameterType="com.culturemoa.cultureMoaProject.user.dto.ReviewRegisterDTO" >
+    <insert id="insertReviewTbl" parameterType="com.culturemoa.cultureMoaProject.user.dto.ReviewRegisterDTO" useGeneratedKeys="true" keyProperty="reviewIdx">
+        <selectKey resultType="int" keyProperty="reviewIdx" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO USER_REVIEW_TBL
         ( WRITER_USER_IDX, RECEIVER_USER_IDX, TRANSACTION_IDX, RATING, REVIEW, SDATE)
         VALUES
@@ -317,6 +320,37 @@
         EVAL_5008 = EVAL_5008 + VALUES(EVAL_5008),
         EVAL_5009 = EVAL_5009 + VALUES(EVAL_5009),
         EVAL_5010 = EVAL_5010 + VALUES(EVAL_5010)
+    </insert>
+
+
+<!--  거래 평가 기록 테이블에 값 넣기  -->
+    <insert id="insertReviewEvaluationRecord" parameterType="com.culturemoa.cultureMoaProject.user.dto.ReviewRegisterDTO">
+        INSERT INTO USER_REVIEW_EVALUATION_RECORD_TBL (
+        REVIEW_IDX,
+        EVAL_5001,
+        EVAL_5002,
+        EVAL_5003,
+        EVAL_5004,
+        EVAL_5005,
+        EVAL_5006,
+        EVAL_5007,
+        EVAL_5008,
+        EVAL_5009,
+        EVAL_5010
+        )
+        VALUES (
+        #{reviewIdx},
+        <choose><when test="evaluation.contains('EVAL_5001')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5002')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5003')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5004')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5005')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5006')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5007')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5008')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5009')">1</when><otherwise>0</otherwise></choose>,
+        <choose><when test="evaluation.contains('EVAL_5010')">1</when><otherwise>0</otherwise></choose>
+        )
     </insert>
 
 
@@ -386,17 +420,28 @@
     <update id="changeCountUserEvaluation" parameterType="map">
         UPDATE USER_REVIEW_EVALUATION_TBL
         <set>
-            <if test="EVAL_5001 != null">EVAL_5001 = EVAL_5001 + #{EVAL_5001},</if>
-            <if test="EVAL_5002 != null">EVAL_5002 = EVAL_5002 + #{EVAL_5002},</if>
-            <if test="EVAL_5003 != null">EVAL_5003 = EVAL_5003 + #{EVAL_5003},</if>
-            <if test="EVAL_5004 != null">EVAL_5004 = EVAL_5004 + #{EVAL_5004},</if>
-            <if test="EVAL_5005 != null">EVAL_5005 = EVAL_5005 + #{EVAL_5005},</if>
-            <if test="EVAL_5006 != null">EVAL_5006 = EVAL_5006 + #{EVAL_5006},</if>
-            <if test="EVAL_5007 != null">EVAL_5007 = EVAL_5007 + #{EVAL_5007},</if>
-            <if test="EVAL_5008 != null">EVAL_5008 = EVAL_5008 + #{EVAL_5008},</if>
-            <if test="EVAL_5009 != null">EVAL_5009 = EVAL_5009 + #{EVAL_5009},</if>
-            <if test="EVAL_5010 != null">EVAL_5010 = EVAL_5010 + #{EVAL_5010}</if>
+            <if test="EVAL_5001 != null">EVAL_5001 = GREATEST(EVAL_5001 + #{EVAL_5001}, 0),</if>
+            <if test="EVAL_5002 != null">EVAL_5002 = GREATEST(EVAL_5002 + #{EVAL_5002}, 0),</if>
+            <if test="EVAL_5003 != null">EVAL_5003 = GREATEST(EVAL_5003 + #{EVAL_5003}, 0),</if>
+            <if test="EVAL_5004 != null">EVAL_5004 = GREATEST(EVAL_5004 + #{EVAL_5004}, 0),</if>
+            <if test="EVAL_5005 != null">EVAL_5005 = GREATEST(EVAL_5005 + #{EVAL_5005}, 0),</if>
+            <if test="EVAL_5006 != null">EVAL_5006 = GREATEST(EVAL_5006 + #{EVAL_5006}, 0),</if>
+            <if test="EVAL_5007 != null">EVAL_5007 = GREATEST(EVAL_5007 + #{EVAL_5007}, 0),</if>
+            <if test="EVAL_5008 != null">EVAL_5008 = GREATEST(EVAL_5008 + #{EVAL_5008}, 0),</if>
+            <if test="EVAL_5009 != null">EVAL_5009 = GREATEST(EVAL_5009 + #{EVAL_5009}, 0),</if>
+            <if test="EVAL_5010 != null">EVAL_5010 = GREATEST(EVAL_5010 + #{EVAL_5010}, 0)</if>
         </set>
         WHERE USER_IDX = #{sellerIdx}
     </update>
+
+    <!--  유저 pick 에서 상품 정보와 userIdx를 이용하여 상품 정보를 개수를 count 하기  -->
+    <select id="getUserPeakProductInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO" resultType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO" >
+        SELECT COUNT(*) AS isPick FROM USER_PICK_TBL WHERE USER_IDX = #{userIdx} AND PRODUCT_IDX = #{idx} AND EDATE IS NULL
+    </select>
+
+<!--  유저 PICK 테이블에 찜을 추가하기 위한 MAPPER  -->
+    <insert id="insertUserPeakInfo" parameterType="com.culturemoa.cultureMoaProject.user.dto.UserPickInfoDTO">
+        INSERT INTO USER_PICK_TBL (USER_IDX, PRODUCT_IDX, SDATE)
+        VALUES (#{userIdx}, #{idx}, #{sDate})
+    </insert>
 </mapper>

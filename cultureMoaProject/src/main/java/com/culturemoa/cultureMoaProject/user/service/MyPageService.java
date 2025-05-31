@@ -7,10 +7,7 @@ import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.repository.MyPageDAO;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,21 +22,18 @@ import java.util.Map;
 @Service
 public class MyPageService {
 
-    @Autowired
-    private MyPageDAO myPageDAO;
-
-    // 디버그 용
-    private static final Logger logger = LoggerFactory.getLogger(MyPageService.class);
-
+    private final MyPageDAO myPageDAO;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDAO userDAO;
+    private final HandleAuthentication handleAuth;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private HandleAuthentication handleAuth;
+    public MyPageService (UserDAO userDAO, PasswordEncoder passwordEncoder, MyPageDAO myPageDAO, HandleAuthentication handleAuth ) {
+        this.userDAO = userDAO;
+        this.passwordEncoder=passwordEncoder;
+        this.myPageDAO=myPageDAO;
+        this.handleAuth=handleAuth;
+    }
 
 
     /**
@@ -110,11 +104,12 @@ public class MyPageService {
      */
     public MyPageMainDTO getMainInfoListByAuth() {
         String userId = handleAuth.getUserIdByAuth();
+        MyPageGetUserInfoDTO myPageGetUserInfo = myPageDAO.getUserInfoById(userId);
         MyPageAverageRatingDTO myPageAverageRating = myPageDAO.getAverageRatingByUserId(userId);
         List<MyPageSellListDTO> myMainSellProductList = myPageDAO.getMyMainSellListInfoByUserId(userId);
         List<MyPagePickProductListDTO> myMainPeakList = myPageDAO.getMyMainPeakListInfoByUserId(userId);
         List<ReviewListDTO> myMainReview = myPageDAO.getMyMainReviewListInfoByUserId(userId);
-        return new MyPageMainDTO(myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
+        return new MyPageMainDTO(myPageGetUserInfo, myPageAverageRating, myMainSellProductList , myMainPeakList, myMainReview);
     }
 
     /**
@@ -170,7 +165,9 @@ public class MyPageService {
         List<ReviewListDTO> reviewList = myPageDAO.getMyReviewInfoByUserId(userId);
         Map<String, Integer> myEvaluationList = myPageDAO.getMyEvaluationByUserIdx(userId);
         List<UserCategorySubDTO> evaluationList = myPageDAO.getEvaluationCategorySubInfo(5005);
-        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList);
+        // 사용자 정보 가져오기
+        MyPageGetUserInfoDTO myPageGetUserInfo = myPageDAO.getUserInfoById(userId);
+        return new MyPageReviewDTO(reviewList, averageRating, myEvaluationList, evaluationList, myPageGetUserInfo);
     }
 
 
@@ -191,9 +188,7 @@ public class MyPageService {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         Map<String, Integer> favorites = myPageDAO.getUserFavoritesList(userIdx);
-        UserFavoriteResponseDTO userFavoriteResponseDTO = new UserFavoriteResponseDTO();
-        userFavoriteResponseDTO.setUserFavoriteMap(favorites);
-        return userFavoriteResponseDTO;
+        return new UserFavoriteResponseDTO(favorites, myPageDAO.getCategorySubInfo());
     }
 
     /**
@@ -215,7 +210,7 @@ public class MyPageService {
     public ReviewWritingPageInfoDTO sellerAndEvaluationCategoriesInfo () {
         try {
             String userId = handleAuth.getUserIdByAuth();
-            SellerInfoDTO seller = myPageDAO.getSellerInfoByUserId(userId);
+            List<SellerInfoDTO> seller = myPageDAO.getSellerInfoByUserId(userId);
             List<UserCategorySubDTO> userCategorySubDTO = myPageDAO.getEvaluationCategorySubInfo(5010);
             return new ReviewWritingPageInfoDTO(seller, userCategorySubDTO);
         } catch (Exception e) {
@@ -233,10 +228,12 @@ public class MyPageService {
         reviewRegisterDTO.setBuyerIdx(userIdx);
         // 등록날짜 넣기
         reviewRegisterDTO.setSDate(LocalDateTime.now().withNano(0));
-        // user_review_tbl에 데이터 넣는 dao 호출
+        // user_review_tbl에 데이터 넣는 dao 호출 후 이 때 마이바티스로 자동으로 삽입된 행의 idx가 dto에 들어감
         int insertResult = myPageDAO.insertReviewInfo(reviewRegisterDTO);
         // user_review_evaluation 데이터 삽입 또는 업데이트 (판매자에 대한 평가를 남기기)
-        int updateResult = myPageDAO.updateReviewEvaluation(reviewRegisterDTO);
+        int updateEvaluationResult = myPageDAO.updateReviewEvaluation(reviewRegisterDTO);
+        // 거래 평가 항목을 기록하는 부분
+        int updateRecordResult = myPageDAO.insertReviewEvaluationRecord(reviewRegisterDTO);
         // 정상적으로 진행할 경우 1을 반환하므로 0일 경우 예외 처리
         if(insertResult == 0) {
             throw new DontInsertException();
@@ -256,22 +253,44 @@ public class MyPageService {
         );
     }
 
+    /**
+     * 평가항목 수정시 작동할 서비스
+     * @param updateReviewInfoDTO : 업데이트할 리뷰 정보가 담긴 dto
+     */
     public void updateReviewAndEvaluation (UpdateReviewInfoDTO updateReviewInfoDTO) {
-        System.out.println("=======updateReviewInfoDTO====== : " + updateReviewInfoDTO);
         // cDate 넣기
         updateReviewInfoDTO.setCDate(LocalDateTime.now().withNano(0));
         // 평가 항목 +/-를 위한 map 객체 생성
         Map<String, Object> userIdxAndEvaluationMap = new HashMap<>();
         userIdxAndEvaluationMap.put("sellerIdx", updateReviewInfoDTO.getSellerIdx());
         userIdxAndEvaluationMap.putAll(updateReviewInfoDTO.getChangeValueEvaluation());
-        System.out.println("=======userIdxAndEvaluationMap====== : " + userIdxAndEvaluationMap);
         myPageDAO.updateReview(updateReviewInfoDTO);
-        System.out.println("=======myPageDAO.updateReview(updateReviewInfoDTO);====== : " + myPageDAO.updateReview(updateReviewInfoDTO));
         myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);
-        System.out.println("=======myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);====== : " + myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap));
         myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);
-        System.out.println("=======myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);====== : " + myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO));
 
+    }
+
+    /**
+     * pick 버튼에 필요한 정보를 가져올 서비스
+     * @param userPickInfoDTO : 조회에 필요한 데이터가 담긴 dto
+     * @return : 조죄한 결과
+     */
+    public UserPickInfoDTO getUserPeakInfoByDTO (UserPickInfoDTO userPickInfoDTO) {
+        String userId = handleAuth.getUserIdByAuth();
+        // userIdx넣기
+        userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
+        return myPageDAO.getUserPeakInfoByProductAndUserIdx(userPickInfoDTO);
+    }
+
+    public void insertUserPeakByAuth(UserPickInfoDTO userPickInfoDTO) {
+        String userId = handleAuth.getUserIdByAuth();
+        // userIdx넣기
+        userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
+        userPickInfoDTO.setSDate(LocalDateTime.now().withNano(0));
+        int insertResult = myPageDAO.insertUserPickByDTO(userPickInfoDTO);
+        if (insertResult == 0) {
+            throw new RuntimeException("이미 찜한 상품입니다.");
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class MyPageBuyListDTO {
     private int price;
     private int flag;
     private String content;
+    @JsonProperty("image_Url")
     private String imageUrl;
     private int categoryIdx;
     private int categoryGenreIdx;

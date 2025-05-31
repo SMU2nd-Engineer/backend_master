@@ -14,9 +14,12 @@ import java.util.Map;
 @Repository
 public class MyPageDAO {
 
-    @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+    private final SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
+    public MyPageDAO(SqlSessionTemplate sqlSessionTemplate) {
+        this.sqlSessionTemplate = sqlSessionTemplate;
+    }
     /**
      * 아이디를 사용하여 패스워드 체크를 위한 단방향 암호 가져오기
      * @param userId : 토큰에서 추출한 아이디
@@ -201,8 +204,8 @@ public class MyPageDAO {
      * @param userId : 유저 아이디
      * @return : 이름이 반환
      */
-    public SellerInfoDTO getSellerInfoByUserId (String userId) {
-        return sqlSessionTemplate.selectOne("myPageMapper.getSellerInfo", userId);
+    public List<SellerInfoDTO> getSellerInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectList("myPageMapper.getSellerInfo", userId);
     }
 
 
@@ -222,6 +225,15 @@ public class MyPageDAO {
      */
     public int updateReviewEvaluation (ReviewRegisterDTO reviewRegisterDTO) {
         return sqlSessionTemplate.update("myPageMapper.insertOrUpdateEvaluation", reviewRegisterDTO);
+    }
+
+    /**
+     * 리뷰 평가 기록 테이블에 값을 넣을 dao
+     * @param reviewRegisterDTO : 사용자가 작성한 리뷰의 idx와 리뷰 평가 항목이 기록된 dto
+     * @return : sql 실행 결과
+     */
+    public int insertReviewEvaluationRecord (ReviewRegisterDTO reviewRegisterDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertReviewEvaluationRecord", reviewRegisterDTO);
     }
 
     /**
@@ -265,6 +277,24 @@ public class MyPageDAO {
      */
     public int updateReviewEvaluationRecode (UpdateReviewInfoDTO updateReviewInfoDTO) {
         return sqlSessionTemplate.update("myPageMapper.updateReviewEvaluationRecord", updateReviewInfoDTO);
+    }
+
+    /**
+     * 찜 정보를 확인하기 위해서 찜 정보를 얻기 위한 dao
+     * @param userPickInfoDTO : userIdx와 productIdx값이 담긴 dto
+     * @return : UserPickInfoDTO 반환
+     */
+    public UserPickInfoDTO getUserPeakInfoByProductAndUserIdx(UserPickInfoDTO userPickInfoDTO) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getUserPeakProductInfo", userPickInfoDTO);
+    }
+
+    /**
+     * 찜 선택시 삽입하는 dto 추가
+     * @param userPickInfoDTO : 찜 목록에 추가할 정보가 담긴 dto
+     * @return : 삽입행 개수 반환
+     */
+    public int insertUserPickByDTO(UserPickInfoDTO userPickInfoDTO) {
+        return sqlSessionTemplate.insert("myPageMapper.insertUserPeakInfo", userPickInfoDTO);
     }
 
 }

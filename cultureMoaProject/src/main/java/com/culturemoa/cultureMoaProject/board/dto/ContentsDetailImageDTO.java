@@ -12,5 +12,5 @@ import lombok.Setter;
 public class ContentsDetailImageDTO {
     private Long idx;
     private Long contents_idx;
-    private String image_Url;
+    private String image_url;
 }

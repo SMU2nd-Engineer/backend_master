@@ -15,8 +15,12 @@ import java.util.List;
 @RequestMapping("/mypage")
 public class MyPageController {
 
+    private final MyPageService myPageService;
+
     @Autowired
-    MyPageService myPageService;
+    public MyPageController(MyPageService myPageService) {
+        this.myPageService = myPageService;
+    }
 
 
     // checkMyInfoPassword 가 더 적절합니다. 동사+명사가 네이밍 룰이니까요
@@ -200,6 +204,28 @@ public class MyPageController {
     public ResponseEntity<?> updateReviewAndEvaluation (@RequestBody UpdateReviewInfoDTO updateReviewInfoDTO) {
         myPageService.updateReviewAndEvaluation(updateReviewInfoDTO);
         return ResponseEntity.ok("정상적으로 업데이트가 진행되었습니다.");
+    }
+
+    /**
+     * 전달 받은 상품 정보를 이용하여 유저 pick 테이블에서 원하는 정보 가져오기
+     * @param userPickInfoDTO : pick 데이터가 담긴 dto
+     * @return : 유저 peak 정보 전달
+     */
+    @PostMapping("pickInfo")
+    public ResponseEntity<?> getUserPeakInfo (@RequestBody UserPickInfoDTO userPickInfoDTO) {
+        return ResponseEntity.ok(myPageService.getUserPeakInfoByDTO(userPickInfoDTO));
+    }
+
+
+    /**
+     * 유저 찜 테이블에 정보를 등록하는 컨트롤러
+     * @param userPickInfoDTO : 프론트에서 product idx를 담을 dto
+     * @return : 정상적으로 진행할 경우 메시지를 전달.
+     */
+    @PostMapping("insertUserPeak")
+    public ResponseEntity<?> insertUserPeak (@RequestBody UserPickInfoDTO userPickInfoDTO) {
+        myPageService.insertUserPeakByAuth(userPickInfoDTO);
+        return ResponseEntity.ok("찜 목록에 등록되었습니다.");
     }
 
 }
