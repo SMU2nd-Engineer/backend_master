@@ -1,11 +1,10 @@
 package com.culturemoa.cultureMoaProject.product.controller;
 
-import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
+import com.culturemoa.cultureMoaProject.common.service.S3Service;
 import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import com.culturemoa.cultureMoaProject.product.service.ProductService;
-import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -27,14 +26,14 @@ import java.util.List;
 @RequestMapping("product")
 public class ProductController {
     // 생성자 패턴으로 Autowired 사용해주세요
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+    private final S3Service s3Service;
 
     @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private HandleAuthentication handleAuth;
+    public ProductController(S3Service s3Service, ProductService productService) {
+        this.s3Service = s3Service;
+        this.productService = productService;
+    }
 
     // 네이밍 규칙 바꾸세요 getProducts가 맞겠죠
     // 하위 service도 마찬가집니다
@@ -84,17 +83,16 @@ public class ProductController {
         }
     }
 
-    // 메서드가 왜 대문자로 시작하죠
     @PostMapping("/upload")
-    public ProductDTO ProductUpload(@RequestPart("product") ProductDTO productDTO, @RequestPart("files") List<MultipartFile> files) {
+    public ProductDTO uploadProduct(@RequestPart("product") ProductDTO productDTO, @RequestPart("files") List<MultipartFile> files) {
         System.out.println("업로드 실행");
         try {
-            String uploadDir = "C:/upload_img/";
+            String uploadDir = "product/";
             List<ProductImageDTO> imageList = new ArrayList<>();
 
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
-                    String imageUrl = productService.saveImage(file, uploadDir);
+                    String imageUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
 
                     ProductImageDTO imageDTO = new ProductImageDTO();
 
@@ -121,7 +119,6 @@ public class ProductController {
     // 검색
     @PostMapping("/search")
     public List<ProductDTO> searchProducts(@RequestBody ProductSearchDTO searchDTO) {
-//        System.out.print(productService.searchProduct());
         return productService.searchProducts(searchDTO);
     }
 
@@ -133,7 +130,7 @@ public class ProductController {
             @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
         try {
-            String uploadDir = "C:/upload_img/";
+            String uploadDir = "product/";
             productDTO.setIdx(idx);
 
             List<ProductImageDTO> imageList = new ArrayList<>();
@@ -150,7 +147,7 @@ public class ProductController {
                 // 새로 업로드 된 이미지 저장
                 for (MultipartFile file : files) {
                     if (files != null && !file.isEmpty()) {
-                        String imageUrl = productService.saveImage(file, uploadDir);
+                        String imageUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
                         ProductImageDTO newImage = new ProductImageDTO();
                         newImage.setImage_Url(imageUrl);
                         newImage.setFlag(true); // 사용할 이미지
@@ -168,7 +165,6 @@ public class ProductController {
         }
     }
 
-    // 네이밍 룰은 동사+명사입니다
     // 상품 삭제
     @PutMapping("/delete/{idx}")
     public ResponseEntity<?> productDelete(@PathVariable long idx){
