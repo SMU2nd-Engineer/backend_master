@@ -1,6 +1,5 @@
 package com.culturemoa.cultureMoaProject.user.service;
 
-import com.culturemoa.cultureMoaProject.common.jwt.AuthJwtService;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import com.culturemoa.cultureMoaProject.user.exception.DontInsertException;
@@ -8,10 +7,7 @@ import com.culturemoa.cultureMoaProject.user.exception.DontUpdateException;
 import com.culturemoa.cultureMoaProject.user.exception.InvalidPasswordException;
 import com.culturemoa.cultureMoaProject.user.repository.MyPageDAO;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -214,7 +210,7 @@ public class MyPageService {
     public ReviewWritingPageInfoDTO sellerAndEvaluationCategoriesInfo () {
         try {
             String userId = handleAuth.getUserIdByAuth();
-            SellerInfoDTO seller = myPageDAO.getSellerInfoByUserId(userId);
+            List<SellerInfoDTO> seller = myPageDAO.getSellerInfoByUserId(userId);
             List<UserCategorySubDTO> userCategorySubDTO = myPageDAO.getEvaluationCategorySubInfo(5010);
             return new ReviewWritingPageInfoDTO(seller, userCategorySubDTO);
         } catch (Exception e) {
@@ -272,6 +268,29 @@ public class MyPageService {
         myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);
         myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);
 
+    }
+
+    /**
+     * pick 버튼에 필요한 정보를 가져올 서비스
+     * @param userPickInfoDTO : 조회에 필요한 데이터가 담긴 dto
+     * @return : 조죄한 결과
+     */
+    public UserPickInfoDTO getUserPeakInfoByDTO (UserPickInfoDTO userPickInfoDTO) {
+        String userId = handleAuth.getUserIdByAuth();
+        // userIdx넣기
+        userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
+        return myPageDAO.getUserPeakInfoByProductAndUserIdx(userPickInfoDTO);
+    }
+
+    public void insertUserPeakByAuth(UserPickInfoDTO userPickInfoDTO) {
+        String userId = handleAuth.getUserIdByAuth();
+        // userIdx넣기
+        userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
+        userPickInfoDTO.setSDate(LocalDateTime.now().withNano(0));
+        int insertResult = myPageDAO.insertUserPickByDTO(userPickInfoDTO);
+        if (insertResult == 0) {
+            throw new RuntimeException("이미 찜한 상품입니다.");
+        }
     }
 
 }

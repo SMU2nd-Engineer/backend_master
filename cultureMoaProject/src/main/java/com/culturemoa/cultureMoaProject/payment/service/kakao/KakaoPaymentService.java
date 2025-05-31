@@ -6,10 +6,14 @@ import com.culturemoa.cultureMoaProject.payment.entity.PaymentHistory;
 import com.culturemoa.cultureMoaProject.payment.entity.PaymentStatus;
 import com.culturemoa.cultureMoaProject.payment.repository.PaymentDAO;
 import com.culturemoa.cultureMoaProject.payment.service.gateway.PaymentGatewayService;
+import com.culturemoa.cultureMoaProject.user.dto.UserTransactionDTO;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
@@ -45,6 +49,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
     public PaymentResponseDTO readyToPay(PaymentReadyRequestDTO requestDTO) {
         String tid = null;
         int userIdx = userDAO.getUserIdx(handleAuthentication.getUserIdByAuth());
+
         try {
             // HTTP 요청 헤더를 설정하는 객체
             HttpHeaders headers = new HttpHeaders();
@@ -109,12 +114,15 @@ public class KakaoPaymentService implements PaymentGatewayService {
         );
         } catch (Exception e) {
             handleFailedPayment(tid != null ? tid : "UNKNOWN", e.getMessage());
+            System.out.println("결제 준비 오류");
             throw new RuntimeException();
         }
     }
 
     @Override
+    @Transactional
     public KakaoApproveResponseDTO approvePayment(PaymentApproveRequestDTO approveDTO) {
+        int userIdx = userDAO.getUserIdx(handleAuthentication.getUserIdByAuth());
         // 카카오페이 API 호출 -> 결제 승인
         try {
             // HTTP 요청 헤더를 설정하는 객체
@@ -145,21 +153,42 @@ public class KakaoPaymentService implements PaymentGatewayService {
             // DB저장
             PaymentStatus status = new PaymentStatus();
             status.setTid(approveDTO.getTid());
-            status.setApprovedAt(response.getApprovedAt());
-
+            if(response != null) {
+                status.setApprovedAt(response.getApprovedAt());
+            } else {
+                status.setFailedAt(LocalDateTime.now());
+            }
             paymentDAO.updatePaymentStatusInfo(status);
 
             // 상품 FLAG 업데이트
             Integer productIdx = paymentDAO.getProductIdxByTid(approveDTO.getTid());
-            if (productIdx != null){
-                paymentDAO.updateProductFlag(true, productIdx);
-            } else {
-                System.out.println("상품 IDX를 찾을 수 없습니다.");
+
+            ProductFlagUpdate productFlagUpdate = new ProductFlagUpdate();
+            productFlagUpdate.setFlag(true);
+            productFlagUpdate.setProductIdx(productIdx);
+
+            paymentDAO.updateProductFlag(productFlagUpdate);
+
+
+            // 거래 내역 중복 체크
+            if (!paymentDAO.existUserTransactionByProductIdx(productIdx)) {
+                // 거래 내역 DB저장 (USER_TRANSATIION_TBL)
+                UserTransactionDTO userTransaction = new UserTransactionDTO();
+                userTransaction.setUserIdx(userIdx);
+                userTransaction.setProductIdx(productIdx);
+                userTransaction.setSdate(LocalDate.now());
+                try {
+                    paymentDAO.insertUserTransaction(userTransaction);
+                } catch (DuplicateKeyException e){
+                    System.out.println("이미 거래내역이 존재합니다. 중복 저장 방지됨.");
+                }
             }
 
             return response;
         } catch (Exception e){
             handleFailedPayment(approveDTO.getTid(), e.getMessage());
+            System.out.println("결제 승인 오류");
+            e.printStackTrace();
             throw new RuntimeException();
         }
     }

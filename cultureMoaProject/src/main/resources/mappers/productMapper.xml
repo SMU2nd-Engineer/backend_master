@@ -84,7 +84,7 @@
         </where>
     </select>
     <!-- 상품 팔렸을 때 flag값 True -->
-    <update id="updateProductFlag" parameterType="boolean" >
+    <update id="updateProductFlag" parameterType="com.culturemoa.cultureMoaProject.payment.dto.ProductFlagUpdate" >
         UPDATE PRODUCT_TBL
         SET FLAG = #{flag}
         WHERE IDX = #{productIdx}
