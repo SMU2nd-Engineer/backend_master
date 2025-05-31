@@ -281,7 +281,8 @@ public class MyPageDAO {
 
     public FetchReviewProductInfoDTO getProductInfoByReviewIdx (int reviewIdx) {
         return sqlSessionTemplate.selectOne("myPageMapper.getProductInfoByReviewIdx", reviewIdx);
-      
+    }
+
     /**
      * 찜 정보를 확인하기 위해서 찜 정보를 얻기 위한 dao
      * @param userPickInfoDTO : userIdx와 productIdx값이 담긴 dto
