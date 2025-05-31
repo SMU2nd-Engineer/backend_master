@@ -77,4 +77,10 @@ public class ContentsDAO {
         return  sqlSessionTemplate.update("contentsMapper.deleteContents", contentsDeleteInfoDTO);
     }
 
+
+    // ContentsService.Map을 받아서 조건에 맞는 쿼리 실행 : 검색된 게시글 조회하여 불러옴
+    public List<ContentInfoDTO> getContentByTitleAndContent(String keyword) {
+        return sqlSessionTemplate.selectList("contentsMapper.getContentByTitleAndContent", keyword);
+    }
+
 }

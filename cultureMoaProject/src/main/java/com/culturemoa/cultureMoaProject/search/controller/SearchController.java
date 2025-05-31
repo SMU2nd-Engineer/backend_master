@@ -11,12 +11,12 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/search")
+@RequestMapping("/total")
 public class SearchController {
     private final SearchService searchService;
 
-    @GetMapping
-    public Map<String, Object> searchAll(@RequestParam("keyword") String keyword){
-        return searchService.searchAll(keyword);
+    @GetMapping("/search")
+    public Map<String, Object> searchAllByKeyword(@RequestParam("keyword") String keyword){
+        return searchService.searchAllByKeyword(keyword);
     }
 }
