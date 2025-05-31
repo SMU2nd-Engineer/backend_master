@@ -26,6 +26,7 @@ public class ContentsController {
         this.s3Service = s3Service;
     }
 
+    // 게시판 리스트 페이지 - 게시글 등록한 목록 확인
     @GetMapping("/list")
     public List<ContentInfoDTO> getContentInfos() {
         System.out.println(contentsService.getContentInfos());
@@ -33,6 +34,7 @@ public class ContentsController {
         return contentsService.getContentInfos();
     }
 
+    // 게시글 리스트페이지 - 제목+내용/작성자, 카테고리선택, 검색
     @GetMapping("/search")
     public List<ContentInfoDTO> getContentInfos(
             @RequestParam(name = "category", required = false) Long category_idx,
@@ -43,6 +45,7 @@ public class ContentsController {
         return contentsService.getContentSearchs(category_idx, keyword, searchType);
     }
 
+    // 게시글 상세페이지 - 등록된 상세내용 확인
     @GetMapping ("/detail/{idx}")
     public ContentsDetailLoadImageInfoDTO getParticular(
             @PathVariable Long idx
@@ -51,6 +54,7 @@ public class ContentsController {
         return contentsService.getParticular(idx);
     }
 
+    // 게시글 등록페이지 - 이미지 등록
     @PostMapping("/submit")
     public ContentsDTO insertContents(@RequestPart("contents") ContentsDTO contentDTO, @RequestPart("files")List<MultipartFile> files) {
         try {

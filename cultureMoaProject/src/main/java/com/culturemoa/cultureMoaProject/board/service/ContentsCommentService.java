@@ -47,7 +47,7 @@ public class ContentsCommentService {
         commentDTO.setUser_idx((long) useridx);
 //        commentDTO.setContents_idx(contentsCommentInfoDTO.getContents_idx());
 //        commentDTO.setText(contentsCommentInfoDTO.getText());
-        commentDTO.setSdate(LocalDateTime.now().withNano(0));
+        commentDTO.setSdate(LocalDateTime.now());
 
         System.out.println("여기까지 실행 됨" + commentDTO);
         if (contentsCommentDAO.getCommentInsert(commentDTO) == 1) {
@@ -63,7 +63,7 @@ public class ContentsCommentService {
             ContentsCommentDeleteInfoDTO contentsCommentDeleteInfoDTO
     ) {
         // 현재 DTO에 입력 값이 없어서 입력하기 위해 오늘 날짜 생성해서 넣기 - 시분초까지 출력
-        contentsCommentDeleteInfoDTO.setEdate(LocalDateTime.now().withNano(0));
+        contentsCommentDeleteInfoDTO.setEdate(LocalDateTime.now());
 
         // idx, 전체 날짜 값이 들어간 DTO를 DAO로 전달 한다.
         return contentsCommentDAO.getCommentDelete(contentsCommentDeleteInfoDTO);

@@ -31,19 +31,14 @@ public class ContentInfoDTO {
     private Long category_idx;
     private String title;
     private String content;
-    @DateTimeFormat(pattern = "MM/dd")
+//    @DateTimeFormat(pattern = "MM/dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime sdate; // 날짜 포맷된 sdate
 
     // 불러올 User 정보(작성자-회원 닉네임)
     private String nickname;
 //    private String userid;
-    // 게시판 이미지 등록 테이블에서 불러올 정보
-//    @JsonProperty("image_Url")
-//    private String image_Url;
-//
-//    @JsonProperty("imageList")
-//    private List<ContentsImageSubmitDTO> imageList;
-//    private Long contents_idx;
+
 
 
 }

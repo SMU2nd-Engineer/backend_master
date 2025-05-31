@@ -45,7 +45,7 @@
 
             <!-- '팝니다', '삽니다' 선택한 필터 category_idx(일단 숫자로 해놓고 나중에 바꿔야함 프론트엔드에서도) -->
 <!--            <if test="category_idx != category_idx and category_idx != ''">-->
-            <if test="category_idx != null">
+            <if test="category_idx >= 0">
                 <!-- Contents_tbl의 category_idx -->
                 AND CONT.CATEGORY_IDX = #{category_idx}
             </if>
@@ -54,7 +54,7 @@
             <!-- 1. 키워드로 검색어 입력했을때, 2. 눈에 안보이는 것: content(내용) 까지 검색(보류)
             3. 제목+내용 구분자 선택시 제목(title), 내용(content) 조회 -->
 
-            <if test="keyword != null">
+            <if test="keyword.length > 0">
               AND (
                     CONT.TITLE LIKE '%${keyword}%'
                     OR CONT.CONTENT LIKE '%${keyword}%'
@@ -62,7 +62,7 @@
             </if>
 
         </where>
-
+        ORDER BY CONT.IDX
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록(카테고리(팝니다/삽니다), 제목, 글 내용, 오늘날짜) insert -->

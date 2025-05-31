@@ -57,15 +57,24 @@ public class ContentsService {
         if (category_idx != null) {
             searchMap.put("category_idx", category_idx);
         }
+        else {
+            searchMap.put("category_idx", -1);
+        }
 
         // 키워드 문자열이 실제로 값이 있는지 확인 후 Map에 추가
         if (keyword != null && !keyword.isEmpty()) {
             searchMap.put("keyword", keyword);
         }
+        else {
+            searchMap.put("keyword", "");
+        }
 
         // 구분자 : 제목+내용 / 작성자 파라미터가 null 아닌 경우에만 Map에 추가
         if (searchType != null && !searchType.isEmpty()) {
             searchMap.put("searchType", searchType);
+        }
+        else  {
+            searchMap.put("searchType", -1);
         }
 
         // DAO로 Map 전달
@@ -88,7 +97,7 @@ public class ContentsService {
 //        contentInfoDTO.setUserid(userid);
 //      입력 화면에 없는 user_idx, sdate DB 저장되게 설정
         contentsDTO.setUser_idx((long) useridx);
-        contentsDTO.setSdate(LocalDateTime.now().withNano(0));
+        contentsDTO.setSdate(LocalDateTime.now());
 
         System.out.println("여기까지 실행 됨" + contentsDTO);
         // 게시글 등록(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
@@ -166,7 +175,7 @@ public class ContentsService {
     // 등록된 게시글 수정(상세페이지의 수정버튼)
     public void  updateContents(ContentsDetailModifyInfoDTO modifyInfoDTO) {
         // 입력화면에 없는 것을 DB에 저장
-        modifyInfoDTO.setCdate(LocalDateTime.now().withNano(0));
+        modifyInfoDTO.setCdate(LocalDateTime.now());
     }
 
     // 등록된 게시글 이미지 수정
@@ -181,7 +190,7 @@ public class ContentsService {
         int useridx = userDAO.getUserIdx(userid);
 //        contentInfoDTO.setUserid(userid);
 //      입력 화면에 없는 cdate DB 저장되게 설정
-        modifyInfoDTO.setCdate(LocalDateTime.now().withNano(0));
+        modifyInfoDTO.setCdate(LocalDateTime.now());
 
         System.out.println("여기까지 실행 됨" + modifyInfoDTO);
         // 게시글 등록(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))

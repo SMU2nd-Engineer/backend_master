@@ -18,7 +18,8 @@ public class ContentsDetailLoadImageInfoDTO {
     private Long category_idx;
     private String title;
     private String content;
-    @DateTimeFormat(pattern = "MM/dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//    @DateTimeFormat(pattern = "MM/dd")
     private LocalDateTime sdate; // 날짜 포맷된 sdate
 
     // 불러올 User 정보(작성자-회원 닉네임)
