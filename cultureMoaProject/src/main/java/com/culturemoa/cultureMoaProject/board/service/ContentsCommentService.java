@@ -32,7 +32,7 @@ public class ContentsCommentService {
     }
 
     // 게시판 상세 페이지 댓글 등록
-    public Long getCommentInsert(
+    public Long insertComment(
             ContentsCommentDTO commentDTO
     ) {
         // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
@@ -59,7 +59,7 @@ public class ContentsCommentService {
 
     // 게시글 상세페이지 - 댓글 삭제 기능
     // 서비스는 전달받은 값이 없어서 그 값을 채워주기 위한 서비스임
-    public int getCommentDelete(
+    public int deleteComment(
             ContentsCommentDeleteInfoDTO contentsCommentDeleteInfoDTO
     ) {
         // 현재 DTO에 입력 값이 없어서 입력하기 위해 오늘 날짜 생성해서 넣기 - 시분초까지 출력

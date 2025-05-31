@@ -23,18 +23,15 @@ import java.util.UUID;
 @Service
 public class ProductService {
     private final ProductDAO productDAO;
+    private final UserDAO userDAO;
+    private final HandleAuthentication handleAuth;
 
-    // 생성자 패턴으로 통일하세요..
     @Autowired
-    public ProductService(ProductDAO productDAO){
+    public ProductService(ProductDAO productDAO, UserDAO userDAO, HandleAuthentication handleAuth) {
         this.productDAO = productDAO;
+        this.userDAO = userDAO;
+        this.handleAuth = handleAuth;
     }
-
-    @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private HandleAuthentication handleAuth;
 
     // 상품 전체 정보 불러오기
     public List<ProductDTO> getAllProduct() {
@@ -74,31 +71,6 @@ public class ProductService {
                 productDAO.insertProductDetail(detail);
             }
         }
-    }
-
-    // 이미지 저장
-    public String saveImage(MultipartFile image, String uploadDir) throws IOException {
-        String originalFilename = image.getOriginalFilename();
-        String extension = "";
-
-        if (originalFilename != null && originalFilename.contains(".")) {
-            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        }
-        
-        // 파일 이름 생성
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS");
-        String timestamp = LocalTime.now().toString().replace(":", "-");
-        String imageUrl = UUID.randomUUID() + "_" + timestamp + extension;  // UUID 동일 파일명 방지
-        // 파일 경로
-        String imagePath = uploadDir + imageUrl;
-        // DB 저장할
-        String dbImagePath = "/upload_img/" + imageUrl;
-
-        Path path = Paths.get(imagePath); // Path 객체 생성
-        Files.createDirectories(path.getParent());
-        Files.write(path,image.getBytes());
-
-        return dbImagePath;
     }
 
     // 상품 검색
