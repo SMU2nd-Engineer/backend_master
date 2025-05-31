@@ -433,4 +433,20 @@
         </set>
         WHERE USER_IDX = #{sellerIdx}
     </update>
+
+    <!-- 리뷰 IDX로 상품정보, 결제정보 가져오기 -->
+    <select id="getProductInfoByReviewIdx" parameterType="int" resultType="com.culturemoa.cultureMoaProject.user.dto.FetchReviewProductInfoDTO">
+        SELECT
+        P.TITLE AS title,
+        P.PRICE AS price,
+        PI.IMAGE_URL AS imageUrl,
+        PH.TRADE_TYPE AS tradeType
+        FROM USER_REVIEW_TBL UR
+        JOIN USER_TRANSACTION_TBL UT ON UR.TRANSACTION_IDX = UT.IDX
+        JOIN PRODUCT_TBL P ON UT.PRODUCT_IDX = P.IDX
+        JOIN PRODUCT_IMAGE_TBL PI ON P.IDX = PI.PRODUCT_IDX
+        JOIN PAYMENT_HISTORY_TBL PH ON PI.PRODUCT_IDX = PH.PRODUCT_IDX
+        WHERE UR.IDX = = #{reviewIdx}
+    </select>
+
 </mapper>

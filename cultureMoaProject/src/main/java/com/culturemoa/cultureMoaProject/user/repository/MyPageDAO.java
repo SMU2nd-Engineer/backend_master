@@ -279,4 +279,8 @@ public class MyPageDAO {
         return sqlSessionTemplate.update("myPageMapper.updateReviewEvaluationRecord", updateReviewInfoDTO);
     }
 
+    public FetchReviewProductInfoDTO getProductInfoByReviewIdx (int reviewIdx) {
+        return sqlSessionTemplate.selectOne("myPageMapper.getProductInfoByReviewIdx", reviewIdx);
+    }
+
 }
