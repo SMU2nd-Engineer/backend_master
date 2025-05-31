@@ -86,7 +86,7 @@ public class MyPageService {
             myPageUpdateUserInfoDTO.setPassword(passwordEncoder.encode(password));
         }
         // 수정 날짜 세팅
-        myPageUpdateUserInfoDTO.setCDate(LocalDateTime.now().withNano(0)); // 나노초 제거하여 넣기
+        myPageUpdateUserInfoDTO.setCDate(LocalDateTime.now()); // 나노초 제거하여 넣기
 
         // 유저 아이디 세팅
         myPageUpdateUserInfoDTO.setId(userId);
@@ -126,7 +126,7 @@ public class MyPageService {
      * @param myPickUpdateDTO : edate를 넣을 정보가 담긴 dto
      */
     public void updateMyPickList (MyPickUpdateDTO myPickUpdateDTO) {
-        myPickUpdateDTO.setEDate(LocalDateTime.now().withNano(0));
+        myPickUpdateDTO.setEDate(LocalDateTime.now());
         myPageDAO.updateMyPickByProductIdx(myPickUpdateDTO);
 
     }
@@ -227,7 +227,7 @@ public class MyPageService {
         int userIdx = userDAO.getUserIdx(userId);
         reviewRegisterDTO.setBuyerIdx(userIdx);
         // 등록날짜 넣기
-        reviewRegisterDTO.setSDate(LocalDateTime.now().withNano(0));
+        reviewRegisterDTO.setSDate(LocalDateTime.now());
         // user_review_tbl에 데이터 넣는 dao 호출 후 이 때 마이바티스로 자동으로 삽입된 행의 idx가 dto에 들어감
         int insertResult = myPageDAO.insertReviewInfo(reviewRegisterDTO);
         // user_review_evaluation 데이터 삽입 또는 업데이트 (판매자에 대한 평가를 남기기)
@@ -260,7 +260,7 @@ public class MyPageService {
      */
     public void updateReviewAndEvaluation (UpdateReviewInfoDTO updateReviewInfoDTO) {
         // cDate 넣기
-        updateReviewInfoDTO.setCDate(LocalDateTime.now().withNano(0));
+        updateReviewInfoDTO.setCDate(LocalDateTime.now());
         // 평가 항목 +/-를 위한 map 객체 생성
         Map<String, Object> userIdxAndEvaluationMap = new HashMap<>();
         userIdxAndEvaluationMap.put("sellerIdx", updateReviewInfoDTO.getSellerIdx());
@@ -287,7 +287,7 @@ public class MyPageService {
         String userId = handleAuth.getUserIdByAuth();
         // userIdx넣기
         userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
-        userPickInfoDTO.setSDate(LocalDateTime.now().withNano(0));
+        userPickInfoDTO.setSDate(LocalDateTime.now());
         int insertResult = myPageDAO.insertUserPickByDTO(userPickInfoDTO);
         if (insertResult == 0) {
             throw new RuntimeException("이미 찜한 상품입니다.");
