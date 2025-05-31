@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserPickInfoDTO {
     private int userIdx;
-    private int isPeak;
+    private int isPick;
     private int idx;
     private LocalDateTime sDate;
 }

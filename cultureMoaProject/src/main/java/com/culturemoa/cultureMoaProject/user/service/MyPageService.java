@@ -270,11 +270,27 @@ public class MyPageService {
 
     }
 
+    /**
+     * pick 버튼에 필요한 정보를 가져올 서비스
+     * @param userPickInfoDTO : 조회에 필요한 데이터가 담긴 dto
+     * @return : 조죄한 결과
+     */
     public UserPickInfoDTO getUserPeakInfoByDTO (UserPickInfoDTO userPickInfoDTO) {
         String userId = handleAuth.getUserIdByAuth();
         // userIdx넣기
         userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
         return myPageDAO.getUserPeakInfoByProductAndUserIdx(userPickInfoDTO);
+    }
+
+    public void insertUserPeakByAuth(UserPickInfoDTO userPickInfoDTO) {
+        String userId = handleAuth.getUserIdByAuth();
+        // userIdx넣기
+        userPickInfoDTO.setUserIdx(userDAO.getUserIdx(userId));
+        userPickInfoDTO.setSDate(LocalDateTime.now().withNano(0));
+        int insertResult = myPageDAO.insertUserPickByDTO(userPickInfoDTO);
+        if (insertResult == 0) {
+            throw new RuntimeException("이미 찜한 상품입니다.");
+        }
     }
 
 }
