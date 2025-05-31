@@ -1,10 +1,13 @@
 package com.culturemoa.cultureMoaProject.user.repository;
 
+import com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO;
+import com.culturemoa.cultureMoaProject.product.dto.ProductDTO;
 import com.culturemoa.cultureMoaProject.user.dto.*;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -116,5 +119,27 @@ public class UserDAO {
         return sqlSessionTemplate.selectOne("userMapper.getUserIdx", userId);
     }
 
+    /**
+     * 홈페이지에 사용할 상품 정보 10개를 조회할 DAO
+     * @return List<ProductDTO>
+     */
+    public List<ProductDTO> getLatestProducts () {
+        return sqlSessionTemplate.selectList("userMapper.getAllProduct");
+    }
 
+    /**
+     * 홈페이지에 사용할 게새물 정보 10개를 조회할 DAO
+     * @return List<ProductDTO>
+     */
+    public List<ContentInfoDTO> getLatestContent () {
+        return sqlSessionTemplate.selectList("userMapper.getContentInfo");
+    }
+
+    /**
+     * 로그인 후 로그인 사용자 정보를 조회할 DAO
+     * @return List<ProductDTO>
+     */
+    public LoginUserInfoDTO getUserInfoByUserId (String userId) {
+        return sqlSessionTemplate.selectOne("userMapper.getLoginUserInfo", userId);
+    }
 }

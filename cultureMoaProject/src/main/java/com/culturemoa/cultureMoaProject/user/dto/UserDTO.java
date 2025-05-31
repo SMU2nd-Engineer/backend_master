@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 /**
  * UserDTO
- * 회원 DTO, DB와 맞춤, 회원 정보 등록할 때 사용
+ * 회원 DTO, DB와 맞춤 확장성을 위하여 생성함.
  * id : 아이디
  * name : 이름
  * password : 패스워드

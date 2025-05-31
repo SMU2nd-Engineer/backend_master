@@ -182,4 +182,13 @@ public class UserController {
         return ResponseEntity.ok("선호도가 정상적으로 등록되었습니다.");
     }
 
+    /**
+     * 로그인 후 홈페이지 화면에 사용할 정보를 전달하기 위한 DTO
+     * @return : 조회한 정보가 담긴 DTO를 반환
+     */
+    @GetMapping("homePageInfo")
+    public ResponseEntity<?> getHomePageInfo () {
+        return ResponseEntity.ok(userService.getHomePageInfoByAuth());
+    }
+
 }

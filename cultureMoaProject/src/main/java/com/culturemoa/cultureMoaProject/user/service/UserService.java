@@ -213,6 +213,15 @@ public class UserService {
         }
     }
 
-    
+    /**
+     * 홈페이지에 사용할 유저 정보를 전달하기 위한 서비스
+     * @return : 조회한 정보를 담은 HomePageInfoDTO를 반환
+     */
+    public HomePageInfoDTO getHomePageInfoByAuth () {
+        String userId = handleAuth.getUserIdByAuth();
+        return new HomePageInfoDTO(userDAO.getLatestProducts(),
+                                   userDAO.getLatestContent(),
+                                   userDAO.getUserInfoByUserId(userId));
+    }
 
 }
