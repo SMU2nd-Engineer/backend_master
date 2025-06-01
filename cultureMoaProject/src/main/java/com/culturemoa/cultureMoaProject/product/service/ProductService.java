@@ -8,17 +8,9 @@ import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -34,8 +26,9 @@ public class ProductService {
     }
 
     // 상품 전체 정보 불러오기
-    public List<ProductDTO> getAllProduct() {
-        return productDAO.getAllProduct();
+    public List<ProductDTO> getAllProduct(Long lastId, long size) {
+
+        return productDAO.getAllProduct(lastId, size);
     }
 
     // 상품 idx에 맞는 해당 디테일 정보 불러오기

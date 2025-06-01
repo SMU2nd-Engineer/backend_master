@@ -5,7 +5,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ProductDAO {
@@ -16,8 +18,11 @@ public class ProductDAO {
         this.sqlSessionTemplate = sqlSessionTemplate;
     }
 
-    public List<ProductDTO> getAllProduct() {
-        return sqlSessionTemplate.selectList("productMapper.getAllProduct");
+    public List<ProductDTO> getAllProduct(Long lastId, long size) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("lastId", lastId);
+        params.put("size", size);
+        return sqlSessionTemplate.selectList("productMapper.getAllProduct", params);
     }
 
     public ProductDTO getProductByIdx(long idx) {
