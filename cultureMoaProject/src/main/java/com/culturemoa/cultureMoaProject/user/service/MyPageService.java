@@ -263,13 +263,19 @@ public class MyPageService {
     public void updateReviewAndEvaluation (UpdateReviewInfoDTO updateReviewInfoDTO) {
         // cDate 넣기
         updateReviewInfoDTO.setCDate(LocalDateTime.now());
+        myPageDAO.updateReview(updateReviewInfoDTO);
         // 평가 항목 +/-를 위한 map 객체 생성
+        if( updateReviewInfoDTO.getChangeValueEvaluation() != null &&
+            !updateReviewInfoDTO.getChangeValueEvaluation().isEmpty()) {
         Map<String, Object> userIdxAndEvaluationMap = new HashMap<>();
         userIdxAndEvaluationMap.put("sellerIdx", updateReviewInfoDTO.getSellerIdx());
         userIdxAndEvaluationMap.putAll(updateReviewInfoDTO.getChangeValueEvaluation());
-        myPageDAO.updateReview(updateReviewInfoDTO);
         myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);
+        }
+        if(updateReviewInfoDTO.getEvaluation() !=null &&
+            !updateReviewInfoDTO.getEvaluation().isEmpty()) {
         myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);
+        }
 
     }
 
