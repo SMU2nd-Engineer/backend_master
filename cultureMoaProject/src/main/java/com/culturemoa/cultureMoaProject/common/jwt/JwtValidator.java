@@ -32,10 +32,8 @@ public class JwtValidator {
             return true;
         }
         catch (ExpiredJwtException e) {
-            System.out.println("토큰이 만료되었습니다.");
             throw new JwtException();
         } catch (Exception e) {
-            System.out.println("토큰 검증 중 예외 발생");
             return false;
         }
     }

@@ -46,9 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest pRequest, @NonNull HttpServletResponse pResponse, @NonNull FilterChain pFilterChain)
             throws ServletException, IOException {
         // 토큰 검증 예외 처리(로그인, 회원가입, 아이디/비밀번호 찾기 등 토큰 발급이 필요 없는 경우 추가하기 위해서 넣음)
-        // 디버깅 코드 - 나중에 지울것
-        System.out.println("[Filter] JwtAuthenticationFilter 실행됨");
-        System.out.println("[Filter] 요청 URI: " + pRequest.getRequestURI());
         String requestURI = pRequest.getRequestURI();
 
 
@@ -56,7 +53,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 모든 경로를 jwt 토큰 검증을 빼기 위하여 설정 나중에 필요한 항목만 넣어주어야 함.
         for (String permitPath : permitPaths) {
             if (requestURI.startsWith(permitPath)) {
-                System.out.println("[Filter] 예외 경로 요청 - 필터 패스: " + requestURI);
                 // 검증을 건너 뛰어도 문제가 생기지 않게 하기 위해서 인증 객체를 임의 생성
                 UsernamePasswordAuthenticationToken authentication =
                         // 추가 적인 권한을 설정 할려면 인자를 null이 아닌 권한으로 설정할 것.

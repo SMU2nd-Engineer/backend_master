@@ -14,7 +14,6 @@ public class CorsLoggingFilter implements Filter{
         if (request instanceof HttpServletRequest httpRequest) {
             String origin = httpRequest.getHeader("Origin");
             String method = httpRequest.getMethod();
-            System.out.println("[CORS 진입] Method: " + method + ", Origin: " + origin);
         }
         chain.doFilter(request, response);
     }

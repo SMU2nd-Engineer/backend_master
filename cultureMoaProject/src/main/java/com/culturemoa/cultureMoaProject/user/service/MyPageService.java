@@ -212,9 +212,7 @@ public class MyPageService {
         try {
             String userId = handleAuth.getUserIdByAuth();
             reviewInitInfoDTO.setUserId(userId);
-            System.out.println("id가 들어간 reviewInitInfoDTO 정보는 : " + reviewInitInfoDTO);
             SellerInfoDTO seller = myPageDAO.getSellerInfoByDTO(reviewInitInfoDTO);
-            System.out.println("seller 정보는 : " + seller);
             List<UserCategorySubDTO> userCategorySubDTO = myPageDAO.getEvaluationCategorySubInfo(5010);
             return new ReviewWritingPageInfoDTO(seller, userCategorySubDTO);
         } catch (Exception e) {

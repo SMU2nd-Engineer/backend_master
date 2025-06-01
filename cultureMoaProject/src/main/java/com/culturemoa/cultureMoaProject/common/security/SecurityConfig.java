@@ -44,11 +44,6 @@ public class SecurityConfig {
         this.jwtProvider = jwtProvider;
     }
 
-    // 경로 찍기
-    @PostConstruct
-    public void init() {
-        System.out.println("✅ CORS 허용 origin: " + frontPath);
-    }
 
     /**
      * 스프링 시큐리티 cors 문제로 origin 확인을 위하여 추가 설정
