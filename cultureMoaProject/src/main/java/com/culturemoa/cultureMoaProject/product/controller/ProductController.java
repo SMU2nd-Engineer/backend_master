@@ -40,8 +40,6 @@ public class ProductController {
     // 전체 목록 불러오기
     @GetMapping("/list")
     public List<ProductDTO> product() {
-        System.out.println(productService.getAllProduct());
-
         return productService.getAllProduct();
 
     }
@@ -49,8 +47,7 @@ public class ProductController {
     // 해당 상품 불러오기
     @GetMapping("/detail/{idx}")
     public ProductDTO getProductByIdx(@PathVariable long idx) {
-
-        System.out.println("################## idx: " + idx);
+        System.out.println("# idx: " + idx);
         return productService.getProductByIdx(idx);
     }
 
