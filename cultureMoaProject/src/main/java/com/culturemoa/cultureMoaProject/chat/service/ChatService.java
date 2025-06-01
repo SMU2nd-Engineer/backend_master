@@ -10,6 +10,7 @@ import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -133,7 +134,7 @@ public class ChatService {
         Long userIdx = Long.valueOf(userDAO.getUserIdx(handleAuthentication.getUserIdByAuth()));
         System.out.println(userIdx);
 
-        List<ChatRoomDTO> rooms = chatRoomRepository.findByUsersContainingOrderByLastMessageAtDesc(userIdx);
+        List<ChatRoomDTO> rooms = chatRoomRepository.findByUsersContaining(userIdx, Sort.by(Sort.Direction.DESC, "lastMessageAt"));
         List<ChatRoomInfoDTO> roomInfos = new ArrayList<>();
 
         rooms.forEach((room) -> {
