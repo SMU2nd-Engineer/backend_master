@@ -2,6 +2,9 @@ package com.culturemoa.cultureMoaProject.common.jwt;
 
 import java.util.List;
 
+/**
+ * 환경에 맞춰서 필터 통과할 경로를 추가하기 위한 클래스
+ */
 public class PrefixFilterPassPaths {
 
     public static List<String> getPermitPaths(String prefix) {

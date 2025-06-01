@@ -18,6 +18,6 @@ public class FetchReviewProductInfoDTO {
     private String imageUrl;
     private int tradeType;
     @JsonProperty("user_idx")
-    private String userIdx;
+    private int userIdx;
 
 }
