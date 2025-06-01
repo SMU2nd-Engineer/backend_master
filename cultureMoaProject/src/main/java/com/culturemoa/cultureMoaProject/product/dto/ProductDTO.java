@@ -27,6 +27,8 @@ public class ProductDTO {
     private Long price;
     private Boolean flag;
     private String nickName;
+    private Long lastId;
+    private Long size;
 
     @JsonProperty("image_Url")
     private String image_Url;

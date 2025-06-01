@@ -39,8 +39,8 @@ public class ProductController {
     // 하위 service도 마찬가집니다
     // 전체 목록 불러오기
     @GetMapping("/list")
-    public List<ProductDTO> product() {
-        return productService.getAllProduct();
+    public List<ProductDTO> product(@RequestParam(required = false) Long lastId, @RequestParam(defaultValue = "20") Long size) {
+        return productService.getAllProduct(lastId, size);
 
     }
 

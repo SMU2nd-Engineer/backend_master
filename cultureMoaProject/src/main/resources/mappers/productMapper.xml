@@ -20,7 +20,15 @@
                 ) DETAIL
         ON MAIN.IDX = DETAIL.PRODUCT_IDX
         LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
-        WHERE MAIN.EDATE IS NULL
+        <where>
+            MAIN.EDATE IS NULL
+
+            <if test="lastId != null">
+                AND MAIN.IDX &lt; #{lastId}
+            </if>
+        </where>
+        ORDER BY MAIN.IDX DESC
+        LIMIT #{size}
     </select>
 
     <!-- 해당 idx에 맞는 정보 가져오기 -->
@@ -90,6 +98,7 @@
                 AND CATEGORYGENRE_IDX = #{categorygenre_idx}
             </if>
         </where>
+        ORDER BY MAIN.IDX DESC
     </select>
     <!-- 상품 팔렸을 때 flag값 True -->
     <update id="updateProductFlag" parameterType="com.culturemoa.cultureMoaProject.payment.dto.ProductFlagUpdate" >
