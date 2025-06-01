@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.board.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,10 @@ public class ContentsCommentInfoDTO {
     private Long comment_idx; // cotentsMapper의 게시글 상세페이지 댓글의 고유 idx 불러오기 별칭명과 동일하게 설정
     private String text;
 //    @DateTimeFormat(pattern = "MM/dd")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    // 입력용 날짜 포맷
+//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    // 출력용 날짜 포맷
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sdate; // 날짜 포맷된 sdate
 
     // 불러올 User 정보(작성자-회원 닉네임)

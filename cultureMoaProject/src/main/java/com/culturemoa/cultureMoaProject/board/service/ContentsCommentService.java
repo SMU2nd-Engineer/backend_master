@@ -49,6 +49,8 @@ public class ContentsCommentService {
 //        commentDTO.setText(contentsCommentInfoDTO.getText());
         commentDTO.setSdate(LocalDateTime.now());
 
+        System.out.println(commentDTO);
+
         System.out.println("여기까지 실행 됨" + commentDTO);
         if (contentsCommentDAO.getCommentInsert(commentDTO) == 1) {
             return commentDTO.getContents_idx();
