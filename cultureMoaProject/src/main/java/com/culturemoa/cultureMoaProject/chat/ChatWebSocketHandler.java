@@ -76,27 +76,27 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        try {
-
-            ChatSessionInfo senderInfo = sessionInfoMap.get(session);
-            if (senderInfo == null) {
-                session.close(CloseStatus.BAD_DATA);
-                return;
-            }
-
-            String roomId = senderInfo.getRoomId();
-
-            Optional<RoomReadDTO> lastAt = roomReadRepository.findByUserIdxAndChatRoomId(Long.valueOf(senderInfo.getUserId()),Long.valueOf(senderInfo.getRoomId()));
-
-            List<ChatDTO> recentMessages = chatRepository.findByChatRoomIdAndCreatedAtAfter(Long.parseLong(roomId), lastAt.get().getLastReadAt());
-
-            for (ChatDTO msg : recentMessages) {
-                String json = objectMapper.writeValueAsString(msg);
-                session.sendMessage(new TextMessage(json));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//
+//            ChatSessionInfo senderInfo = sessionInfoMap.get(session);
+//            if (senderInfo == null) {
+//                session.close(CloseStatus.BAD_DATA);
+//                return;
+//            }
+//
+//            String roomId = senderInfo.getRoomId();
+//
+//            Optional<RoomReadDTO> lastAt = roomReadRepository.findByUserIdxAndChatRoomId(Long.valueOf(senderInfo.getUserId()),Long.valueOf(senderInfo.getRoomId()));
+//
+//            List<ChatDTO> recentMessages = chatRepository.findByChatRoomIdAndCreatedAtAfter(Long.parseLong(roomId), lastAt.get().getLastReadAt());
+//
+//            for (ChatDTO msg : recentMessages) {
+//                String json = objectMapper.writeValueAsString(msg);
+//                session.sendMessage(new TextMessage(json));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void broadcastToRoom(String roomId, String message, Long senderId) {
