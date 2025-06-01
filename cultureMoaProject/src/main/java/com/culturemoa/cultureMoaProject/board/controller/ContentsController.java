@@ -56,16 +56,17 @@ public class ContentsController {
 
     // 게시글 등록페이지 - 이미지 등록
     @PostMapping("/submit")
-    public ContentsDTO insertContents(@RequestPart("contents") ContentsDTO contentDTO, @RequestPart("files")List<MultipartFile> files) {
+    public ContentsDTO insertContents(@RequestPart("contents") ContentsDTO contentDTO, @RequestPart(value = "files", required = false)List<MultipartFile> files) {
         try {
             String uploadDir = "board/";
             List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
 
-            for (int i = 0; i < files.size(); i++) {
-                MultipartFile file = files.get(i);
-                if (!files.isEmpty()) {
-                    String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
-                    boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
+            if (files != null) {
+                for (int i = 0; i < files.size(); i++) {
+                    MultipartFile file = files.get(i);
+                    // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
+                        String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
+                        boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
                 }
             }
 

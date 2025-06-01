@@ -32,8 +32,8 @@ public class ContentInfoDTO {
     private String title;
     private String content;
 //    @DateTimeFormat(pattern = "MM/dd")
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sdate; // 날짜 포맷된 sdate
 
     // 불러올 User 정보(작성자-회원 닉네임)
