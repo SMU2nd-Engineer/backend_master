@@ -124,7 +124,7 @@
     AS comment_idx: ContentsCommentInfoDTO에 컬럼명이 일치해야되서 선언함
     -->
     <select id="getComment" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentInfoDTO" >
-        SELECT COMNT.CONTENTS_IDX, COMNT.TEXT, COMNT.SDATE,
+        SELECT COMNT.USER_IDX, COMNT.CONTENTS_IDX, COMNT.TEXT, COMNT.SDATE,
         USERT.NICKNAME, COMNT.IDX AS comment_idx
         FROM CONTENTS_COMMENT_TBL COMNT
         LEFT OUTER JOIN USER_TBL USERT ON
