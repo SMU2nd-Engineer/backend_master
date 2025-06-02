@@ -22,6 +22,8 @@ import java.util.UUID;
 @Service
 public class ContentsService {
     private final ContentsDAO contentsDAO;
+    private final UserDAO userDAO;
+    private final HandleAuthentication handleAuth;
 
     @Autowired
     public ContentsService(ContentsDAO contentsDAO, UserDAO userDAO, HandleAuthentication handleAuth) {
@@ -30,14 +32,7 @@ public class ContentsService {
         // 사용자 인증 정보 가져오기
         this.handleAuth = handleAuth;
     }
-    // 생성자 패턴이면 통합 하세요 생성자로 Autowired 여러개 하는거 아닙니다 생성자 패턴에서는
-    @Autowired
-    private final UserDAO userDAO;
-
-
-    @Autowired
-    private HandleAuthentication handleAuth;
-
+    // 생성자 패턴이면 통합 하세요 생성자로 Autowired 여러개 하는거 아닙니다 생성자 패턴에서는 - 수정완료
 
     public List<ContentsDTO> getAllContents() {
         return contentsDAO.getAllContents();
@@ -58,9 +53,6 @@ public class ContentsService {
         if (category_idx != null && category_idx != -1) {
             searchMap.put("category_idx", category_idx);
         }
-//        else {
-//            searchMap.put("category_idx", -1);
-//        }
 
         // 키워드 문자열이 실제로 값이 있는지 확인 후 Map에 추가
         if (keyword != null && !keyword.isEmpty()) {
@@ -78,8 +70,6 @@ public class ContentsService {
             searchMap.put("searchType", -1);
         }
 
-//        System.out.println("searchMap" + searchMap);
-
         // DAO로 Map 전달
         return contentsDAO.getContentsSearchCriteria(searchMap);
     }
@@ -89,8 +79,6 @@ public class ContentsService {
             // 등록해야할 칼럼들, 불러와야 할 이미지 Url 주소를 리스트로 저장
             ContentsDTO contentsDTO, List<ContentsImageSubmitDTO> imgList
     ) {
-        // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
-
         // user 정보 담겨 있음
         // 사용자 인증해서 user id를 자동으로 불러옴
         String userid = handleAuth.getUserIdByAuth();
@@ -100,7 +88,6 @@ public class ContentsService {
         contentsDTO.setUser_idx((long) useridx);
         contentsDTO.setSdate(LocalDateTime.now());
 
-        System.out.println("여기까지 실행 됨" + contentsDTO);
         // 게시글 등록(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
         if(contentsDAO.getContentInsert(contentsDTO) == 1){
             // 텍스트 에디터 quill 이미지 저장
@@ -165,14 +152,10 @@ public class ContentsService {
         contentsDTO.setSdate(contentInfoDTO.getSdate());
         contentsDTO.setNickname(contentInfoDTO.getNickname());
 
-        System.out.println(contentsDAO.boardImageRead(idx));
-
         contentsDTO.setDetailImageList(contentsDAO.boardImageRead(idx));
-        System.out.println(contentsDTO);
         return contentsDTO;
 
         }
-
 
     // 등록된 게시글 수정(상세페이지의 수정버튼)
     public void  updateContents(ContentsDetailModifyInfoDTO modifyInfoDTO) {

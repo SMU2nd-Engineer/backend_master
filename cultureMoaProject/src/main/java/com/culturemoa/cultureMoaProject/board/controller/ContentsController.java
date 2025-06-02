@@ -29,7 +29,6 @@ public class ContentsController {
     // 게시판 리스트 페이지 - 게시글 등록한 목록 확인
     @GetMapping("/list")
     public List<ContentInfoDTO> getContentInfos() {
-        System.out.println(contentsService.getContentInfos());
 
         return contentsService.getContentInfos();
     }
@@ -106,13 +105,6 @@ public class ContentsController {
     ) {
         return contentsCommentService.deleteComment(contentsCommentDeleteInfoDTO);
     }
-
-    // 게시판 상세페이지(수정 버튼) - 카테고리 선택, 제목, 글내용 수정
-//    @PostMapping("edit")
-//    public updateContents (
-//
-//    )
-
 
     // 게시판 상세페이지(수정 버튼) - 카테고리 선택, 제목, 글내용 수정 + 이미지 수정
     @PostMapping("/edit")
