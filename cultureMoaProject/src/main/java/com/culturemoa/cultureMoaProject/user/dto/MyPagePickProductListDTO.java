@@ -14,6 +14,10 @@ import java.time.LocalDateTime;
  * price : 가격
  * text : 상품 내용
  * flag : 판매 여부(ERD에는 boolean이지만 db에는 1또는 0일 것이므로 int로 받음)
+ * pick : 찜 여부
+ * categoryIdx : 상품의 분류
+ * categoryGenreIdx : 상품의 장류 분류
+ * eDate : 상품의 판매 또는 삭제 일자.
  */
 @Data
 @NoArgsConstructor
@@ -29,4 +33,5 @@ public class MyPagePickProductListDTO {
     private int categoryIdx;
     private int categoryGenreIdx;
     private LocalDateTime eDate;
+    private int pick;
 }

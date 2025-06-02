@@ -123,8 +123,8 @@ public class UserDAO {
      * 홈페이지에 사용할 상품 정보 10개를 조회할 DAO
      * @return List<ProductDTO>
      */
-    public List<ProductDTO> getLatestProducts () {
-        return sqlSessionTemplate.selectList("userMapper.getAllProduct");
+    public List<ProductDTO> getLatestProducts (int userIdx) {
+        return sqlSessionTemplate.selectList("userMapper.getAllProduct", userIdx);
     }
 
     /**

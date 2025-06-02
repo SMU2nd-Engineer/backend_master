@@ -64,9 +64,10 @@
     </select>
 
 <!--  홈페이지에 사용할 매퍼- 8개의 최신 상품 정보 가져오기  -->
-    <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
+    <select id="getAllProduct" parameterType="int" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
-        USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
+        MAIN.USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME,
+        (PICK.IDX IS NOT NULL) AS PICK
         FROM PRODUCT_TBL MAIN
         LEFT JOIN (
         SELECT s1.*
@@ -79,6 +80,11 @@
         ) DETAIL
         ON MAIN.IDX = DETAIL.PRODUCT_IDX
         LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
+        LEFT JOIN (
+        SELECT *
+        FROM USER_PICK_TBL AS PTEMP
+        WHERE PTEMP.USER_IDX = #{userIdx} AND PTEMP.EDATE IS NULL
+        ) AS PICK ON PICK.PRODUCT_IDX = MAIN.IDX
         WHERE MAIN.EDATE IS NULL
         ORDER BY MAIN.SDATE DESC, MAIN.IDX DESC
         LIMIT 8

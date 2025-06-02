@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
  *     categorySubIdx : 카테고리 정보
  *     eDate : 상품 삭제 또는 판매 일자
  *     purchaseDate : 상품 구매 날짜
+ *     pick : 찜 여부
  */
 @Data
 @NoArgsConstructor
@@ -34,4 +35,5 @@ public class MyPageBuyListDTO {
     private int categoryGenreIdx;
     private LocalDateTime eDate;
     private LocalDateTime purchaseDate;
+    private int pick;
 }

@@ -35,13 +35,31 @@
 
     <!--  마이페이지 메인에서 사용할 찜 목록 최신 2개만 가져오기  -->
     <select id="getMainPeakListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePickProductListDTO">
-        SELECT P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl ,
-        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx
+        SELECT
+        P.IDX,
+        P.TITLE,
+        P.PRICE,
+        P.FLAG,
+        P.CONTENT,
+        PI.IMAGE_URL AS imageUrl,
+        P.CATEGORY_IDX AS categoryIdx,
+        P.CATEGORYGENRE_IDX AS categoryGenreIdx,
+        TRUE AS PICK
         FROM USER_PICK_TBL AS UP
         JOIN USER_TBL AS U ON U.IDX = UP.USER_IDX
         JOIN PRODUCT_TBL AS P ON P.IDX = UP.PRODUCT_IDX
-        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
-        WHERE U.ID = #{userId} AND U.EDATE IS NULL AND UP.EDATE IS NULL
+        JOIN (
+        SELECT s1.*
+        FROM PRODUCT_IMAGE_TBL s1
+        INNER JOIN (
+        SELECT PRODUCT_IDX, MIN(IDX) AS MIN_IDX
+        FROM PRODUCT_IMAGE_TBL
+        GROUP BY PRODUCT_IDX
+        ) s2 ON s1.PRODUCT_IDX = s2.PRODUCT_IDX AND s1.IDX = s2.MIN_IDX
+        ) PI ON PI.PRODUCT_IDX = P.IDX
+        WHERE U.ID = #{userId}
+        AND U.EDATE IS NULL
+        AND UP.EDATE IS NULL
         ORDER BY UP.IDX DESC
         LIMIT 2;
     </select>
@@ -51,10 +69,26 @@
     <select id="getMainSellListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageSellListDTO" >
         SELECT
         P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl,
-        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.SDATE, P.EDATE
+        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.SDATE, P.EDATE,
+        (PICK.IDX IS NOT NULL) AS PICK
         FROM PRODUCT_TBL AS P
-        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
+        JOIN (
+        SELECT s1.*
+        FROM PRODUCT_IMAGE_TBL s1
+        INNER JOIN (
+        SELECT PRODUCT_IDX, MIN(IDX) AS MIN_IDX
+        FROM PRODUCT_IMAGE_TBL
+        GROUP BY PRODUCT_IDX
+        ) s2 ON s1.PRODUCT_IDX = s2.PRODUCT_IDX AND s1.IDX = s2.MIN_IDX
+        ) PI ON PI.PRODUCT_IDX = P.IDX
         JOIN USER_TBL AS U ON U.IDX = P.USER_IDX
+        LEFT JOIN (
+        SELECT *
+        FROM USER_PICK_TBL
+        WHERE EDATE IS NULL AND USER_IDX = (
+        SELECT IDX FROM USER_TBL WHERE ID = #{userId}
+        )
+        ) AS PICK ON PICK.PRODUCT_IDX = P.IDX
         WHERE U.ID = #{userId} AND U.EDATE IS NULL
         ORDER BY P.IDX DESC
         LIMIT 4;
@@ -74,13 +108,32 @@
 
     <!--  마이페이지 찜 목록 정보 가져오기  -->
     <select id="getWishListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPagePickProductListDTO">
-        SELECT P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl, P.EDATE ,
-        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx
+        SELECT
+        P.IDX,
+        P.TITLE,
+        P.PRICE,
+        P.FLAG,
+        P.CONTENT,
+        PI.IMAGE_URL AS imageUrl,
+        P.EDATE,
+        P.CATEGORY_IDX AS categoryIdx,
+        P.CATEGORYGENRE_IDX AS categoryGenreIdx,
+        TRUE AS PICK
         FROM USER_PICK_TBL as UP
         JOIN USER_TBL AS U ON U.IDX = UP.USER_IDX
         JOIN PRODUCT_TBL AS P ON P.IDX = UP.PRODUCT_IDX
-        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
-        WHERE U.ID = #{userId} AND UP.EDATE IS NULL AND U.EDATE IS NULL
+        JOIN (
+        SELECT s1.*
+        FROM PRODUCT_IMAGE_TBL s1
+        INNER JOIN (
+        SELECT PRODUCT_IDX, MIN(IDX) AS MIN_IDX
+        FROM PRODUCT_IMAGE_TBL
+        GROUP BY PRODUCT_IDX
+        ) s2 ON s1.PRODUCT_IDX = s2.PRODUCT_IDX AND s1.IDX = s2.MIN_IDX
+        ) PI ON PI.PRODUCT_IDX = P.IDX
+        WHERE U.ID = #{userId}
+        AND UP.EDATE IS NULL
+        AND U.EDATE IS NULL
         ORDER BY UP.IDX DESC;
     </select>
 
@@ -99,25 +152,65 @@
     <select id="getMySellByListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageSellListDTO" >
         SELECT
         P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl,
-        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.SDATE, P.EDATE
+        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.SDATE, P.EDATE,
+        (PICK.IDX IS NOT NULL) AS PICK
         FROM PRODUCT_TBL AS P
-        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
+        JOIN (
+        SELECT s1.*
+        FROM PRODUCT_IMAGE_TBL s1
+        INNER JOIN (
+        SELECT PRODUCT_IDX, MIN(IDX) AS MIN_IDX
+        FROM PRODUCT_IMAGE_TBL
+        GROUP BY PRODUCT_IDX
+        ) s2 ON s1.PRODUCT_IDX = s2.PRODUCT_IDX AND s1.IDX = s2.MIN_IDX
+        ) PI ON PI.PRODUCT_IDX = P.IDX
         JOIN USER_TBL AS U ON U.IDX = P.USER_IDX
+        LEFT JOIN (
+        SELECT *
+        FROM USER_PICK_TBL
+        WHERE EDATE IS NULL AND USER_IDX = (
+        SELECT IDX FROM USER_TBL WHERE ID = #{userId}
+        )
+        ) AS PICK ON PICK.PRODUCT_IDX = P.IDX
         WHERE U.ID = #{userId} AND U.EDATE IS NULL
-        ORDER BY P.IDX DESC;
+        ORDER BY P.IDX DESC
     </select>
 
 
     <!--  마이페이지에 사용자 기준 구매 목록 가져오기  -->
     <select id="getMyBuyListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.MyPageBuyListDTO" >
         SELECT
-        P.IDX, P.TITLE, P.PRICE, P.FLAG, P.CONTENT, PI.IMAGE_URL AS imageUrl,
-        P.CATEGORY_IDX AS categoryIdx, P.CATEGORYGENRE_IDX AS categoryGenreIdx, P.EDATE, UT.SDATE AS purchaseDate
+        P.IDX,
+        P.TITLE,
+        P.PRICE,
+        P.FLAG,
+        P.CONTENT,
+        PI.IMAGE_URL AS imageUrl,
+        P.CATEGORY_IDX AS categoryIdx,
+        P.CATEGORYGENRE_IDX AS categoryGenreIdx,
+        P.EDATE,
+        UT.SDATE AS purchaseDate,
+        (PICK.IDX IS NOT NULL) AS PICK
         FROM USER_TRANSACTION_TBL AS UT
         JOIN PRODUCT_TBL AS P ON P.IDX = UT.PRODUCT_IDX
-        JOIN PRODUCT_IMAGE_TBL AS PI ON PI.PRODUCT_IDX = P.IDX
+        JOIN (
+        SELECT s1.*
+        FROM PRODUCT_IMAGE_TBL s1
+        INNER JOIN (
+        SELECT PRODUCT_IDX, MIN(IDX) AS MIN_IDX
+        FROM PRODUCT_IMAGE_TBL
+        GROUP BY PRODUCT_IDX
+        ) s2 ON s1.PRODUCT_IDX = s2.PRODUCT_IDX AND s1.IDX = s2.MIN_IDX
+        ) PI ON PI.PRODUCT_IDX = P.IDX
         JOIN USER_TBL AS U ON U.IDX = P.USER_IDX
-        WHERE U.ID = #{userId} AND U.EDATE IS NULL
+        LEFT JOIN (
+        SELECT *
+        FROM USER_PICK_TBL
+        WHERE EDATE IS NULL
+        AND USER_IDX = (SELECT IDX FROM USER_TBL WHERE ID = #{userId})
+        ) AS PICK ON PICK.PRODUCT_IDX = P.IDX
+        WHERE UT.USER_IDX = (SELECT IDX FROM USER_TBL WHERE ID = #{userId})
+        AND U.EDATE IS NULL
         ORDER BY UT.IDX DESC;
     </select>
 
