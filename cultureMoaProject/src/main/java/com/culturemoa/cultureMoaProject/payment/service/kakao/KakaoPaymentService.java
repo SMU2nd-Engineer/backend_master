@@ -235,6 +235,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
 
     @Override
     public void handleFailedPayment(String tid, String methodResultMessage) {
+
         PaymentStatus status = new PaymentStatus();
         status.setTid(tid);
         status.setFailedAt(LocalDateTime.now());
