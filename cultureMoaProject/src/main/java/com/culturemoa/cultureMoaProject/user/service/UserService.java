@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -188,11 +189,16 @@ public class UserService {
     public void userWithdrawal() {
         // 유저 아이디 추출하기
         String userId = handleAuth.getUserIdByAuth();
+        int userIdx = userDAO.getUserIdx(userId);
+
         // 회원 탈퇴, 정보 수정 날짜 생성하기
         LocalDateTime localDateTime = LocalDateTime.now();
 
+        // 기존 아이디를 탈퇴회원 아이디 prefix 붙이기
+        String deleteId = userId+"_delete_"+userIdx + "_" + localDateTime.format(DateTimeFormatter.BASIC_ISO_DATE);
+
         // 생성자를 사용하여 바로 값 넘겨 주기
-        int userWithdrawalProcess = userDAO.updateWithdrawal(new UserWithdrawalDTO(userId,localDateTime, localDateTime));
+        int userWithdrawalProcess = userDAO.updateWithdrawal(new UserWithdrawalDTO(userId, deleteId, localDateTime, localDateTime));
 
         if(userWithdrawalProcess == 0) {
             throw new DBManipulationFailException();
