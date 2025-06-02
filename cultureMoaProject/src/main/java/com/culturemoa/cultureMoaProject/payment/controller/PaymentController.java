@@ -58,15 +58,14 @@ public class PaymentController {
     }
 
     @PostMapping("/fail")
-    public ResponseEntity<String> fail(
-//            @RequestParam int payMethod,
-            @RequestBody KakaoFailRequestDTO request
-    ){
+    public ResponseEntity<ErrorResponseDTO> fail(@RequestBody KakaoFailRequestDTO request) {
         PaymentGatewayService service = getPaymentService(6001);
         String failMessage = request.getReason() != null ? request.getReason() : "알 수 없는 오류";
 
         service.handleFailedPayment(request.getTid(), failMessage);
-        return ResponseEntity.badRequest().body("결제가 실패했습니다: " + failMessage);
+
+        ErrorResponseDTO response = new ErrorResponseDTO(-780, failMessage);
+        return ResponseEntity.badRequest().body(response);
     }
 
     private PaymentGatewayService getPaymentService(int payMethod) {
