@@ -44,10 +44,10 @@ public class LogAspect {
      * @return ReturnObject
      * @throws Throwable
      */
-    @Around("restApiMethods()")
-    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        return printLog(proceedingJoinPoint, "restApiMethods");
-    }
+//    @Around("restApiMethods()")
+//    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+//        return printLog(proceedingJoinPoint, "restApiMethods");
+//    }
 
 
 
