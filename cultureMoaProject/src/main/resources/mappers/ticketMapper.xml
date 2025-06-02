@@ -27,6 +27,10 @@
                 AND SDATE &lt;= #{endDate}
                 AND EDATE &gt;= #{startDate}
             </if>
+            <!-- 지난 공연 제외 -->
+            <if test="today != null">
+                AND EDATE &gt;= #{today}
+            </if>
         </where>
         <!-- 날짜순으로 정렬하고 싶다면 활성화 시키기-->
         <!-- ORDER BY sDate ASC -->
@@ -34,20 +38,21 @@
 
     <select id="getCalendarTicketCount" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
         WITH RECURSIVE CALENDAR AS (
-            SELECT DATE(#{startDate}) AS DATE
-            UNION ALL
-            SELECT DATE_ADD(DATE, INTERVAL 1 DAY)
-            FROM CALENDAR c
-            WHERE DATE &lt; #{endDate}
+        SELECT DATE(#{startDate}) AS DATE
+        UNION ALL
+        SELECT DATE_ADD(DATE, INTERVAL 1 DAY)
+        FROM CALENDAR c
+        WHERE DATE &lt; #{endDate}
         )
         SELECT
-            DATE_FORMAT(c.DATE, '%Y-%m-%d') AS DATE,
-            SUM(CASE WHEN t.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS PERFORMANCE_COUNT,
-            SUM(CASE WHEN t.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS SPORTS_COUNT
+        DATE_FORMAT(c.DATE, '%Y-%m-%d') AS DATE,
+        SUM(CASE WHEN t.SUB_IDX BETWEEN 3001 AND 3007 THEN 1 ELSE 0 END) AS PERFORMANCE_COUNT,
+        SUM(CASE WHEN t.SUB_IDX = 3008 THEN 1 ELSE 0 END) AS SPORTS_COUNT
         FROM
         CALENDAR c
         LEFT JOIN TICKET_TBL t
         ON c.DATE BETWEEN t.SDATE AND t.EDATE
+        AND t.EDATE &gt;= #{today} <!-- 지난 공연 제외 -->
         <!-- 카테고리 필터 -->
         <if test="categories != null and categories.size() > 0">
             AND t.SUB_IDX IN
@@ -58,9 +63,12 @@
         GROUP BY c.DATE
         ORDER BY c.DATE
     </select>
-    <select id="getTicketInfo" parameterType="int" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO" >
+
+    <!-- 티켓 상세정보 -->
+    <select id="getTicketInfo" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO" >
         SELECT IDX, TITLE, COMPANY, LINK, SDATE, EDATE, PLACE, PRICE, GRADE, CAST, RUNNINGTIME, IMG, ETC
         FROM TICKET_TBL
         WHERE IDX = #{idx}
+        AND EDATE &gt;= #{today} <!-- 지난 공연 제외 -->
     </select>
 </mapper>
