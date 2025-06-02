@@ -95,8 +95,12 @@
             <if test="categorygenre_idx > 2000" >
                 AND CATEGORYGENRE_IDX = #{categorygenre_idx}
             </if>
+            <if test="lastId != null">
+                AND MAIN.IDX &lt; #{lastId}
+            </if>
         </where>
         ORDER BY MAIN.IDX DESC
+        LIMIT #{size}
     </select>
     <!-- 상품 팔렸을 때 flag값 True -->
     <update id="updateProductFlag" parameterType="com.culturemoa.cultureMoaProject.payment.dto.ProductFlagUpdate" >
