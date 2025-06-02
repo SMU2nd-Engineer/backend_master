@@ -47,42 +47,11 @@ public class ProductController {
     // 해당 상품 불러오기
     @GetMapping("/detail/{idx}")
     public ProductDTO getProductByIdx(@PathVariable long idx) {
-        System.out.println("# idx: " + idx);
         return productService.getProductByIdx(idx);
-    }
-
-    // 상품 업로드
-    @GetMapping("/upload_img/{filename:.+}")
-    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-        try {
-            Path filePath = Paths.get("C:/upload_img").resolve(filename).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-
-            if (!resource.exists() || !resource.isReadable()) {
-                return ResponseEntity.notFound().build();
-            }
-
-            // 파일 확장자에 따라 Content-Type 지정
-            String contentType = Files.probeContentType(filePath);
-            if (contentType == null) {
-                contentType = "application/octet-stream"; // 기본값
-            }
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
-        } catch (
-                MalformedURLException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
     @PostMapping("/upload")
     public ProductDTO uploadProduct(@RequestPart("product") ProductDTO productDTO, @RequestPart("files") List<MultipartFile> files) {
-        System.out.println("업로드 실행");
         try {
             String uploadDir = "product/";
             List<ProductImageDTO> imageList = new ArrayList<>();

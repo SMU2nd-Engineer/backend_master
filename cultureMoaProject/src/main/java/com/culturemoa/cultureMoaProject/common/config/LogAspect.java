@@ -3,15 +3,19 @@ package com.culturemoa.cultureMoaProject.common.config;
 import com.culturemoa.cultureMoaProject.log.dto.LoggerDTO;
 import com.culturemoa.cultureMoaProject.log.service.LoggerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -19,6 +23,7 @@ import java.lang.reflect.Method;
 @Component
 @Aspect
 @Slf4j
+@Order(5000)
 public class LogAspect {
     private final LoggerService loggerService;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -59,11 +64,23 @@ public class LogAspect {
      * @throws Throwable 실행 실패시 처리
      */
     private Object printLog (ProceedingJoinPoint proceedingJoinPoint, String pointCutName) throws Throwable{
+        Object returnObj;
+        try {
+            returnObj = proceedingJoinPoint.proceed();
+        } catch (Throwable t){
+            throw t;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            return proceedingJoinPoint.proceed(); // 인증 안된 요청은 로깅 생략
+        }
+
         LoggerDTO loggerDTO = getLoggerDTO(proceedingJoinPoint, pointCutName);
 
         log.info("실행 메서드 : " + getMethod(proceedingJoinPoint).getName());
 
-        Object returnObj = proceedingJoinPoint.proceed();
         setLogReturn(loggerDTO, returnObj);
 
         loggerService.insertLogger(loggerDTO);
@@ -95,10 +112,22 @@ public class LogAspect {
         loggerDTO.setClassName(proceedingJoinPoint.getTarget().getClass().toString());
         loggerDTO.setMethodName(method.getName());
 
-        String requestParamsJson = null;
         try {
-            requestParamsJson = objectMapper.writeValueAsString(proceedingJoinPoint.getArgs());
-            loggerDTO.setParameter(requestParamsJson);
+            Object[] args = proceedingJoinPoint.getArgs();
+            StringBuilder sb = new StringBuilder("[");
+            for (Object arg : args) {
+                if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) {
+                    sb.append("{\"type\":\"HttpServletObject\"},");
+                } else {
+                    try {
+                        sb.append(objectMapper.writeValueAsString(arg)).append(",");
+                    } catch (Exception e) {
+                        sb.append("{\"error\":\"Unserializable argument\"},");
+                    }
+                }
+            }
+            sb.append("]");
+            loggerDTO.setParameter(sb.toString());
         } catch (Exception e) {
             loggerDTO.setParameter("[unserializable]");
         }
@@ -114,12 +143,16 @@ public class LogAspect {
     private void setLogReturn (LoggerDTO loggerDTO, Object returnObj){
         String responseJson = null;
         try {
-            loggerDTO.setReturnType(returnObj.getClass().getSimpleName());
-            responseJson = objectMapper.writeValueAsString(returnObj);
-            loggerDTO.setReturnValue(responseJson);
+            if (returnObj != null) {
+                loggerDTO.setReturnType(returnObj.getClass().getSimpleName());
+                responseJson = objectMapper.writeValueAsString(returnObj);
+            } else {
+                loggerDTO.setReturnType("null");
+                responseJson = "null";
+            }
         } catch (Exception e) {
             responseJson = "[unserializable]";
-            loggerDTO.setReturnValue(responseJson);
         }
+        loggerDTO.setReturnValue(responseJson);
     }
 }
