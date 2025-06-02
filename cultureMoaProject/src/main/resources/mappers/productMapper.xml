@@ -7,7 +7,8 @@
     <!-- 전체 정보 가져오기 -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
-                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
+                MAIN.USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
+                ,(PICK.IDX IS NOT NULL) AS PICK
         FROM PRODUCT_TBL MAIN
         LEFT JOIN (
                     SELECT s1.*
@@ -20,6 +21,7 @@
                 ) DETAIL
         ON MAIN.IDX = DETAIL.PRODUCT_IDX
         LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
+        LEFT JOIN (SELECT * FROM USER_PICK_TBL AS PTEMP WHERE PTEMP.USER_IDX = #{userIdx}) AS PICK ON PICK.PRODUCT_IDX = MAIN.IDX
         <where>
             MAIN.EDATE IS NULL
 
@@ -32,11 +34,13 @@
     </select>
 
     <!-- 해당 idx에 맞는 정보 가져오기 -->
-    <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" parameterType="long">
+    <select id="getProductByIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO">
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
-               USER_IDX, PRICE, MAIN.FLAG, CONTENT, USER.NICKNAME
+            MAIN.USER_IDX, PRICE, MAIN.FLAG, CONTENT, USER.NICKNAME
+            ,(PICK.IDX IS NOT NULL) AS PICK
         FROM PRODUCT_TBL MAIN
         LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
+        LEFT JOIN (SELECT * FROM USER_PICK_TBL AS PTEMP WHERE PTEMP.USER_IDX = #{userIdx}) AS PICK ON PICK.PRODUCT_IDX = MAIN.IDX
         WHERE MAIN.IDX = #{idx}
     </select>
 
@@ -64,30 +68,24 @@
 
     <!-- 상품 검색 (상품이름, 상품장르, 카테고리, 상세설명)-->
     <select id="searchProducts" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO">
-        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, SDATE, EDATE,
-                USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG
+        SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
+                MAIN.USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
+                ,(PICK.IDX IS NOT NULL) AS PICK
         FROM PRODUCT_TBL MAIN
         LEFT JOIN (
-                SELECT s1.*
+            SELECT s1.*
                 FROM PRODUCT_IMAGE_TBL s1
                 INNER JOIN (
-                SELECT product_idx, MIN(idx) AS min_idx
-                FROM PRODUCT_IMAGE_TBL
-                GROUP BY product_idx
+                    SELECT product_idx, MIN(idx) AS min_idx
+                    FROM PRODUCT_IMAGE_TBL
+                    GROUP BY product_idx
                 ) s2 ON s1.product_idx = s2.product_idx AND s1.idx = s2.min_idx
-            ) DETAIL ON
-             MAIN.IDX = DETAIL.PRODUCT_IDX
+            ) DETAIL
+            ON MAIN.IDX = DETAIL.PRODUCT_IDX
+        LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
+        LEFT JOIN (SELECT * FROM USER_PICK_TBL AS PTEMP WHERE PTEMP.USER_IDX = #{userIdx}) AS PICK ON PICK.PRODUCT_IDX = MAIN.IDX
         <where>
-            1 = 1
-<!--            <if test="searchDTO.getCategory_idx() > 0">-->
-<!--                CATEGORY_IDX = #{searchDTO.getCategory_idx()}-->
-<!--            </if>-->
-<!--            <if test="searchDTO.geCategorygenre_idx() > 0">-->
-<!--                CATEGORYGENRE_IDX = #{searchDTO.geCategorygenre_idx()}-->
-<!--            </if>-->
-<!--            <if test="searchDTO.getKeyword() > 0">-->
-<!--                KEYWORD = #{searchDTO.getKeyword()}-->
-<!--            </if>-->
+            MAIN.EDATE IS NULL
             <if test="keyword != null">
                 AND (TITLE LIKE '%${keyword}%' OR CONTENT LIKE '%${keyword}%')
             </if>

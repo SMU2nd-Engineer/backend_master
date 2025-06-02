@@ -13,4 +13,5 @@ public class ProductSearchDTO {
     private String keyword;
     private Long category_idx;
     private Long categorygenre_idx;
+    private Long userIdx;
 }
