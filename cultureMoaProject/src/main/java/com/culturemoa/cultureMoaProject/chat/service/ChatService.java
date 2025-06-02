@@ -132,7 +132,6 @@ public class ChatService {
      */
     public List<ChatRoomInfoDTO> getChatRooms(){
         Long userIdx = Long.valueOf(userDAO.getUserIdx(handleAuthentication.getUserIdByAuth()));
-        System.out.println(userIdx);
 
         List<ChatRoomDTO> rooms = chatRoomRepository.findByUsersContaining(userIdx, Sort.by(Sort.Direction.DESC, "lastMessageAt"));
         List<ChatRoomInfoDTO> roomInfos = new ArrayList<>();

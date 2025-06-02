@@ -23,10 +23,6 @@ public class LoggerService {
     }
 
     public void insertLogger(LoggerDTO loggerDTO){
-//        LoggerDTO logger = new LoggerDTO();
-//        logger.setPath(joinPoint.getTarget().toString());
-//        logger.setClassName(joinPoint.getTarget().getClass().toString());
-//        logger.setMethodName();
         loggerDTO.setId(countersService.getId(TYPE));
         loggerDTO.setTime(LocalDateTime.now());
         loggerRepository.insert(loggerDTO);
