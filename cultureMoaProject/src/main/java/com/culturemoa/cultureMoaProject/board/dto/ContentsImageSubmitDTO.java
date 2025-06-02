@@ -10,7 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 public class ContentsImageSubmitDTO {
     // 이미지 등록
-    private String image_Url;
+    private String image_url;
 
 
 }

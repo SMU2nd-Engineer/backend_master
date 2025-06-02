@@ -55,10 +55,11 @@
             <!-- 1. 키워드로 검색어 입력했을때, 2. 눈에 안보이는 것: content(내용) 까지 검색(보류)
             3. 제목+내용 구분자 선택시 제목(title), 내용(content) 조회 -->
 
-            <if test="keyword.length > 0">
+            <if test="keyword.length > 0 and searchType != 1">
               AND (
                     CONT.TITLE LIKE '%${keyword}%'
                     OR CONT.CONTENT LIKE '%${keyword}%'
+<!--                    USERT.NICKNAME LIKE '%${keyword}}%'-->
                 )
             </if>
 
@@ -104,14 +105,26 @@
         AND   CONT.IDX = #{idx}
     </select>
 
-    <!-- 등록된 게시글 수정(상세페이지 수정버튼) -->
-    <update id="updateContents" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailModifyInfoDTO">
+    <!-- 등록된 게시글 수정(상세페이지 수정버튼) 카테고리+제목+글내용 -->
+    <update id="updateContents" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailModifyInfoDTO"
+            keyProperty="idx">
         UPDATE CONTENTS_TBL
            SET CATEGORY_IDX = #{category_idx},
                TITLE = #{title},
                CONTENT = #{content},
                CDATE = #{cdate},
-         WHERE IDX = #{id}
+         WHERE IDX = #{idx}
+    </update>
+
+    <!-- 등록된 게시글 수정(상세페이지 수정버튼) - 이미지 -->
+    <update id="postModifyContentsImage" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO">
+        UPDATE CONTENTS_DETAIL_IMAGE_TBL
+        SET IMAGE_URL =
+            CASE
+                WHEN #{image_url} IS NOT NULL THEN #{image_url}
+                ELSE NULL
+            END
+        WHERE CONTENTS_IDX = #{contents_idx}
     </update>
 
     <!-- 등록된 게시글 삭제(상세페이지 삭제버튼) -->

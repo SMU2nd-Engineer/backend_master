@@ -45,13 +45,12 @@ public class ContentsDAO {
     }
 
     // 게시글 상세페이지(이미지 수정)
-    public int postModifyContents ( ContentsDetailModifyInfoDTO modifyInfoDTO) {
-           return sqlSessionTemplate.update("contentsMapper.postModifyContents", modifyInfoDTO);
+    public int postModifyContentsImage ( ContentsDetailImageModifyDTO imageModifyDTO) {
+           return sqlSessionTemplate.update("contentsMapper.postModifyContentsImage", imageModifyDTO);
 
     }
 
-
-//    // 게시글 상세 페이지(이미지 정보 불러오기)
+    // 게시글 상세 페이지(이미지 정보 불러오기)
     public List<ContentsDetailImageDTO> boardImageRead(Long contents_idx) {
         return sqlSessionTemplate.selectList("contentsMapper.boardImageRead", contents_idx );
     }

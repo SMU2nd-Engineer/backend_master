@@ -47,6 +47,7 @@ public class ContentsService {
     public List<ContentInfoDTO> getContentInfos() {
         return contentsDAO.getContentInfos();
     }
+
     // 제목+내용/작성자, 대분류 선택하고 검색어 입력하면 조건에 맞는 검색 데이터 조회하여 출력
     public List<ContentInfoDTO> getContentSearchs(Long category_idx, String keyword, String searchType) {
         // searchMap에 값을 안넣으면 xml의 if 조건에 해당 파라미터가 존재하지 않아서 바인딩 에러 발생할 수 있음
@@ -76,6 +77,8 @@ public class ContentsService {
         else  {
             searchMap.put("searchType", -1);
         }
+
+        System.out.println("searchMap" + searchMap);
 
         // DAO로 Map 전달
         return contentsDAO.getContentSearchs(searchMap);
@@ -107,7 +110,7 @@ public class ContentsService {
                 for (ContentsImageSubmitDTO imageSubmitDTO : imgList ) {
                     ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
                     detailImageDTO.setContents_idx(contentsDTO.getIdx());
-                    detailImageDTO.setImage_url(imageSubmitDTO.getImage_Url());
+                    detailImageDTO.setImage_url(imageSubmitDTO.getImage_url());
 
                     contentsDAO.getBoardImageInsert(detailImageDTO);
 
@@ -172,6 +175,7 @@ public class ContentsService {
 
         }
 
+
     // 등록된 게시글 수정(상세페이지의 수정버튼)
     public void  updateContents(ContentsDetailModifyInfoDTO modifyInfoDTO) {
         // 입력화면에 없는 것을 DB에 저장
@@ -179,9 +183,9 @@ public class ContentsService {
     }
 
     // 등록된 게시글 이미지 수정
-    public Long postModifyContents(
+    public Long postModifyContentsImage(
             // 등록해야할 칼럼들, 불러와야 할 이미지 Url 주소를 리스트로 저장
-            ContentsDetailModifyInfoDTO modifyInfoDTO, List<ContentsImageSubmitDTO> imgList
+            ContentsDetailImageModifyDTO imageModifyDTO, List<ContentsImageSubmitDTO> imgList
     ) {
 //       user 정보 담겨 있음
         // 사용자 인증해서 user id를 자동으로 불러옴
@@ -190,23 +194,23 @@ public class ContentsService {
         int useridx = userDAO.getUserIdx(userid);
 //        contentInfoDTO.setUserid(userid);
 //      입력 화면에 없는 cdate DB 저장되게 설정
-        modifyInfoDTO.setCdate(LocalDateTime.now());
+        imageModifyDTO.setCdate(LocalDateTime.now());
 
-        System.out.println("여기까지 실행 됨" + modifyInfoDTO);
+        System.out.println("여기까지 실행 됨" + imageModifyDTO);
         // 게시글 등록(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
-        if(contentsDAO.postModifyContents(modifyInfoDTO) == 1){
+        if(contentsDAO.postModifyContentsImage(imageModifyDTO) == 1){
             // 텍스트 에디터 quill 이미지 저장
             if (imgList != null) {
                 for (ContentsImageSubmitDTO imageSubmitDTO : imgList ) {
                     ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
-                    detailImageDTO.setContents_idx(modifyInfoDTO.getIdx());
-                    detailImageDTO.setImage_url(imageSubmitDTO.getImage_Url());
+                    detailImageDTO.setContents_idx(imageModifyDTO.getIdx());
+                    detailImageDTO.setImage_url(imageSubmitDTO.getImage_url());
 
-                    contentsDAO.getBoardImageInsert(detailImageDTO);
+                    contentsDAO.postModifyContentsImage(imageModifyDTO);
 
                 }
             }
-            return modifyInfoDTO.getIdx();
+            return imageModifyDTO.getIdx();
         };
 
         return 1L;
