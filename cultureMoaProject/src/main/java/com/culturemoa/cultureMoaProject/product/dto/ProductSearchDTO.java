@@ -14,4 +14,6 @@ public class ProductSearchDTO {
     private Long category_idx;
     private Long categorygenre_idx;
     private Long userIdx;
+    private Long lastId;
+    private Long size;
 }

@@ -73,7 +73,12 @@ public class ProductController {
 
     // 검색
     @PostMapping("/search")
-    public List<ProductDTO> searchProducts(@RequestBody ProductSearchDTO searchDTO) {
+    public List<ProductDTO> searchProducts(@RequestBody ProductSearchDTO searchDTO,
+                                           @RequestParam(required = false) Long lastId,
+                                           @RequestParam(defaultValue = "20") Long size) {
+        if (lastId != null) searchDTO.setLastId(lastId);
+        searchDTO.setSize(size);
+
         return productService.searchProducts(searchDTO);
     }
 
