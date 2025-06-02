@@ -28,8 +28,8 @@ public class ContentsDAO {
     }
 
     // ContentsService.Map을 받아서 조건에 맞는 쿼리 실행 : 검색된 게시글 조회하여 불러옴
-    public List<ContentInfoDTO> getContentSearchs(Map<String, Object> searchMap) {
-        return sqlSessionTemplate.selectList("contentsMapper.getContentSearchs", searchMap);
+    public List<ContentInfoDTO> getContentsSearchCriteria(Map<String, Object> searchMap) {
+        return sqlSessionTemplate.selectList("contentsMapper.getContentsSearchCriteria", searchMap);
     }
 
     // 게시글 등록 페이지(카테고리, 제목, 글 내용(텍스트))
@@ -40,32 +40,31 @@ public class ContentsDAO {
     }
 
     // 게시글 등록 페이지(이미지 등록)
-    public void getBoardImageInsert (ContentsDetailImageDTO detailImageDTO) {
-        sqlSessionTemplate.insert("contentsMapper.getBoardImageInsert", detailImageDTO);
+    public void getContentsImageInsert (ContentsDetailImageDTO detailImageDTO) {
+        sqlSessionTemplate.insert("contentsMapper.getContentsImageInsert", detailImageDTO);
     }
 
     // 게시글 상세페이지(이미지 수정)
-    public int postModifyContents ( ContentsDetailModifyInfoDTO modifyInfoDTO) {
-           return sqlSessionTemplate.update("contentsMapper.postModifyContents", modifyInfoDTO);
+    public int postModifyContentsImage ( ContentsDetailImageModifyDTO imageModifyDTO) {
+           return sqlSessionTemplate.update("contentsMapper.postModifyContentsImage", imageModifyDTO);
 
     }
 
-
-//    // 게시글 상세 페이지(이미지 정보 불러오기)
+    // 게시글 상세 페이지(이미지 정보 불러오기)
     public List<ContentsDetailImageDTO> boardImageRead(Long contents_idx) {
         return sqlSessionTemplate.selectList("contentsMapper.boardImageRead", contents_idx );
     }
 
     // 게시글 상세페이지 정보 불러오기
-    public ContentInfoDTO getParticular(
+    public ContentInfoDTO getContentsParticular (
             Long idx
     ) {
-        return sqlSessionTemplate.selectOne("contentsMapper.getParticular", idx);
+        return sqlSessionTemplate.selectOne("contentsMapper.getContentsParticular ", idx);
     }
 
     // 게시글 상세페이지 게시글 정보 수정
-    public void updateContents(ContentsDetailModifyInfoDTO modifyInfoDTO) {
-        int updateContent = sqlSessionTemplate.update("contentsMapper.updateContents", modifyInfoDTO);
+    public void updateContents(ContentsDetailImageModifyDTO imageModifyDTO) {
+        int updateContent = sqlSessionTemplate.update("contentsMapper.updateContents", imageModifyDTO);
         if (updateContent == 0) {
             throw new RuntimeException("수정할 게시글이 없습니다.");
         }

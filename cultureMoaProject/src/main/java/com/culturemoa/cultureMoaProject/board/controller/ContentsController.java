@@ -42,7 +42,7 @@ public class ContentsController {
             @RequestParam(required = false) String searchType
     ) {
         // Map 사용하지 않고 파라미터를 서비스에 전달
-        return contentsService.getContentSearchs(category_idx, keyword, searchType);
+        return contentsService.getContentsSearchCriteria(category_idx, keyword, searchType);
     }
 
     // 게시글 상세페이지 - 등록된 상세내용 확인
@@ -51,7 +51,7 @@ public class ContentsController {
             @PathVariable Long idx
     ) {
 
-        return contentsService.getParticular(idx);
+        return contentsService.getContentsParticular(idx);
     }
 
     // 게시글 등록페이지 - 이미지 등록
@@ -107,23 +107,31 @@ public class ContentsController {
         return contentsCommentService.deleteComment(contentsCommentDeleteInfoDTO);
     }
 
-    // 게시판 상세페이지(수정 버튼) - 이미지 수정
+    // 게시판 상세페이지(수정 버튼) - 카테고리 선택, 제목, 글내용 수정
+//    @PostMapping("edit")
+//    public updateContents (
+//
+//    )
+
+
+    // 게시판 상세페이지(수정 버튼) - 카테고리 선택, 제목, 글내용 수정 + 이미지 수정
     @PostMapping("/edit")
-    public ContentsDetailModifyInfoDTO updateContents(@RequestPart("contents") ContentsDetailModifyInfoDTO modifyInfoDTO, @RequestPart("files")List<MultipartFile> files) {
+    public ContentsDetailImageModifyDTO postModifyContentsImage(@RequestParam("idx") Long idx, @RequestPart("contents") ContentsDetailImageModifyDTO imageModifyDTO, @RequestPart(value = "files", required = false)List<MultipartFile> files) {
         try {
             String uploadDir = "board/";
             List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
 
-            for (int i = 0; i < files.size(); i++) {
-                MultipartFile file = files.get(i);
-                if (!files.isEmpty()) {
+            if (files != null) {
+                for (int i = 0; i < files.size(); i++) {
+                    MultipartFile file = files.get(i);
+                    // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
                     String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
                     boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
                 }
             }
 
-            contentsService.postModifyContents(modifyInfoDTO,boardImageList);
-            return modifyInfoDTO;
+            contentsService.postModifyContentsImage(idx, imageModifyDTO,boardImageList);
+            return imageModifyDTO;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

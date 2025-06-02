@@ -2,26 +2,27 @@ package com.culturemoa.cultureMoaProject.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContentsDTO {
+public class ContentsDetailImageModifyDTO {
+
     private Long idx;
     private Long user_idx;
     private Long category_idx;
+    private Long contents_idx;
     private String title;
-//    private int division;
     private String content;
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private String image_url;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime sdate; // 날짜 포맷된 sdate
     private LocalDateTime cdate;
-    private LocalDateTime edate;
 
+//    private Long id;
 }
