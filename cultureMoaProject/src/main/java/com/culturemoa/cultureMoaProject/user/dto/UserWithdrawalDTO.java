@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserWithdrawalDTO {
     private String id;
+    private String deleteId;
     private LocalDateTime cDate;
     private LocalDateTime eDate;
 }
