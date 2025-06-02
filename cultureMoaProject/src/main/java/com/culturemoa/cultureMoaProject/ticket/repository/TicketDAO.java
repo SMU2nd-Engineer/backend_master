@@ -24,7 +24,11 @@ public class TicketDAO {
         return sqlSessionTemplate.selectList("ticketMapper.getAllTicket");
     }
     public TicketDTO getTicketInfo(int idx) {
-        return sqlSessionTemplate.selectOne("ticketMapper.getTicketInfo", idx);
+        Map<String, Object> params = new HashMap<>();
+        params.put("idx", idx);
+        params.put("today", LocalDate.now().toString());
+
+        return sqlSessionTemplate.selectOne("ticketMapper.getTicketInfo", params);
     }
 
     public List<TicketDTO> getSearch(List<Integer> categories, String query, LocalDate startDate, LocalDate endDate) {
@@ -33,11 +37,15 @@ public class TicketDAO {
         params.put("query", query);
         params.put("startDate", startDate);
         params.put("endDate", endDate);
+        params.put("today", LocalDate.now().toString());
 
         return sqlSessionTemplate.selectList("ticketMapper.getSearch", params);
     }
 
     public List<DateCountDTO> getCalendarTicketCount(Map<String, Object> paramMap) {
+        if (!paramMap.containsKey("today")) {
+            paramMap.put("today", LocalDate.now().toString());
+        }
         // 리스트 형태로 넘기기
         return sqlSessionTemplate.selectList("ticketMapper.getCalendarTicketCount", paramMap);
     }

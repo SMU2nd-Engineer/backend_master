@@ -23,7 +23,9 @@ public class TicketService {
     public List<TicketDTO> getAllTicket(){
         return ticketDAO.getAllTicket();
     }
-    public TicketDTO getTicketInfo(int idx){ return ticketDAO.getTicketInfo(idx); }
+    public TicketDTO getTicketInfo(int idx){
+        return ticketDAO.getTicketInfo(idx);
+    }
 
     // 검색 기능 메서드
     public List<TicketDTO> searchTickets(String categoriesStr, String query, LocalDate startDate,LocalDate endDate) {
