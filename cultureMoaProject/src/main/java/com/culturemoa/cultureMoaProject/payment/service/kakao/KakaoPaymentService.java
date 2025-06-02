@@ -114,7 +114,6 @@ public class KakaoPaymentService implements PaymentGatewayService {
         );
         } catch (Exception e) {
             handleFailedPayment(tid != null ? tid : "UNKNOWN", e.getMessage());
-            System.out.println("결제 준비 오류");
             throw new RuntimeException();
         }
     }
@@ -180,14 +179,13 @@ public class KakaoPaymentService implements PaymentGatewayService {
                 try {
                     paymentDAO.insertUserTransaction(userTransaction);
                 } catch (DuplicateKeyException e){
-                    System.out.println("이미 거래내역이 존재합니다. 중복 저장 방지됨.");
+                    e.printStackTrace();
                 }
             }
 
             return response;
         } catch (Exception e){
             handleFailedPayment(approveDTO.getTid(), e.getMessage());
-            System.out.println("결제 승인 오류");
             e.printStackTrace();
             throw new RuntimeException();
         }

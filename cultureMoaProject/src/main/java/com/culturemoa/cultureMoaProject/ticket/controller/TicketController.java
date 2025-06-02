@@ -43,7 +43,6 @@ public class TicketController {
     // 마찬가지 getDateCounts 가 맞을듯 조건이 있다면 By~
     @GetMapping("/calendar")
     public List<DateCountDTO> getCalendarTicketCount(@RequestParam("month") String month, @RequestParam(value = "categories", required = false) String categories) {
-        System.out.println("month: " + month);
         return ticketService.getCalendarTicketCount(month, categories);
     }
 

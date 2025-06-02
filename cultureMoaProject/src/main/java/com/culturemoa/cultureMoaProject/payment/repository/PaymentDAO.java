@@ -44,7 +44,6 @@ public class PaymentDAO {
 
     public boolean existUserTransactionByProductIdx(int productIdx){
         Integer count = sqlSessionTemplate.selectOne("paymentMapper.countUserTransactionByProductIdx", productIdx);
-        System.out.println("거래내역에 productIdx 존재하는지 :"+count);
         return count != null && count > 0;
     }
 
