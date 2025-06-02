@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.board.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,8 @@ public class ContentsDTO {
     private String title;
 //    private int division;
     private String content;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sdate; // 날짜 포맷된 sdate
     private LocalDateTime edate;
 

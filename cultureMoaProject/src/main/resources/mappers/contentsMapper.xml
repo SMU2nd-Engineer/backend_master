@@ -63,7 +63,7 @@
             </if>
 
         </where>
-        ORDER BY CONT.IDX
+        ORDER BY CONT.IDX DESC
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록(카테고리(팝니다/삽니다), 제목, 글 내용, 오늘날짜) insert -->
@@ -89,7 +89,7 @@
         SELECT CONTENTS_IDX, IMAGE_URL AS image_url
         FROM CONTENTS_DETAIL_IMAGE_TBL
         WHERE CONTENTS_IDX = #{contents_idx}
-        ORDER BY IDX
+        ORDER BY IDX DESC
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 정보 불러오기 - 게시글 상세페이지 -->
