@@ -63,7 +63,7 @@
         SELECT IDX FROM USER_TBL WHERE ID = #{userId} AND EDATE IS NULL
     </select>
 
-<!--  홈페이지에 사용할 매퍼- 10개의 최신 상품 정보 가져오기  -->
+<!--  홈페이지에 사용할 매퍼- 8개의 최신 상품 정보 가져오기  -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
         USER_IDX, PRICE, MAIN.FLAG, IMAGE_URL, CONTENT, DETAIL.FLAG, USER.NICKNAME
@@ -81,10 +81,10 @@
         LEFT JOIN USER_TBL AS USER ON MAIN.USER_IDX = USER.IDX
         WHERE MAIN.EDATE IS NULL
         ORDER BY MAIN.SDATE DESC, MAIN.IDX DESC
-        LIMIT 10
+        LIMIT 8
     </select>
 
-<!--  홈페이지에 사용할 매퍼 - 8개의 최신 게시글 가져오기  -->
+<!--  홈페이지에 사용할 매퍼 - 10개의 최신 게시글 가져오기  -->
     <select id="getContentInfo" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO">
         SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE,
         CONT.CONTENT, CONT.SDATE,
@@ -93,7 +93,7 @@
         LEFT OUTER JOIN USER_TBL USERT ON CONT.USER_IDX = USERT.IDX
         WHERE CONT.EDATE IS NULL
         ORDER BY CONT.SDATE DESC, CONT.IDX DESC
-        LIMIT 8
+        LIMIT 10
     </select>
 
 <!--  로그인 후 홈페이지에서 전역 변수에 저장할 필요한 유저정보 골라내기   -->
