@@ -91,15 +91,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
 
         } catch (RuntimeException e) {
-            // 토큰이 유효하지 않으니 401 error 반환하도록 구성
+            // 로그 레벨을 낮추거나 생략 (refresh 요청이 아닌 경우만 로그)
+            if (!pRequest.getRequestURI().contains("/auth/refresh")) {
+                // 필요 시만 로그 출력
+                System.out.println("JWT 예외 발생: " + e.getMessage());
+            }
+
             sendErrorResponse(pResponse, "유효하지 않은 코드입니다.");
-            return; // 요청 중단
+            return;
         }
 
     }
 
     private void sendErrorResponse (HttpServletResponse pResponse, String message) throws IOException {
-        throw new JwtException();
+        if (!pResponse.isCommitted()) { // 스택트레이스 제거
+            pResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            pResponse.setContentType("application/json");
+            pResponse.getWriter().write("{\"error\": \"" + message + "\"}");
+        }
     }
 
 }
