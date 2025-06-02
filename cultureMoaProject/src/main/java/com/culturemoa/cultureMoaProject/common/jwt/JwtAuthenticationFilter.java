@@ -99,10 +99,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void sendErrorResponse (HttpServletResponse pResponse, String message) throws IOException {
-//        pResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
-//        pResponse.setContentType("application/json"); // axios에서 정확히 받도록
-//        pResponse.setCharacterEncoding("UTF-8"); // 한글 깨지지 않도록 설정
-//        pResponse.getWriter().write("{\"error\": \"" + message + "\"}");
         throw new JwtException();
     }
 
