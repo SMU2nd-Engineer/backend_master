@@ -44,15 +44,15 @@ public class LogAspect {
     public void restApiMethods() {}
 
     /**
-     * 유저 로그 Aspect
+     * REST API 로그 Aspect
      * @param proceedingJoinPoint 포인트컷
      * @return ReturnObject
      * @throws Throwable
      */
-//    @Around("restApiMethods()")
-//    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-//        return printLog(proceedingJoinPoint, "restApiMethods");
-//    }
+    @Around("restApiMethods()")
+    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+        return printLog(proceedingJoinPoint, "restApiMethods");
+    }
 
 
 
@@ -64,6 +64,7 @@ public class LogAspect {
      * @throws Throwable 실행 실패시 처리
      */
     private Object printLog (ProceedingJoinPoint proceedingJoinPoint, String pointCutName) throws Throwable{
+        // 메서드 전체 실행 후 로깅
         Object returnObj;
         try {
             returnObj = proceedingJoinPoint.proceed();
@@ -71,10 +72,16 @@ public class LogAspect {
             throw t;
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // WebSocket 클래스이면 제외
+        String className = proceedingJoinPoint.getTarget().getClass().getName();
+        if (className.contains("WebSocket") || className.contains("WebSocketHandler")) {
+            return proceedingJoinPoint.proceed();
+        }
 
+        // 인증 안된 요청은 로깅 생략
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            return proceedingJoinPoint.proceed(); // 인증 안된 요청은 로깅 생략
+            return proceedingJoinPoint.proceed();
         }
 
         LoggerDTO loggerDTO = getLoggerDTO(proceedingJoinPoint, pointCutName);

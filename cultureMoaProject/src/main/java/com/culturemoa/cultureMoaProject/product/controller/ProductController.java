@@ -6,19 +6,10 @@ import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import com.culturemoa.cultureMoaProject.product.dto.ProductSearchDTO;
 import com.culturemoa.cultureMoaProject.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +26,10 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // 네이밍 규칙 바꾸세요 getProducts가 맞겠죠
-    // 하위 service도 마찬가집니다
     // 전체 목록 불러오기
     @GetMapping("/list")
-    public List<ProductDTO> product(@RequestParam(required = false) Long lastId, @RequestParam(defaultValue = "20") Long size) {
-        return productService.getAllProduct(lastId, size);
+    public List<ProductDTO> getProducts(@RequestParam(required = false) Long lastId, @RequestParam(defaultValue = "20") Long size) {
+        return productService.getProducts(lastId, size);
 
     }
 

@@ -26,15 +26,18 @@ public class ProductService {
     }
 
     // 상품 전체 정보 불러오기
-    public List<ProductDTO> getAllProduct(Long lastId, long size) {
-
-        return productDAO.getAllProduct(lastId, size);
+    public List<ProductDTO> getProducts(Long lastId, long size) {
+        String userid = handleAuth.getUserIdByAuth();
+        long userIdx = userDAO.getUserIdx(userid);
+        return productDAO.getProducts(userIdx, lastId, size);
     }
 
     // 상품 idx에 맞는 해당 디테일 정보 불러오기
     public ProductDTO getProductByIdx(long idx) {
+        String userid = handleAuth.getUserIdByAuth();
+        long userIdx = userDAO.getUserIdx(userid);
 
-        ProductDTO product = productDAO.getProductByIdx(idx);
+        ProductDTO product = productDAO.getProductByIdx(userIdx, idx);
         List<ProductImageDTO> images = productDAO.imageRead(idx);
         product.setImageList(images);
         if( images != null && !images.isEmpty()) {
@@ -69,7 +72,7 @@ public class ProductService {
     // 상품 검색
     public List<ProductDTO> searchProducts(ProductSearchDTO searchDTO) {
         String userid = handleAuth.getUserIdByAuth();
-        int user_idx = userDAO.getUserIdx(userid);
+        searchDTO.setUserIdx(Long.valueOf(userDAO.getUserIdx(userid)));
         return productDAO.searchProducts(searchDTO);
     }
 

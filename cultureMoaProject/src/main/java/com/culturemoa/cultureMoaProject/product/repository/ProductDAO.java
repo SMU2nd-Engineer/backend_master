@@ -18,15 +18,19 @@ public class ProductDAO {
         this.sqlSessionTemplate = sqlSessionTemplate;
     }
 
-    public List<ProductDTO> getAllProduct(Long lastId, long size) {
+    public List<ProductDTO> getProducts(long userIdx, Long lastId, long size) {
         Map<String, Object> params = new HashMap<>();
+        params.put("userIdx", userIdx);
         params.put("lastId", lastId);
         params.put("size", size);
         return sqlSessionTemplate.selectList("productMapper.getAllProduct", params);
     }
 
-    public ProductDTO getProductByIdx(long idx) {
-        return sqlSessionTemplate.selectOne("productMapper.getProductByIdx", idx);
+    public ProductDTO getProductByIdx(long userIdx, long idx) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("userIdx", userIdx);
+        params.put("idx", idx);
+        return sqlSessionTemplate.selectOne("productMapper.getProductByIdx", params);
     }
 
     public void insertProduct(ProductDTO product){

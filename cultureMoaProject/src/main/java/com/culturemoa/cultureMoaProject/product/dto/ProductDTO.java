@@ -29,6 +29,7 @@ public class ProductDTO {
     private String nickName;
     private Long lastId;
     private Long size;
+    private int pick;
 
     @JsonProperty("image_Url")
     private String image_Url;
@@ -37,6 +38,5 @@ public class ProductDTO {
 
     @JsonProperty("imageList")
     private List<ProductImageDTO> imageList;
-
 }
 
