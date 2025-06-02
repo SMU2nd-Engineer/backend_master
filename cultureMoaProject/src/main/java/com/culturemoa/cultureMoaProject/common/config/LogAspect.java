@@ -36,9 +36,7 @@ public class LogAspect {
     /*
     * com.culturemoa.cultureMoaProject.user 하위 모든 경로 // 예시코드
     * */
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.GetMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
+    @Pointcut("(@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
     public void restApiMethods() {}
@@ -64,18 +62,18 @@ public class LogAspect {
      * @throws Throwable 실행 실패시 처리
      */
     private Object printLog (ProceedingJoinPoint proceedingJoinPoint, String pointCutName) throws Throwable{
+        // WebSocket 클래스이면 제외
+        String className = proceedingJoinPoint.getTarget().getClass().getName();
+        if (className.contains("WebSocket") || className.contains("WebSocketHandler")) {
+            return proceedingJoinPoint.proceed();
+        }
+
         // 메서드 전체 실행 후 로깅
         Object returnObj;
         try {
             returnObj = proceedingJoinPoint.proceed();
         } catch (Throwable t){
             throw t;
-        }
-
-        // WebSocket 클래스이면 제외
-        String className = proceedingJoinPoint.getTarget().getClass().getName();
-        if (className.contains("WebSocket") || className.contains("WebSocketHandler")) {
-            return proceedingJoinPoint.proceed();
         }
 
         // 인증 안된 요청은 로깅 생략
