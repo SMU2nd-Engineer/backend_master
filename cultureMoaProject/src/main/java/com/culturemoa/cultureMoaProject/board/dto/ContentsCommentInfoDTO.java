@@ -22,7 +22,7 @@ public class ContentsCommentInfoDTO {
     // 입력용 날짜 포맷
 //    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     // 출력용 날짜 포맷
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime sdate; // 날짜 포맷된 sdate
 
     // 불러올 User 정보(작성자-회원 닉네임)

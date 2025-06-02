@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ContentsImageSubmitDAO {
-    // 생성자 패턴인데 왜 Autowired가 변수 선언부에 있나요 생성자로 옮기세요
-    @Autowired
+    // 생성자 패턴인데 왜 Autowired가 변수 선언부에 있나요 생성자로 옮기세요 - 옮김
     private final SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
     public ContentsImageSubmitDAO(SqlSessionTemplate sqlSessionTemplate) {
         this.sqlSessionTemplate = sqlSessionTemplate; }
 

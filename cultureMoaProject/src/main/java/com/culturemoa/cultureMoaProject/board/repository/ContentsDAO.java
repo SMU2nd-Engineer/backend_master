@@ -23,7 +23,7 @@ public class ContentsDAO {
     }
 
     public List<ContentInfoDTO> getContentInfos() {
-        System.out.println("여기까지 실행됩니다.");
+//        System.out.println("여기까지 실행됩니다.");
         return sqlSessionTemplate.selectList("contentsMapper.getContentInfos");
     }
 
