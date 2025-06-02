@@ -41,7 +41,7 @@ public class ChatController {
     }
 
     @PostMapping("/rooms")
-    public ChatRoomDTO CreateChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
+    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO){
         chatRoomDTO.setId(countersService.getId("chatroom"));
 
         return chatService.createChatRoom(chatRoomDTO);

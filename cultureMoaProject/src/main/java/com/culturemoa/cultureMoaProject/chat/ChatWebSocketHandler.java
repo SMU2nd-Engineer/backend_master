@@ -127,7 +127,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                 }
             }
         }
-        System.out.println("❌ WebSocket 연결 종료됨: " + session.getId());
     }
 
     @Override
