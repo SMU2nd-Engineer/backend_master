@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -48,10 +47,10 @@ public class LogAspect {
      * @return ReturnObject
      * @throws Throwable
      */
-    @Around("restApiMethods()")
-    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        return printLog(proceedingJoinPoint, "restApiMethods");
-    }
+//    @Around("restApiMethods()")
+//    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+//        return printLog(proceedingJoinPoint, "restApiMethods");
+//    }
 
 
 
