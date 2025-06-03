@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -144,6 +145,11 @@ public class ChatService {
             info.setLastMessage(room.getLastMessage());
             info.setLastMessageAt(room.getLastMessageAt());
             info.setCount(countUnreadMessages(userIdx, room.getId()));
+
+            info.getUsers().forEach((user)-> {
+                if (user.longValue() != userIdx.longValue())
+                    info.setNickname(userDAO.getNicknameByUserIdx(user));
+            });
             roomInfos.add(info);
         });
         return roomInfos;

@@ -108,4 +108,10 @@
         FROM USER_TBL
         WHERE ID = #{userId} AND EDATE IS NULL;
     </select>
+
+    <select id="getNicknameByUserIdx" parameterType="Long" resultType="String" >
+        SELECT NICKNAME
+        FROM USER_TBL
+        WHERE IDX = #{userIdx} AND EDATE IS NULL;
+    </select>
 </mapper>

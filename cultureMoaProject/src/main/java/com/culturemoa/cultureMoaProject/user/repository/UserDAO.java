@@ -142,4 +142,8 @@ public class UserDAO {
     public LoginUserInfoDTO getUserInfoByUserId (String userId) {
         return sqlSessionTemplate.selectOne("userMapper.getLoginUserInfo", userId);
     }
+
+    public String getNicknameByUserIdx(Long userIdx){
+        return sqlSessionTemplate.selectOne("userMapper.getNicknameByUserIdx", userIdx);
+    }
 }
