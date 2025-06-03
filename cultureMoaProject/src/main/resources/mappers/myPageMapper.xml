@@ -250,7 +250,7 @@
     <select id="getMyReviewListInfo" parameterType="String" resultType="com.culturemoa.cultureMoaProject.user.dto.ReviewListDTO" >
         SELECT UR.REVIEW, UR.IDX, UR.SDATE
         FROM USER_REVIEW_TBL AS UR
-        JOIN USER_TBL AS U ON U.IDX = UR.RECEIVER_USER_IDX
+        JOIN USER_TBL AS U ON U.IDX = UR.WRITER_USER_IDX
         WHERE U.ID = #{userId} AND U.EDATE IS NULL
         order by UR.IDX DESC;
     </select>
