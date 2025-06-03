@@ -86,7 +86,7 @@
     </insert>
 
     <!-- 게시글 이미지 상세 정보 가져오기  -->
-    <select id="boardImageRead" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO" parameterType="Long" >
+    <select id="getContentsReadDetailImages" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO" parameterType="Long" >
         SELECT CONTENTS_IDX, IMAGE_URL AS image_url
         FROM CONTENTS_DETAIL_IMAGE_TBL
         WHERE CONTENTS_IDX = #{contents_idx}
@@ -106,7 +106,7 @@
     </select>
 
     <!-- 등록된 게시글 수정(상세페이지 수정버튼) 카테고리+제목+글내용 + 이미지 -->
-    <update id="updateContents" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageModifyDTO"
+    <update id="postContentsModifyInformations" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageModifyDTO"
             keyProperty="idx">
         UPDATE CONTENTS_TBL
            SET CATEGORY_IDX = #{category_idx},
