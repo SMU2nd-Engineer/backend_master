@@ -165,6 +165,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
             ProductFlagUpdate productFlagUpdate = new ProductFlagUpdate();
             productFlagUpdate.setFlag(true);
             productFlagUpdate.setProductIdx(productIdx);
+            productFlagUpdate.setEdate(LocalDateTime.now());
 
             paymentDAO.updateProductFlag(productFlagUpdate);
 
@@ -175,7 +176,7 @@ public class KakaoPaymentService implements PaymentGatewayService {
                 UserTransactionDTO userTransaction = new UserTransactionDTO();
                 userTransaction.setUserIdx(userIdx);
                 userTransaction.setProductIdx(productIdx);
-                userTransaction.setSdate(LocalDate.now());
+                userTransaction.setSdate(LocalDateTime.now());
                 try {
                     paymentDAO.insertUserTransaction(userTransaction);
                 } catch (DuplicateKeyException e){
