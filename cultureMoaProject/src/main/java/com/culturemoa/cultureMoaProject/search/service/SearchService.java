@@ -29,6 +29,7 @@ public class SearchService {
         // 상품 검색
         ProductSearchDTO productSearchDTO = new ProductSearchDTO();
         productSearchDTO.setKeyword(keyword);
+        productSearchDTO.setSize(20L);
         List<ProductDTO> products = productDAO.searchProducts(productSearchDTO);
         result.put("products", products);
 
