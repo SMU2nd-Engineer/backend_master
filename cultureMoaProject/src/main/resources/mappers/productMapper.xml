@@ -105,7 +105,7 @@
     <!-- 상품 팔렸을 때 flag값 True -->
     <update id="updateProductFlag" parameterType="com.culturemoa.cultureMoaProject.payment.dto.ProductFlagUpdate" >
         UPDATE PRODUCT_TBL
-        SET FLAG = #{flag}
+        SET FLAG = #{flag}, EDATE = #{edate}
         WHERE IDX = #{productIdx}
     </update>
 
