@@ -53,8 +53,6 @@ public class LogAspect {
         return printLog(proceedingJoinPoint, "restApiMethods");
     }
 
-
-
     /**
      * 로그 작성 및 포인트컷 실행 메서드
      * @param proceedingJoinPoint 포인트컷

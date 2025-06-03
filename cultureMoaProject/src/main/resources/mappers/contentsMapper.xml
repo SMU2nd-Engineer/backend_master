@@ -90,7 +90,7 @@
         SELECT CONTENTS_IDX, IMAGE_URL AS image_url
         FROM CONTENTS_DETAIL_IMAGE_TBL
         WHERE CONTENTS_IDX = #{contents_idx}
-        ORDER BY IDX DESC
+        ORDER BY IDX
     </select>
 
     <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 정보 불러오기 - 게시글 상세페이지 -->
@@ -110,23 +110,16 @@
             keyProperty="idx">
         UPDATE CONTENTS_TBL
            SET CATEGORY_IDX = #{category_idx},
-<!--               CONTENTS_IDX = #{contents_idx}, -->
                TITLE = #{title},
                CONTENT = #{content},
-<!--               IMAGE_URL = #{image_url},-->
                CDATE = #{cdate}
          WHERE IDX = #{idx}
     </update>
 
     <!-- 등록된 게시글 수정(상세페이지 수정버튼) - 이미지 -->
-    <update id="postModifyContentsImage" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageDTO">
-        UPDATE CONTENTS_DETAIL_IMAGE_TBL
-        SET IMAGE_URL =
-            CASE
-                WHEN #{image_url} IS NOT NULL THEN #{image_url}
-                ELSE NULL
-            END
-        WHERE CONTENTS_IDX = #{contents_idx}
+    <update id="deleteModifyContentsImage" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDetailImageModifyDTO">
+        DELETE FROM CONTENTS_DETAIL_IMAGE_TBL
+        WHERE CONTENTS_IDX = #{idx}
     </update>
 
     <!-- 등록된 게시글 삭제(상세페이지 삭제버튼) -->

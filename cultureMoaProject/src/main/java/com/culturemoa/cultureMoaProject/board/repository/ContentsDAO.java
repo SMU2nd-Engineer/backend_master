@@ -1,7 +1,6 @@
 package com.culturemoa.cultureMoaProject.board.repository;
 
 import com.culturemoa.cultureMoaProject.board.dto.*;
-import com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -40,13 +39,13 @@ public class ContentsDAO {
     }
 
     // 게시글 등록 페이지(이미지 등록)
-    public void getContentsImageInsert (ContentsDetailImageDTO detailImageDTO) {
+    public void insertContentsImage(ContentsDetailImageDTO detailImageDTO) {
         sqlSessionTemplate.insert("contentsMapper.getContentsImageInsert", detailImageDTO);
     }
 
-    // 게시글 상세페이지(이미지 수정)
-    public int postModifyContentsImage ( ContentsDetailImageModifyDTO imageModifyDTO) {
-           return sqlSessionTemplate.update("contentsMapper.postModifyContentsImage", imageModifyDTO);
+    // 게시글 상세페이지 기존 URL 삭제
+    public int deleteModifyContentsImage ( ContentsDetailImageModifyDTO imageModifyDTO) {
+           return sqlSessionTemplate.update("contentsMapper.deleteModifyContentsImage", imageModifyDTO);
 
     }
 

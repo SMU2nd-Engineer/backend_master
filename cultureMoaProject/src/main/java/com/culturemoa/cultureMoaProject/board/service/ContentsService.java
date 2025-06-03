@@ -2,6 +2,7 @@ package com.culturemoa.cultureMoaProject.board.service;
 
 import com.culturemoa.cultureMoaProject.board.dto.*;
 import com.culturemoa.cultureMoaProject.board.repository.ContentsDAO;
+import com.culturemoa.cultureMoaProject.common.service.S3Service;
 import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,25 +14,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ContentsService {
     private final ContentsDAO contentsDAO;
     private final UserDAO userDAO;
     private final HandleAuthentication handleAuth;
+    private final S3Service s3Service;
 
     @Autowired
-    public ContentsService(ContentsDAO contentsDAO, UserDAO userDAO, HandleAuthentication handleAuth) {
+    public ContentsService(ContentsDAO contentsDAO, UserDAO userDAO, HandleAuthentication handleAuth, S3Service s3Service) {
         this.contentsDAO = contentsDAO;
         this.userDAO = userDAO;
-        // 사용자 인증 정보 가져오기
         this.handleAuth = handleAuth;
+        this.s3Service = s3Service;
     }
+
     // 생성자 패턴이면 통합 하세요 생성자로 Autowired 여러개 하는거 아닙니다 생성자 패턴에서는 - 수정완료
 
     public List<ContentsDTO> getAllContents() {
@@ -77,8 +76,20 @@ public class ContentsService {
     // 게시판 등록 페이지 - 게시글 등록
     public Long getContentInsert(
             // 등록해야할 칼럼들, 불러와야 할 이미지 Url 주소를 리스트로 저장
-            ContentsDTO contentsDTO, List<ContentsImageSubmitDTO> imgList
-    ) {
+            ContentsDTO contentsDTO, List<MultipartFile> files
+    ) throws IOException {
+        String uploadDir = "board/";
+        List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
+
+        if (files != null) {
+            for (int i = 0; i < files.size(); i++) {
+                MultipartFile file = files.get(i);
+                // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
+                String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
+                boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
+            }
+        }
+
         // user 정보 담겨 있음
         // 사용자 인증해서 user id를 자동으로 불러옴
         String userid = handleAuth.getUserIdByAuth();
@@ -91,13 +102,13 @@ public class ContentsService {
         // 게시글 등록(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
         if(contentsDAO.getContentInsert(contentsDTO) == 1){
             // 텍스트 에디터 quill 이미지 저장
-            if (imgList != null) {
-                for (ContentsImageSubmitDTO imageSubmitDTO : imgList ) {
+            if (!boardImageList.isEmpty()) {
+                for (ContentsImageSubmitDTO imageSubmitDTO : boardImageList ) {
                     ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
                     detailImageDTO.setContents_idx(contentsDTO.getIdx());
                     detailImageDTO.setImage_url(imageSubmitDTO.getImage_url());
 
-                    contentsDAO.getContentsImageInsert(detailImageDTO);
+                    contentsDAO.insertContentsImage(detailImageDTO);
 
                 }
             }
@@ -165,11 +176,39 @@ public class ContentsService {
 
     // 등록된 게시글 (상세페이지 수정버튼)카테고리(잡담/팝니다/삽니다/기타)+제목+글내용, 이미지 수정
     public Long postModifyContentsImage(
-            // 등록해야할 칼럼들, 불러와야 할 이미지 Url 주소를 리스트로 저장
-            Long idx, ContentsDetailImageModifyDTO imageModifyDTO, List<ContentsImageSubmitDTO> imgList
-    ) {
-        imageModifyDTO.setIdx(idx);
+            Long idx
+            , ContentsDetailImageModifyDTO imageModifyDTO
+            , List<MultipartFile> files
+            ,List<String> currentUrls
+    ) throws IOException {
+        String uploadDir = "board/";
+        List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
 
+        for (String current : currentUrls) {
+            if (current.startsWith("https://"))
+                boardImageList.add(new ContentsImageSubmitDTO(current));
+            else {
+                MultipartFile file = files.get(0);
+                // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
+                String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
+                boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
+                files.remove(0);
+            }
+        }
+
+        // 기존 저장된 S3 데이터 지워야햄
+        List<ContentsDetailImageDTO> savedUrls = contentsDAO.getContentsReadDetailImages(idx);
+        List<String> incomingUrls = currentUrls.stream()
+                .filter(url -> url.startsWith("http"))
+                .toList();
+        List<ContentsDetailImageDTO> toDelete = savedUrls.stream()
+                .filter(url -> !incomingUrls.contains(url.getImage_url()))
+                .toList();
+        for(ContentsDetailImageDTO detailImageDTO : toDelete){
+            s3Service.deleteByUrl(detailImageDTO.getImage_url());
+        }
+
+        imageModifyDTO.setIdx(idx);
 //       user 정보 담겨 있음
         // 사용자 인증해서 user id를 자동으로 불러옴
         String userid = handleAuth.getUserIdByAuth();
@@ -183,22 +222,19 @@ public class ContentsService {
         contentsDAO.postContentsModifyInformations(imageModifyDTO);
 
         // 게시글 상세페이지 (수정버튼 - 텍스트 에디터: 이미지)
-        if(contentsDAO.postModifyContentsImage(imageModifyDTO) == 1){
-            // 텍스트 에디터 quill 이미지 수정 저장
-            if (imgList != null) {
-                for (ContentsImageSubmitDTO imageSubmitDTO : imgList ) {
-                    ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
-                    detailImageDTO.setContents_idx(imageModifyDTO.getIdx());
-                    detailImageDTO.setImage_url(imageSubmitDTO.getImage_url());
+        contentsDAO.deleteModifyContentsImage(imageModifyDTO);
+        // 텍스트 에디터 quill 이미지 수정 저장
+        if (!boardImageList.isEmpty()) {
+            for (ContentsImageSubmitDTO imageSubmitDTO : boardImageList ) {
+                ContentsDetailImageDTO detailImageDTO = new ContentsDetailImageDTO();
+                detailImageDTO.setContents_idx(imageModifyDTO.getIdx());
+                detailImageDTO.setImage_url(imageSubmitDTO.getImage_url());
 
-                    contentsDAO.postModifyContentsImage(imageModifyDTO);
+                contentsDAO.insertContentsImage(detailImageDTO);
 
-                }
             }
-            return imageModifyDTO.getIdx();
-        };
-
-        return 1L;
+        }
+        return imageModifyDTO.getIdx();
     }
 
 
