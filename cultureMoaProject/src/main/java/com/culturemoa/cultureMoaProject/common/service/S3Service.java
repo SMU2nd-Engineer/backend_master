@@ -9,6 +9,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -48,5 +49,32 @@ public class S3Service {
         );
 
         return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, region, filename);
+    }
+
+    // S3 URL 기반 삭제
+    public void deleteByUrl(String fileUrl) {
+        String endpoint = String.format("https://%s.s3.%s.amazonaws.com/", bucket, region);
+
+        if (!fileUrl.startsWith(endpoint)) {
+            throw new IllegalArgumentException("S3 URL 형식이 잘못되었습니다.");
+        }
+
+        // URL에서 key만 추출
+        String key = fileUrl.substring(endpoint.length());
+
+        // 클라이언트 생성
+        S3Client s3Client = S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)))
+                .build();
+
+        // 삭제 요청
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+
+        s3Client.deleteObject(deleteObjectRequest);
     }
 }

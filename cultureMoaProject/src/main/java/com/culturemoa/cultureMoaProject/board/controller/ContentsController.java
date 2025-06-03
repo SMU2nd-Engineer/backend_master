@@ -17,13 +17,11 @@ import java.util.List;
 public class ContentsController {
     private final ContentsService contentsService;
     private final ContentsCommentService contentsCommentService;
-    private final S3Service s3Service;
 
     @Autowired
-    public ContentsController(ContentsService contentsService, ContentsCommentService contentsCommentService, S3Service s3Service) {
+    public ContentsController(ContentsService contentsService, ContentsCommentService contentsCommentService) {
         this.contentsService = contentsService;
         this.contentsCommentService = contentsCommentService;
-        this.s3Service = s3Service;
     }
 
     // 게시판 리스트 페이지 - 게시글 등록한 목록 확인
@@ -57,19 +55,7 @@ public class ContentsController {
     @PostMapping("/submit")
     public ContentsDTO insertContents(@RequestPart("contents") ContentsDTO contentDTO, @RequestPart(value = "files", required = false)List<MultipartFile> files) {
         try {
-            String uploadDir = "board/";
-            List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
-
-            if (files != null) {
-                for (int i = 0; i < files.size(); i++) {
-                    MultipartFile file = files.get(i);
-                    // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
-                        String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
-                        boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
-                }
-            }
-
-            contentsService.getContentInsert(contentDTO,boardImageList);
+            contentsService.getContentInsert(contentDTO, files);
             return contentDTO;
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,21 +94,13 @@ public class ContentsController {
 
     // 게시판 상세페이지(수정 버튼) - 카테고리 선택, 제목, 글내용 수정 + 이미지 수정
     @PostMapping("/edit")
-    public ContentsDetailImageModifyDTO postModifyContentsImage(@RequestParam("idx") Long idx, @RequestPart("contents") ContentsDetailImageModifyDTO imageModifyDTO, @RequestPart(value = "files", required = false)List<MultipartFile> files) {
+    public ContentsDetailImageModifyDTO postModifyContentsImage(
+            @RequestParam("idx") Long idx
+            , @RequestPart("contents") ContentsDetailImageModifyDTO imageModifyDTO
+            , @RequestPart(value = "files", required = false)List<MultipartFile> files
+            , @RequestParam("current") List<String> currentUrls) {
         try {
-            String uploadDir = "board/";
-            List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
-
-            if (files != null) {
-                for (int i = 0; i < files.size(); i++) {
-                    MultipartFile file = files.get(i);
-                    // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
-                    String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
-                    boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
-                }
-            }
-
-            contentsService.postModifyContentsImage(idx, imageModifyDTO,boardImageList);
+            contentsService.postModifyContentsImage(idx, imageModifyDTO, files, currentUrls);
             return imageModifyDTO;
         } catch (Exception e) {
             e.printStackTrace();
