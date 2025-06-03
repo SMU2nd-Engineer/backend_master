@@ -36,9 +36,10 @@ public class LogAspect {
     /*
     * com.culturemoa.cultureMoaProject.user 하위 모든 경로 // 예시코드
     * */
-    @Pointcut("(@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
+    @Pointcut("execution(* com.culturemoa.cultureMoaProject..controller..*(..)) && " +
+            "(@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
             "@annotation(org.springframework.web.bind.annotation.PutMapping) || " +
-            "@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+            "@annotation(org.springframework.web.bind.annotation.DeleteMapping))")
     public void restApiMethods() {}
 
     /**
@@ -64,7 +65,7 @@ public class LogAspect {
     private Object printLog (ProceedingJoinPoint proceedingJoinPoint, String pointCutName) throws Throwable{
         // WebSocket 클래스이면 제외
         String className = proceedingJoinPoint.getTarget().getClass().getName();
-        if (className.contains("WebSocket") || className.contains("WebSocketHandler")) {
+        if (className.startsWith("Chat") || className.contains("WebSocket") || className.contains("WebSocketHandler")) {
             return proceedingJoinPoint.proceed();
         }
 
@@ -77,18 +78,24 @@ public class LogAspect {
         }
 
         // 인증 안된 요청은 로깅 생략
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = null;
+        try {
+            authentication = SecurityContextHolder.getContext().getAuthentication();
+        } catch (Exception e) {
+            log.warn("SecurityContext 접근 중 오류 발생: " + e.getMessage());
+        }
+
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             return proceedingJoinPoint.proceed();
         }
 
         LoggerDTO loggerDTO = getLoggerDTO(proceedingJoinPoint, pointCutName);
 
-        log.info("실행 메서드 : " + getMethod(proceedingJoinPoint).getName());
-
         setLogReturn(loggerDTO, returnObj);
 
         loggerService.insertLogger(loggerDTO);
+
+        log.info("실행 메서드 : " + getMethod(proceedingJoinPoint).getName() +" / paramater : " + loggerDTO.getParameter() + " / return : " + loggerDTO.getReturnValue());
 
         return returnObj;
     }

@@ -26,13 +26,7 @@ public class ChatHandshakeInterceptor implements HandshakeInterceptor {
         }
         System.out.println("Handshake Headers = "+request.getHeaders());
 
-        // Origin 체크 예시
-        String origin = request.getHeaders().getOrigin();
-        if (origin != null && (origin.equals("http://3.38.104.183") || origin.equals("https://ec2-3-38-104-183.ap-northeast-2.compute.amazonaws.com"))) {
-            return true;
-        }
-        response.setStatusCode(HttpStatus.FORBIDDEN);
-        return false;
+        return true;
     }
 
     @Override
