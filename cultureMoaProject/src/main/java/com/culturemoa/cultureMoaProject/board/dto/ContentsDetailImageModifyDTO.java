@@ -21,7 +21,7 @@ public class ContentsDetailImageModifyDTO {
     private String title;
     private String content;
     private String image_url;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime cdate;
 
 //    private Long id;

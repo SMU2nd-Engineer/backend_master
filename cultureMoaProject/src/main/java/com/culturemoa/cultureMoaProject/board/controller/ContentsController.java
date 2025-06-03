@@ -53,7 +53,7 @@ public class ContentsController {
         return contentsService.getContentsParticular(idx);
     }
 
-    // 게시글 등록페이지 - 이미지 등록
+    // 게시글 등록페이지 - 카테고리 선택, 제목, 텍스트 에디터 (글내용 + 이미지) 등록
     @PostMapping("/submit")
     public ContentsDTO insertContents(@RequestPart("contents") ContentsDTO contentDTO, @RequestPart(value = "files", required = false)List<MultipartFile> files) {
         try {

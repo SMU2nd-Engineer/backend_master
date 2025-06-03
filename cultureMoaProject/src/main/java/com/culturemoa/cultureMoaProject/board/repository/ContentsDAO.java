@@ -51,20 +51,20 @@ public class ContentsDAO {
     }
 
     // 게시글 상세 페이지(이미지 정보 불러오기)
-    public List<ContentsDetailImageDTO> boardImageRead(Long contents_idx) {
-        return sqlSessionTemplate.selectList("contentsMapper.boardImageRead", contents_idx );
+    public List<ContentsDetailImageDTO> getContentsReadDetailImages(Long contents_idx) {
+        return sqlSessionTemplate.selectList("contentsMapper.getContentsReadDetailImages", contents_idx );
     }
 
-    // 게시글 상세페이지 정보 불러오기
+    // 게시글 상세페이지 정보 불러오기 - 카테고리(잡담/팝니다/삽니다/기타)+제목+텍스트 에디터(글내용, 이미지)
     public ContentInfoDTO getContentsParticular (
             Long idx
     ) {
         return sqlSessionTemplate.selectOne("contentsMapper.getContentsParticular ", idx);
     }
 
-    // 게시글 상세페이지 게시글 정보 수정
-    public void updateContents(ContentsDetailImageModifyDTO imageModifyDTO) {
-        int updateContent = sqlSessionTemplate.update("contentsMapper.updateContents", imageModifyDTO);
+    // 게시글 상세페이지 게시글 정보 수정 - 카테고리(잡담/팝니다/삽니다/기타)+제목+글내용, 이미지(아직 완성X) 수정
+    public void postContentsModifyInformations(ContentsDetailImageModifyDTO imageModifyDTO) {
+        int updateContent = sqlSessionTemplate.update("contentsMapper.postContentsModifyInformations", imageModifyDTO);
         if (updateContent == 0) {
             throw new RuntimeException("수정할 게시글이 없습니다.");
         }

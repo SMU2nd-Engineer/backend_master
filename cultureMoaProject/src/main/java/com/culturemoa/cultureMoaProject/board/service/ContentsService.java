@@ -152,18 +152,18 @@ public class ContentsService {
         contentsDTO.setSdate(contentInfoDTO.getSdate());
         contentsDTO.setNickname(contentInfoDTO.getNickname());
 
-        contentsDTO.setDetailImageList(contentsDAO.boardImageRead(idx));
+        contentsDTO.setDetailImageList(contentsDAO.getContentsReadDetailImages(idx));
         return contentsDTO;
 
         }
 
-    // 등록된 게시글 수정(상세페이지의 수정버튼)
-    public void  updateContents(ContentsDetailModifyInfoDTO modifyInfoDTO) {
+    // 등록된 게시글 수정(상세페이지의 수정버튼) -- 밑에 합치는 중
+    public void  postContentsModifyInformations(ContentsDetailModifyInfoDTO modifyInfoDTO) {
         // 입력화면에 없는 것을 DB에 저장
         modifyInfoDTO.setCdate(LocalDateTime.now());
     }
 
-    // 등록된 게시글 카테고리(잡담/팝니다/삽니다/기타)+제목+글내용, 이미지 수정
+    // 등록된 게시글 (상세페이지 수정버튼)카테고리(잡담/팝니다/삽니다/기타)+제목+글내용, 이미지 수정
     public Long postModifyContentsImage(
             // 등록해야할 칼럼들, 불러와야 할 이미지 Url 주소를 리스트로 저장
             Long idx, ContentsDetailImageModifyDTO imageModifyDTO, List<ContentsImageSubmitDTO> imgList
@@ -175,15 +175,14 @@ public class ContentsService {
         String userid = handleAuth.getUserIdByAuth();
         // 조회 해서 user id 불러옴
         int useridx = userDAO.getUserIdx(userid);
-//        contentInfoDTO.setUserid(userid);
 //      입력 화면에 없는 cdate DB 저장되게 설정
         imageModifyDTO.setCdate(LocalDateTime.now());
         imageModifyDTO.setUser_idx((long) useridx);
 
         // 게시글 상세페이지(수정 버튼: 카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
-        contentsDAO.updateContents(imageModifyDTO);
+        contentsDAO.postContentsModifyInformations(imageModifyDTO);
 
-        // 게시글 수정(카테고리(잡담/팝니다/삽니다/기타) 선택, 제목 입력, 글 내용(텍스트 에디터))
+        // 게시글 상세페이지 (수정버튼 - 텍스트 에디터: 이미지)
         if(contentsDAO.postModifyContentsImage(imageModifyDTO) == 1){
             // 텍스트 에디터 quill 이미지 수정 저장
             if (imgList != null) {
