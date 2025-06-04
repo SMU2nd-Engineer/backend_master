@@ -1,5 +1,6 @@
 package com.culturemoa.cultureMoaProject.common.jwt;
 
+import com.culturemoa.cultureMoaProject.user.dto.LoginUserInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,4 +13,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class JwtDTO {
     private String accessToken;
+    private LoginUserInfoDTO userInfo;
 }

@@ -3,6 +3,8 @@ package com.culturemoa.cultureMoaProject.user.controller;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtDTO;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtValidator;
+import com.culturemoa.cultureMoaProject.user.dto.LoginUserInfoDTO;
+import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,11 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TokenController {
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
+    private final JwtValidator jwtValidator;
+    private final UserDAO userDAO;
 
     @Autowired
-    private JwtValidator jwtValidator;
+    public TokenController(JwtProvider jwtProvider, JwtValidator jwtValidator, UserDAO userDAO) {
+        this.jwtProvider = jwtProvider;
+        this.jwtValidator = jwtValidator;
+        this.userDAO = userDAO;
+    }
+
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
@@ -52,7 +60,8 @@ public class TokenController {
         //새로 accessToken 발급 받기
         String newAccessToken = jwtProvider.generateAccessToken(userId);
 
-        JwtDTO jwtDTO = new JwtDTO(newAccessToken);
+        LoginUserInfoDTO userInfo = userDAO.getUserInfoByUserId(userId);
+        JwtDTO jwtDTO = new JwtDTO(newAccessToken, userInfo);
         return ResponseEntity.ok(jwtDTO); // 리프레시로 새로 생성한 newAccessToken을 반환
     }
 }
