@@ -66,7 +66,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         Set<WebSocketSession> sessions = roomSessions.get(roomId);
         if (sessions != null) {
             for (WebSocketSession session : sessions) {
-                ChatSessionInfo info = sessionInfoMap.get(session); // ← 여기 수정
+                ChatSessionInfo info = sessionInfoMap.get(session);
                 if(!Long.valueOf(info.getUserId()).equals(senderId)){
                     try {
                         session.sendMessage(new TextMessage(message));
