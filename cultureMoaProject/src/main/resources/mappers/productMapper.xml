@@ -88,7 +88,7 @@
         <where>
             MAIN.EDATE IS NULL
             <if test="keyword != null">
-                AND (TITLE LIKE '%${keyword}%' OR CONTENT LIKE '%${keyword}%')
+                AND (TITLE LIKE CONCAT('%',#{keyword},'%') OR CONTENT LIKE CONCAT('%',#{keyword},'%'))
             </if>
             <if test="category_idx > 1000">
                 AND CATEGORY_IDX = #{category_idx}
