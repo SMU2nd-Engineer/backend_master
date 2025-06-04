@@ -98,7 +98,7 @@ public class ContentsController {
             @RequestParam("idx") Long idx
             , @RequestPart("contents") ContentsDetailImageModifyDTO imageModifyDTO
             , @RequestPart(value = "files", required = false)List<MultipartFile> files
-            , @RequestParam("current") List<String> currentUrls) {
+            , @RequestParam(value = "current", required = false) List<String> currentUrls) {
         try {
             contentsService.postModifyContentsImage(idx, imageModifyDTO, files, currentUrls);
             return imageModifyDTO;
