@@ -140,5 +140,9 @@
         WHERE IDX = #{idx}
     </update>
 
-
+    <!-- 상품 삭제 -->
+    <delete id="deleteImageByIdx" parameterType="Long">
+        DELETE FROM PRODUCT_IMAGE_TBL
+        WHERE PRODUCT_IDX = #{idx}
+    </delete>
 </mapper>

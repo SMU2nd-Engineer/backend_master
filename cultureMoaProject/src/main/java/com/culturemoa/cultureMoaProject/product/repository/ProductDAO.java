@@ -59,8 +59,8 @@ public class ProductDAO {
         return sqlSessionTemplate.update("productMapper.deleteProduct", productDeleteDTO);
     }
 
-
-
-
+    public int deleteImageByIdx(Long idx){
+        return sqlSessionTemplate.delete("productMapper.deleteImageByIdx", idx);
+    }
 
 }
