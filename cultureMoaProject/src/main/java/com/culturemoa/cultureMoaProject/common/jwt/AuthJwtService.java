@@ -1,5 +1,7 @@
 package com.culturemoa.cultureMoaProject.common.jwt;
 
+import com.culturemoa.cultureMoaProject.user.dto.LoginUserInfoDTO;
+import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
@@ -8,8 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthJwtService {
 
+    private final JwtProvider jwtProvider;
+    private final UserDAO userDAO;
+
     @Autowired
-    private JwtProvider jwtProvider;
+    public AuthJwtService(JwtProvider jwtProvider, UserDAO userDAO) {
+        this.jwtProvider = jwtProvider;
+        this.userDAO = userDAO;
+    }
+
+
 
     /**
      * tokenCreateSave
@@ -37,7 +47,8 @@ public class AuthJwtService {
     // 위 설정을 바탕으로 쿠키 객체 생성 및 쿠키를 응답 헤더에 추가 (브라우저에 저장 지시)
     pResponse.addHeader("Set-Cookie", cookieBuilder.build().toString());
 
-    return new JwtDTO(accessToken);
+    LoginUserInfoDTO userInfo = userDAO.getUserInfoByUserId(pUserId);
+    return new JwtDTO(accessToken, userInfo);
 
     }
 

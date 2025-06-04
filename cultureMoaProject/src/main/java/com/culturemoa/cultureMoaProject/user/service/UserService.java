@@ -224,8 +224,7 @@ public class UserService {
         String userId = handleAuth.getUserIdByAuth();
         int userIdx = userDAO.getUserIdx(userId);
         return new HomePageInfoDTO(userDAO.getLatestProducts(userIdx),
-                                   userDAO.getLatestContent(),
-                                   userDAO.getUserInfoByUserId(userId));
+                                   userDAO.getLatestContent());
     }
 
 }

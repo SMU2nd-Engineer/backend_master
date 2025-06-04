@@ -20,5 +20,4 @@ import java.util.List;
 public class HomePageInfoDTO {
     private List<ProductDTO> latestProducts;
     private List<ContentInfoDTO> latestContents;
-    private LoginUserInfoDTO userInfo;
 }
