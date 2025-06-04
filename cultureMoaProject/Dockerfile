@@ -33,6 +33,8 @@ USER worker:worker
 
 ENV SPRING_PROFILES_ACTIVE=docker
 
+ENV TZ=Asia/Seoul
+
 EXPOSE 8100
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "main.jar"]
+ENTRYPOINT ["java","-Duser.timezone=Asia/Seoul", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "main.jar"]
