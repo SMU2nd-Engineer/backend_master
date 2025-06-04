@@ -271,11 +271,7 @@ public class MyPageService {
         userIdxAndEvaluationMap.putAll(updateReviewInfoDTO.getChangeValueEvaluation());
         myPageDAO.updateReviewEvaluation(userIdxAndEvaluationMap);
         }
-        if(updateReviewInfoDTO.getEvaluation() !=null &&
-            !updateReviewInfoDTO.getEvaluation().isEmpty()) {
         myPageDAO.updateReviewEvaluationRecode(updateReviewInfoDTO);
-        }
-
     }
 
     /**
