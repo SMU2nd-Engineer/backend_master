@@ -183,27 +183,32 @@ public class ContentsService {
     ) throws IOException {
         String uploadDir = "board/";
         List<ContentsImageSubmitDTO> boardImageList = new ArrayList<>();
+        List<ContentsDetailImageDTO> toDelete;
+        List<ContentsDetailImageDTO> savedUrls = contentsDAO.getContentsReadDetailImages(idx);
 
-        for (String current : currentUrls) {
-            if (current.startsWith("https://"))
-                boardImageList.add(new ContentsImageSubmitDTO(current));
-            else {
-                MultipartFile file = files.get(0);
-                // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
-                String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
-                boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
-                files.remove(0);
+        if(currentUrls != null && !currentUrls.isEmpty()){
+            for (String current : currentUrls) {
+                if (current.startsWith("https://"))
+                    boardImageList.add(new ContentsImageSubmitDTO(current));
+                else {
+                    MultipartFile file = files.get(0);
+                    // 이미지 선택하지 않아도 저장되는 조건 - 파일이 있을때만 처리
+                    String boardImagUrl = s3Service.uploadImageToBucketPath(file, uploadDir);
+                    boardImageList.add(new ContentsImageSubmitDTO(boardImagUrl));
+                    files.remove(0);
+                }
             }
+            // 기존 저장된 S3 데이터 지워야햄
+            List<String> incomingUrls = currentUrls.stream()
+                    .filter(url -> url.startsWith("http"))
+                    .toList();
+            toDelete = savedUrls.stream()
+                    .filter(url -> !incomingUrls.contains(url.getImage_url()))
+                    .toList();
+        }else {
+            toDelete =  savedUrls.stream().filter(url -> !url.getImage_url().isEmpty()).toList();
         }
 
-        // 기존 저장된 S3 데이터 지워야햄
-        List<ContentsDetailImageDTO> savedUrls = contentsDAO.getContentsReadDetailImages(idx);
-        List<String> incomingUrls = currentUrls.stream()
-                .filter(url -> url.startsWith("http"))
-                .toList();
-        List<ContentsDetailImageDTO> toDelete = savedUrls.stream()
-                .filter(url -> !incomingUrls.contains(url.getImage_url()))
-                .toList();
         for(ContentsDetailImageDTO detailImageDTO : toDelete){
             s3Service.deleteByUrl(detailImageDTO.getImage_url());
         }
