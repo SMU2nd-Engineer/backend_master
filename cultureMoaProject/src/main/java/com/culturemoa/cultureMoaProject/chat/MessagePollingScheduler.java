@@ -35,14 +35,14 @@ public class MessagePollingScheduler {
 
             List<ChatDTO> newMessages = repository.findByChatRoomIdAndCreatedAtAfter(Long.parseLong(roomId), lastCheck);
             if (!newMessages.isEmpty()) {
-                newMessages.forEach(msg -> {
-                    try {
-                        String json = objectMapper.writeValueAsString(msg);
-                        handler.broadcastToRoom(roomId, json, msg.getUserIdx());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+//                newMessages.forEach(msg -> {
+//                    try {
+//                        String json = objectMapper.writeValueAsString(msg);
+//                        handler.broadcastToRoom(roomId, json, msg.getUserIdx());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                });
                 lastCheckPerRoom.put(roomId, Instant.now());
             }
         });
