@@ -11,6 +11,7 @@ import java.time.LocalDate;
  * reviewIdx : 리뷰 IDX
  * sellerIdx : 판매자 IDX
  * sellerName : 판매자 이름
+ * sellerNickName : 판매자 별명
  * productTitle : 상품 이름
  * rating : 별점
  * reviewText : 거래 후기
@@ -23,6 +24,7 @@ public class FetchReviewRegisterInfoDTO {
     private int reviewIdx;
     private int sellerIdx;
     private String sellerName;
+    private String sellerNickName;
     private String productTitle;
     private double rating;
     private String reviewText;
