@@ -20,9 +20,10 @@ public class TicketDAO {
         this.sqlSessionTemplate = sqlSessionTemplate;
     }
     // 티켓 전체
-    public List<TicketDTO> getAllTicket() {
+    public List<TicketDTO> getTickets() {
         return sqlSessionTemplate.selectList("ticketMapper.getAllTicket");
     }
+
     public TicketDTO getTicketInfo(int idx) {
         Map<String, Object> params = new HashMap<>();
         params.put("idx", idx);
@@ -31,7 +32,7 @@ public class TicketDAO {
         return sqlSessionTemplate.selectOne("ticketMapper.getTicketInfo", params);
     }
 
-    public List<TicketDTO> getSearch(List<Integer> categories, String query, LocalDate startDate, LocalDate endDate) {
+    public List<TicketDTO> getTicketBySearchQuery(List<Integer> categories, String query, LocalDate startDate, LocalDate endDate) {
         Map<String, Object> params = new HashMap<>();
         params.put("categories", categories);  // 리스트 형태로 넘기기
         params.put("query", query);
@@ -39,14 +40,14 @@ public class TicketDAO {
         params.put("endDate", endDate);
         params.put("today", LocalDate.now().toString());
 
-        return sqlSessionTemplate.selectList("ticketMapper.getSearch", params);
+        return sqlSessionTemplate.selectList("ticketMapper.getTicketBySearchQuery", params);
     }
 
-    public List<DateCountDTO> getCalendarTicketCount(Map<String, Object> paramMap) {
+    public List<DateCountDTO> getDateCountsByMonthAndCategories(Map<String, Object> paramMap) {
         if (!paramMap.containsKey("today")) {
             paramMap.put("today", LocalDate.now().toString());
         }
         // 리스트 형태로 넘기기
-        return sqlSessionTemplate.selectList("ticketMapper.getCalendarTicketCount", paramMap);
+        return sqlSessionTemplate.selectList("ticketMapper.getDateCountsByMonthAndCategories", paramMap);
     }
 }

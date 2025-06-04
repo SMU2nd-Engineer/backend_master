@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class CategoryService {
-    private CategoryDAO categoryDAO;
+    private final CategoryDAO categoryDAO;
 
     @Autowired
     public CategoryService(CategoryDAO categoryDAO) {

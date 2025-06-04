@@ -4,6 +4,7 @@
     <resultMap id="getAllProduct" type="hashmap">
 
     </resultMap>
+
     <!-- 전체 정보 가져오기 -->
     <select id="getAllProduct" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductDTO" >
         SELECT MAIN.IDX, CATEGORY_IDX, CATEGORYGENRE_IDX, TITLE, MAIN.SDATE, MAIN.EDATE,
@@ -59,10 +60,10 @@
     </insert>
 
     <!-- 상품 이미지 가져오기 -->
-    <select id="imageRead" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO" parameterType="long" >
+    <select id="getProductImagesByProductIdx" resultType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO" parameterType="long" >
         SELECT PRODUCT_IDX, IMAGE_URL, FLAG
         FROM PRODUCT_IMAGE_TBL
-        WHERE PRODUCT_IDX = #{product_idx} AND FLAG = TRUE
+        WHERE PRODUCT_IDX = #{productIdx} AND FLAG = TRUE
     </select>
 
 
@@ -102,6 +103,7 @@
         ORDER BY MAIN.IDX DESC
         LIMIT #{size}
     </select>
+
     <!-- 상품 팔렸을 때 flag값 True -->
     <update id="updateProductFlag" parameterType="com.culturemoa.cultureMoaProject.payment.dto.ProductFlagUpdate" >
         UPDATE PRODUCT_TBL
@@ -119,6 +121,7 @@
             PRICE = #{price}
         WHERE IDX = #{idx}
     </update>
+
     <update id="updateImage" parameterType="com.culturemoa.cultureMoaProject.product.dto.ProductImageDTO">
         UPDATE PRODUCT_IMAGE_TBL
         SET IMAGE_URL =

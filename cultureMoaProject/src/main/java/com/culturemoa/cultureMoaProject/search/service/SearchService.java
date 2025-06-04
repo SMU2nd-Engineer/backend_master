@@ -23,7 +23,7 @@ public class SearchService {
         this.contentsDAO = contentsDAO;
     }
 
-    public Map<String, Object> searchAllByKeyword(String keyword) {
+    public Map<String, Object> getTotalSearchByKeyword(String keyword) {
         Map<String, Object> result = new HashMap<>();
 
         // 상품 검색

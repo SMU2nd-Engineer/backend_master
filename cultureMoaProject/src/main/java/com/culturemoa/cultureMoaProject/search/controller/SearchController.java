@@ -16,7 +16,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/search")
-    public Map<String, Object> searchAllByKeyword(@RequestParam("keyword") String keyword){
-        return searchService.searchAllByKeyword(keyword);
+    public Map<String, Object> getTotalSearchByKeyword(@RequestParam("keyword") String keyword){
+        return searchService.getTotalSearchByKeyword(keyword);
     }
 }

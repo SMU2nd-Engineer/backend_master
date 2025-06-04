@@ -7,7 +7,7 @@
     </select>
 
     <!--  상품 검색  -->
-    <select id="getSearch" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">
+    <select id="getTicketBySearchQuery" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.TicketDTO">
         SELECT IDX, SUB_IDX, TITLE, COMPANY, LINK, SDATE, EDATE, PLACE, PRICE, GRADE, CAST, RUNNINGTIME, IMG, ETC
         FROM TICKET_TBL
         <where>
@@ -36,7 +36,7 @@
         <!-- ORDER BY sDate ASC -->
     </select>
 
-    <select id="getCalendarTicketCount" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
+    <select id="getDateCountsByMonthAndCategories" parameterType="map" resultType="com.culturemoa.cultureMoaProject.ticket.dto.DateCountDTO">
         WITH RECURSIVE CALENDAR AS (
         SELECT DATE(#{startDate}) AS DATE
         UNION ALL
