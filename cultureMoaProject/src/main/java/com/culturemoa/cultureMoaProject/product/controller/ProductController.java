@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("product")
 public class ProductController {
-    // 생성자 패턴으로 Autowired 사용해주세요
     private final ProductService productService;
     private final S3Service s3Service;
 
@@ -97,7 +96,7 @@ public class ProductController {
 
             // 새 이미지가 업로드 되고 기존 이미지 false
             if (files != null && !files.isEmpty()) {
-                List<ProductImageDTO> existingImages = productService.imageRead(idx);
+                List<ProductImageDTO> existingImages = productService.getProductImagesByProductIdx(idx);
 
                 for (ProductImageDTO oldImage : existingImages) {
                     oldImage.setFlag(false);

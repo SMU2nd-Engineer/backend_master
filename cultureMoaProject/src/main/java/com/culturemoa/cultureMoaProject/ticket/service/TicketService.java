@@ -20,15 +20,16 @@ public class TicketService {
     }
 
     // 티켓 전체
-    public List<TicketDTO> getAllTicket(){
-        return ticketDAO.getAllTicket();
+    public List<TicketDTO> getTickets(){
+        return ticketDAO.getTickets();
     }
+
     public TicketDTO getTicketInfo(int idx){
         return ticketDAO.getTicketInfo(idx);
     }
 
     // 검색 기능 메서드
-    public List<TicketDTO> searchTickets(String categoriesStr, String query, LocalDate startDate,LocalDate endDate) {
+    public List<TicketDTO> getTicketBySearchQuery(String categoriesStr, String query, LocalDate startDate, LocalDate endDate) {
         List<Integer> categories = List.of(); // 빈 리스트 초기화
 
         if (categoriesStr != null && !categoriesStr.isEmpty()) {
@@ -37,10 +38,10 @@ public class TicketService {
                     .collect(Collectors.toList());
         }
 
-        return ticketDAO.getSearch(categories, query, startDate, endDate);
+        return ticketDAO.getTicketBySearchQuery(categories, query, startDate, endDate);
     }
     // 공연/스포츠 집계
-    public List<DateCountDTO> getCalendarTicketCount(String month, String categoriesStr) {
+    public List<DateCountDTO> getDateCountsByMonthAndCategories(String month, String categoriesStr) {
         // 1. month 파라미터에서 시작일과 종료일 추출
         String[] parts = month.split("-");
         int year = Integer.parseInt(parts[0]);
@@ -64,7 +65,7 @@ public class TicketService {
         paramMap.put("categories", categories);
 
         // 4. DAO 호출
-        return ticketDAO.getCalendarTicketCount(paramMap);
+        return ticketDAO.getDateCountsByMonthAndCategories(paramMap);
     }
 
 }

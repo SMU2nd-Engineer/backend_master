@@ -2,7 +2,6 @@ package com.culturemoa.cultureMoaProject.chat;
 
 import com.culturemoa.cultureMoaProject.chat.dto.ChatDTO;
 import com.culturemoa.cultureMoaProject.chat.repository.ChatRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -13,7 +12,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Component
 @EnableScheduling

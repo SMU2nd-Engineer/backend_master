@@ -1,27 +1,17 @@
 package com.culturemoa.cultureMoaProject.chat;
 
-import com.culturemoa.cultureMoaProject.chat.dto.ChatDTO;
-import com.culturemoa.cultureMoaProject.chat.dto.RoomReadDTO;
-import com.culturemoa.cultureMoaProject.chat.repository.ChatRepository;
-import com.culturemoa.cultureMoaProject.chat.repository.RoomReadRepository;
 import com.culturemoa.cultureMoaProject.common.jwt.JwtProvider;
-import com.culturemoa.cultureMoaProject.common.util.HandleAuthentication;
 import com.culturemoa.cultureMoaProject.user.repository.UserDAO;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,19 +23,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     // 유저 세션에 userId나 기타 정보도 같이 저장하고 싶다면
     private final Map<WebSocketSession, ChatSessionInfo> sessionInfoMap = new ConcurrentHashMap<>();
 
-    private final ChatRepository chatRepository;
-    private final RoomReadRepository roomReadRepository;
     private final JwtProvider jwtProvider;
     private final UserDAO userDAO;
-    private final ObjectMapper objectMapper;
 
     @Autowired
-    public ChatWebSocketHandler(ChatRepository chatRepository, RoomReadRepository roomReadRepository, JwtProvider jwtProvider, UserDAO userDAO, ObjectMapper objectMapper) {
-        this.chatRepository = chatRepository;
-        this.roomReadRepository = roomReadRepository;
+    public ChatWebSocketHandler(JwtProvider jwtProvider, UserDAO userDAO) {
         this.jwtProvider = jwtProvider;
         this.userDAO = userDAO;
-        this.objectMapper = objectMapper;
     }
 
     public Map<String, Set<WebSocketSession>> getRoomSessions() {
@@ -76,27 +60,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-//        try {
-//
-//            ChatSessionInfo senderInfo = sessionInfoMap.get(session);
-//            if (senderInfo == null) {
-//                session.close(CloseStatus.BAD_DATA);
-//                return;
-//            }
-//
-//            String roomId = senderInfo.getRoomId();
-//
-//            Optional<RoomReadDTO> lastAt = roomReadRepository.findByUserIdxAndChatRoomId(Long.valueOf(senderInfo.getUserId()),Long.valueOf(senderInfo.getRoomId()));
-//
-//            List<ChatDTO> recentMessages = chatRepository.findByChatRoomIdAndCreatedAtAfter(Long.parseLong(roomId), lastAt.get().getLastReadAt());
-//
-//            for (ChatDTO msg : recentMessages) {
-//                String json = objectMapper.writeValueAsString(msg);
-//                session.sendMessage(new TextMessage(json));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void broadcastToRoom(String roomId, String message, Long senderId) {

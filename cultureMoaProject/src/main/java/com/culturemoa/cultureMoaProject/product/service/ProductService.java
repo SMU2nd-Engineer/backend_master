@@ -38,7 +38,7 @@ public class ProductService {
         long userIdx = userDAO.getUserIdx(userid);
 
         ProductDTO product = productDAO.getProductByIdx(userIdx, idx);
-        List<ProductImageDTO> images = productDAO.imageRead(idx);
+        List<ProductImageDTO> images = productDAO.getProductImagesByProductIdx(idx);
         product.setImageList(images);
         if( images != null && !images.isEmpty()) {
             product.setImage_Url(images.get(0).getImage_Url());
@@ -77,8 +77,8 @@ public class ProductService {
     }
 
     // 상세 이미지 불러오기
-    public List<ProductImageDTO> imageRead(long product_idx){
-        return productDAO.imageRead(product_idx);
+    public List<ProductImageDTO> getProductImagesByProductIdx(long productIdx){
+        return productDAO.getProductImagesByProductIdx(productIdx);
     }
 
     // 상품 수정
