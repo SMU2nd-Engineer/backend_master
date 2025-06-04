@@ -1,7 +1,6 @@
 package com.culturemoa.cultureMoaProject.common.security;
 
 import com.culturemoa.cultureMoaProject.common.jwt.*;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

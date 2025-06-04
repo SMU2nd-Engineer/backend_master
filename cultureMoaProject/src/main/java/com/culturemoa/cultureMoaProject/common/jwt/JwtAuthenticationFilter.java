@@ -1,6 +1,5 @@
 package com.culturemoa.cultureMoaProject.common.jwt;
 
-import com.culturemoa.cultureMoaProject.user.exception.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -107,6 +106,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (!pResponse.isCommitted()) { // 스택트레이스 제거
             pResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             pResponse.setContentType("application/json");
+            pResponse.setCharacterEncoding("UTF-8");
             pResponse.getWriter().write("{\"error\": \"" + message + "\"}");
         }
     }
