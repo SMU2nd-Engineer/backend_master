@@ -22,7 +22,6 @@ public class ContentsDAO {
     }
 
     public List<ContentInfoDTO> getContentInfos() {
-//        System.out.println("여기까지 실행됩니다.");
         return sqlSessionTemplate.selectList("contentsMapper.getContentInfos");
     }
 
@@ -61,7 +60,7 @@ public class ContentsDAO {
         return sqlSessionTemplate.selectOne("contentsMapper.getContentsParticular ", idx);
     }
 
-    // 게시글 상세페이지 게시글 정보 수정 - 카테고리(잡담/팝니다/삽니다/기타)+제목+글내용, 이미지(아직 완성X) 수정
+    // 게시글 상세페이지 게시글 정보 수정 - 카테고리(잡담/팝니다/삽니다/기타)+제목+글내용, 이미지 수정
     public void postContentsModifyInformations(ContentsDetailImageModifyDTO imageModifyDTO) {
         int updateContent = sqlSessionTemplate.update("contentsMapper.postContentsModifyInformations", imageModifyDTO);
         if (updateContent == 0) {

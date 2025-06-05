@@ -90,8 +90,7 @@ public class ContentsService {
             }
         }
 
-        // user 정보 담겨 있음
-        // 사용자 인증해서 user id를 자동으로 불러옴
+        // 사용자 인증해서 user id를 자동으로 불러옴(user 정보 담겨 있음)
         String userid = handleAuth.getUserIdByAuth();
         // 조회 해서 user id 불러옴
         int useridx = userDAO.getUserIdx(userid);
