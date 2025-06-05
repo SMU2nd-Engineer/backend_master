@@ -25,7 +25,7 @@
         LEFT JOIN (SELECT * FROM USER_PICK_TBL AS PTEMP WHERE PTEMP.USER_IDX = #{userIdx} AND PTEMP.EDATE IS NULL) AS PICK ON PICK.PRODUCT_IDX = MAIN.IDX
         <where>
             MAIN.EDATE IS NULL
-
+            USER.EDATE IS NULL
             <if test="lastId != null">
                 AND MAIN.IDX &lt; #{lastId}
             </if>
