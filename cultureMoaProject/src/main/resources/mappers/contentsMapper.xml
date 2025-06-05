@@ -23,51 +23,35 @@
         FROM CONTENTS_TBL CONT
         LEFT OUTER JOIN USER_TBL USERT ON
         CONT.USER_IDX = USERT.IDX
-
         <where>
-            <!-- edate: 종료일/삭제일로 삭제되지 않았거나, 아직 유효한 게시글만 보여주는 필터 조건이고,
-                DB에서 삭제하지 않고 EDATE에 날짜만 남기는 방식임 -->
             CONT.EDATE IS NULL
-
-            <!-- searchType: 제목+내용/작성자(nickname) 의 구분값
-            contents 테이블의 제목(title)+내용(contents) 선택 한 후 키워드로 검색 -->
+            <!-- searchType: 제목+내용/작성자(nickname) 의 구분값 -->
             <if test="searchType == 0">
                 AND (
                     CONT.TITLE LIKE '%${keyword}%'
                     OR CONT.CONTENT LIKE '%${keyword}%'
                 )
-
             </if>
-
-            <!-- USER_tbl의 nickname을 선택한 후 키워드로 검색 -->
+            <!-- 작성자 (nickname)를 선택한 필터 -->
             <if test="searchType == 1">
                 AND USERT.NICKNAME LIKE '%${keyword}%'
             </if>
-
-            <!-- '팝니다', '삽니다' 선택한 필터 category_idx(일단 숫자로 해놓고 나중에 바꿔야함 프론트엔드에서도) -->
-<!--            <if test="category_idx != category_idx and category_idx != ''">-->
+            <!-- 카테고리 선택한 필터  -->
             <if test="category_idx != null and category_idx != -1">
-                <!-- Contents_tbl의 category_idx -->
                 AND CONT.CATEGORY_IDX = #{category_idx}
             </if>
-            <!-- 키워드로 검색어 입력했을때 제목(title), 내용(content) 조회 -->
-
-            <!-- 1. 키워드로 검색어 입력했을때, 2. 눈에 안보이는 것: content(내용) 까지 검색(보류)
-            3. 제목+내용 구분자 선택시 제목(title), 내용(content) 조회 -->
-
+            <!-- 1. 키워드로 검색어 입력했을때, 2. 눈에 안보이는 content(내용) 까지 검색-->
             <if test="keyword.length > 0 and searchType != 1">
               AND (
                     CONT.TITLE LIKE '%${keyword}%'
                     OR CONT.CONTENT LIKE '%${keyword}%'
-<!--                    USERT.NICKNAME LIKE '%${keyword}}%'-->
                 )
             </if>
-
         </where>
         ORDER BY CONT.IDX DESC
     </select>
 
-    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록(카테고리(팝니다/삽니다), 제목, 글 내용, 오늘날짜) insert -->
+    <!-- 게시글 등록(카테고리(잡담/팝니다/삽니다/기타), 제목, 글 내용, 오늘날짜) insert -->
     <insert id="getContentInsert" useGeneratedKeys="true"
             parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsDTO"
             keyProperty="idx" >
@@ -93,7 +77,7 @@
         ORDER BY IDX
     </select>
 
-    <!-- CONTENTS_TBL, USER_TBL의 게시글 등록 정보 불러오기 - 게시글 상세페이지 -->
+    <!-- 게시글 상세페이지 - 게시글 등록 정보 불러오기 -->
     <select id="getContentsParticular " parameterType="Long" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentInfoDTO" >
         SELECT CONT.IDX, CONT.USER_IDX, CONT.CATEGORY_IDX, CONT.TITLE,
         CONT.CONTENT, CONT.SDATE,
@@ -129,9 +113,8 @@
         WHERE IDX = #{idx}
     </update>
 
-    <!-- CONTENTS_TBL, USER_TBL의 댓글 목록 불러오기 - 게시글 상세페이지
-    AS comment_idx: ContentsCommentInfoDTO에 컬럼명이 일치해야되서 선언함
-    -->
+    <!-- 게시글 상세페이지 - 댓글 목록 불러오기
+    AS comment_idx: ContentsCommentInfoDTO에 컬럼명이 일치해야되서 선언함 -->
     <select id="getComment" resultType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentInfoDTO" >
         SELECT COMNT.USER_IDX, COMNT.CONTENTS_IDX, COMNT.TEXT, COMNT.SDATE,
         USERT.NICKNAME, COMNT.IDX AS comment_idx
@@ -142,7 +125,7 @@
         AND   COMNT.EDATE IS NULL
     </select>
 
-    <!-- CONTENTS_TBL, USER_TBL의 댓글 등록 - 게시글 상세페이지 -->
+    <!-- 게시글 상세페이지 - 댓글 등록  -->
     <insert id="getCommentInsert" useGeneratedKeys="true"
             parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentDTO"
             keyProperty="idx" >
@@ -151,7 +134,7 @@
         VALUES(#{user_idx}, #{contents_idx}, #{text}, #{sdate});
     </insert>
 
-    <!-- CONTENTS_TBL, USER_TBL의 댓글 삭제 - 게시글 상세페이지 -->
+    <!-- 게시글 상세페이지 - 댓글 삭제 -->
     <update id="getCommentDelete" parameterType="com.culturemoa.cultureMoaProject.board.dto.ContentsCommentDeleteInfoDTO">
         UPDATE CONTENTS_COMMENT_TBL
         SET EDATE = #{edate}

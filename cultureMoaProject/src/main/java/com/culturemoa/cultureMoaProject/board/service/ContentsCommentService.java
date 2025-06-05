@@ -35,26 +35,16 @@ public class ContentsCommentService {
     public Long insertComment(
             ContentsCommentDTO commentDTO
     ) {
-        // 로그인이 되어 있어야 사용가능한데 userId 가져올 수 있음
-//      String userId = handleAuth.getUserIdByAuth();
 //      입력 화면에 없는 user_idx, sdate DB 저장되게 설정
-//        // user 정보 담겨 있음
-        // 사용자 인증해서 user id를 자동으로 불러옴
+        // 사용자 인증해서 user id를 자동으로 불러옴(user 정보 담겨 있음)
         String userid = handleAuth.getUserIdByAuth();
         // 조회 해서 user id 불러옴
         int useridx = userDAO.getUserIdx(userid);
-        // 입력 화면에 없는 user_idx, sdate DB 저장되게 설정
         commentDTO.setUser_idx((long) useridx);
-//        commentDTO.setContents_idx(contentsCommentInfoDTO.getContents_idx());
-//        commentDTO.setText(contentsCommentInfoDTO.getText());
         commentDTO.setSdate(LocalDateTime.now());
 
-        System.out.println(commentDTO);
-
-        System.out.println("여기까지 실행 됨" + commentDTO);
         if (contentsCommentDAO.getCommentInsert(commentDTO) == 1) {
             return commentDTO.getContents_idx();
-
         };
         return 0L;
     }
