@@ -186,9 +186,18 @@ public class UserController {
      * 로그인 후 홈페이지 화면에 사용할 정보를 전달하기 위한 DTO
      * @return : 조회한 정보가 담긴 DTO를 반환
      */
-    @GetMapping("homePageInfo")
+    @GetMapping("/homePageInfo")
     public ResponseEntity<?> getHomePageInfo () {
         return ResponseEntity.ok(userService.getHomePageInfoByAuth());
+    }
+
+    /**
+     * 자동 로그인의 경우 사용자 정보를 저장하기 위해 사용할 컨트롤러
+     * @return : 사용자 정보를 담음 LoginUserInfoDTO
+     */
+    @GetMapping("/userInfo")
+    public ResponseEntity<?> getUserInfo() {
+        return ResponseEntity.ok(userService.getUserInfoByAuth());
     }
 
 }
