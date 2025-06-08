@@ -42,16 +42,16 @@ public class LogAspect {
             "@annotation(org.springframework.web.bind.annotation.DeleteMapping))")
     public void restApiMethods() {}
 
-    /**
-     * REST API 로그 Aspect
-     * @param proceedingJoinPoint 포인트컷
-     * @return ReturnObject
-     * @throws Throwable
-     */
-    @Around("restApiMethods()")
-    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
-        return printLog(proceedingJoinPoint, "restApiMethods");
-    }
+//    /**
+//     * REST API 로그 Aspect
+//     * @param proceedingJoinPoint 포인트컷
+//     * @return ReturnObject
+//     * @throws Throwable
+//     */
+//    @Around("restApiMethods()")
+//    public Object restApiLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+//        return printLog(proceedingJoinPoint, "restApiMethods");
+//    }
 
     /**
      * 로그 작성 및 포인트컷 실행 메서드

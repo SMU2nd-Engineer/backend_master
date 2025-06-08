@@ -52,7 +52,7 @@
         CALENDAR c
         LEFT JOIN TICKET_TBL t
         ON c.DATE BETWEEN t.SDATE AND t.EDATE
-        AND t.EDATE &gt;= #{today} <!-- 지난 공연 제외 -->
+        AND EDATE &gt;= #{today} <!-- 지난 공연 제외 -->
         <!-- 카테고리 필터 -->
         <if test="categories != null and categories.size() > 0">
             AND t.SUB_IDX IN

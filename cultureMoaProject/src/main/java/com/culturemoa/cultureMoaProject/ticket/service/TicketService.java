@@ -63,6 +63,7 @@ public class TicketService {
                     .collect(Collectors.toList());
         }
         paramMap.put("categories", categories);
+        paramMap.put("today", LocalDate.now().toString());
 
         // 4. DAO 호출
         return ticketDAO.getDateCountsByMonthAndCategories(paramMap);
