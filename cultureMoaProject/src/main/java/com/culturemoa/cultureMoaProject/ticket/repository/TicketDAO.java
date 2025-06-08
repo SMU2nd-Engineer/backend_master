@@ -44,9 +44,6 @@ public class TicketDAO {
     }
 
     public List<DateCountDTO> getDateCountsByMonthAndCategories(Map<String, Object> paramMap) {
-        if (!paramMap.containsKey("today")) {
-            paramMap.put("today", LocalDate.now().toString());
-        }
         // 리스트 형태로 넘기기
         return sqlSessionTemplate.selectList("ticketMapper.getDateCountsByMonthAndCategories", paramMap);
     }
