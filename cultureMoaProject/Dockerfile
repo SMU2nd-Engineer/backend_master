@@ -26,7 +26,6 @@ RUN addgroup -g 1000 worker \
 
 COPY --from=build --chown=worker:worker /app/target/*.jar ./main.jar
 
-# 외부 볼륨 마운트 경로
 VOLUME ["/app/data"]
 
 USER worker:worker
